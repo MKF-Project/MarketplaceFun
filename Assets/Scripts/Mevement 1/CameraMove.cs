@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour
 {
 
-    //public Transform Player;
+    public Transform Camera;
     
     public bool MouseLocked;
 
@@ -22,10 +22,12 @@ public class CameraMove : MonoBehaviour
             Cursor.visible = false; 
             Cursor.lockState = CursorLockMode.Locked;
 
-            _mouseX += Input.GetAxis("Mouse X") * Sensitivity;
-            _mouseY -= Input.GetAxis("Mouse Y") * Sensitivity;
+            _mouseX = Input.GetAxis("Mouse X") * Sensitivity;
+            _mouseY = Input.GetAxis("Mouse Y") * Sensitivity;
 
-            transform.eulerAngles = new Vector3(_mouseY, _mouseX, 0); 
+            transform.Rotate(Vector3.up, _mouseX);
+
+            Camera.Rotate(Vector3.left, _mouseY);
         }
     }
 }

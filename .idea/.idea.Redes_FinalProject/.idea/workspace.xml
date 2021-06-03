@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d4c5e468-6365-435a-81f6-0519356b5640" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Redes_FinalProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Redes_FinalProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Mevement 1/CameraMove.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Mevement 1/CameraMove.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefab/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefab/Player.prefab" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/Mevement 1/PlayerMovement.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="43" column="65" selection-start-line="43" selection-start-column="58" selection-end-line="43" selection-end-column="65" />
+            <state relative-caret-position="244">
+              <caret line="34" column="9" lean-forward="true" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
               <folding>
                 <marker date="1622489768732" expanded="false" signature="6:78" ph="..." />
                 <marker date="1622489768732" expanded="true" signature="123:1474" ph="{...}" />
@@ -54,14 +51,23 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/Mevement 1/CameraMove.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="32" column="1" lean-forward="true" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+            <state relative-caret-position="496">
+              <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
               <folding>
-                <marker date="1622752131211" expanded="false" signature="6:78" ph="..." />
-                <marker date="1622752131211" expanded="true" signature="119:676" ph="{...}" />
-                <marker date="1622752131211" expanded="true" signature="295:674" ph="{...}" />
-                <marker date="1622752131211" expanded="true" signature="326:668" ph="{...}" />
+                <marker date="1622752228161" expanded="false" signature="6:78" ph="..." />
+                <marker date="1622752228161" expanded="true" signature="119:673" ph="{...}" />
+                <marker date="1622752228161" expanded="true" signature="295:671" ph="{...}" />
+                <marker date="1622752228161" expanded="true" signature="326:665" ph="{...}" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Library/PackageCache/com.mlapi.contrib.extensions@e47ee18972/Runtime/NetworkManagerHud/NetworkManagerHud.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="480">
+              <caret line="35" selection-start-line="35" selection-end-line="35" />
             </state>
           </provider>
         </entry>
@@ -73,6 +79,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/InputManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.mlapi.contrib.extensions@e47ee18972/Runtime/NetworkManagerHud/NetworkManagerHud.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Mevement 1/CameraMove.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Mevement 1/PlayerMovement.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -92,7 +99,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="620" />
     <option name="y" value="150" />
     <option name="width" value="1284" />
@@ -182,12 +189,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1622749689762</updated>
-      <workItem from="1622749693682" duration="1866000" />
+      <workItem from="1622749693682" duration="3170000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1866000" />
+    <option name="totallyTimeSpent" value="3170000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -200,7 +207,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
       <window_info id="Image Layers" />
@@ -261,10 +267,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Library/PackageCache/com.mlapi.contrib.extensions@e47ee18972/Runtime/NetworkManagerHud/NetworkManagerHud.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="35" selection-start-line="35" selection-end-line="35" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/Mevement 1/PlayerMovement.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="43" column="65" selection-start-line="43" selection-start-column="58" selection-end-line="43" selection-end-column="65" />
+        <state relative-caret-position="244">
+          <caret line="34" column="9" lean-forward="true" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
           <folding>
             <marker date="1622489768732" expanded="false" signature="6:78" ph="..." />
             <marker date="1622489768732" expanded="true" signature="123:1474" ph="{...}" />
@@ -282,13 +295,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/Mevement 1/CameraMove.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="1" lean-forward="true" selection-start-line="32" selection-start-column="1" selection-end-line="32" selection-end-column="1" />
+        <state relative-caret-position="496">
+          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
           <folding>
-            <marker date="1622752131211" expanded="false" signature="6:78" ph="..." />
-            <marker date="1622752131211" expanded="true" signature="119:676" ph="{...}" />
-            <marker date="1622752131211" expanded="true" signature="295:674" ph="{...}" />
-            <marker date="1622752131211" expanded="true" signature="326:668" ph="{...}" />
+            <marker date="1622752228161" expanded="false" signature="6:78" ph="..." />
+            <marker date="1622752228161" expanded="true" signature="119:673" ph="{...}" />
+            <marker date="1622752228161" expanded="true" signature="295:671" ph="{...}" />
+            <marker date="1622752228161" expanded="true" signature="326:665" ph="{...}" />
           </folding>
         </state>
       </provider>

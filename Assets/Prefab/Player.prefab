@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8816987188005979575}
   - component: {fileID: 8816987188005979568}
   - component: {fileID: 8816987188005979569}
-  - component: {fileID: 8816987188005979574}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -84,20 +83,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8816987188005979570}
   m_Enabled: 1
---- !u!114 &8816987188005979574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8816987188005979570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f14feb7c5fb05b4ca81167585118256, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MouseLocked: 1
-  Sensitivity: 2
 --- !u!1 &8816987188999332804
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,6 +97,7 @@ GameObject:
   - component: {fileID: 8816987188999332815}
   - component: {fileID: 8816987188999332814}
   - component: {fileID: -8703463587070590722}
+  - component: {fileID: -2412267911150120978}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -211,8 +197,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73256b376233e274da94b4c56b7e1829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 2
-  WalkSpeed: 0
+  MoveSpeed: 10
+  WalkSpeed: 2
 --- !u!114 &-8703463587070590722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,5 +211,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f14feb7c5fb05b4ca81167585118256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MouseLocked: 0
-  Sensitivity: 0
+  Camera: {fileID: 8816987188005979575}
+  MouseLocked: 1
+  Sensitivity: 2
+--- !u!114 &-2412267911150120978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816987188999332804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 1897319656204293034
+  PrefabHashGenerator: Player
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0

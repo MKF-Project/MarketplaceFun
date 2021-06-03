@@ -977,6 +977,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1558036158}
+  - component: {fileID: 1558036160}
   - component: {fileID: 1558036157}
   - component: {fileID: 1558036156}
   - component: {fileID: 1558036155}
@@ -1115,3 +1116,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DrawOffset: {x: 10, y: 10}
   LabelColor: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &1558036160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558036154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc7280c697397944d8633af1f0e8a29f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

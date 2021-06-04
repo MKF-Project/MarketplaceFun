@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     private CharacterController _controller;
-    
+
 
     public float MoveSpeed;
 
     public float WalkSpeed;
 
     private float _realSpeed;
-    
+
     private float _verticalSpeed;
 
 
@@ -24,8 +25,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateSpeed();
-        Move();
+        if(IsOwner)
+        {
+            UpdateSpeed();
+            Move();
+        }
     }
 
     private void UpdateSpeed()

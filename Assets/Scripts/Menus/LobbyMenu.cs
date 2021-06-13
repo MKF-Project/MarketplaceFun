@@ -13,10 +13,7 @@ public class LobbyMenu : MonoBehaviour
 
     private void Awake()
     {
-        NetworkController.OnConnected += (isHost) => {
-            print("On Lobby Menu");
-            MenuManager.toggleMenu(gameObject);
-        };
+        NetworkController.OnConnected += (isHost) => this.toggleMenu();
 
         OnStartMatch += () => print("Start Match");
     }

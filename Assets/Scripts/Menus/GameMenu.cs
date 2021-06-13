@@ -18,10 +18,10 @@ public class GameMenu : MonoBehaviour
     {
         OnQuitGame += () => Application.Quit();
 
-        ConnectionMenu.OnBack += () => MenuManager.toggleMenu(gameObject);
+        ConnectionMenu.OnBack += this.toggleMenu;
 
         NetworkController.OnDisconnected += (wasHost) => {
-            MenuManager.toggleMenu(gameObject);
+            this.toggleMenu();
             print($"{(wasHost? "Host" : "Client")} disconnected");
         };
     }
@@ -31,7 +31,7 @@ public class GameMenu : MonoBehaviour
         // Start Enabled
         // This method *MUST* be run on Start, so that the other menus have the chance
         // to subscribe their events and run their setups before they get deactivated here.
-        MenuManager.toggleMenu(gameObject);
+        this.toggleMenu();
     }
 
     // Button Actions

@@ -19,7 +19,7 @@ public class LoadingMenu : MonoBehaviour
     }
 
     private void initializeLoadingMenu(bool isHost, string address) {
-        MenuController.toggleMenu(gameObject);
+        MenuManager.toggleMenu(gameObject);
         _loadMessage.text = isHost? hostMessage : $"{joinMessage} {address}...";
     }
 

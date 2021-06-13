@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuController : MonoBehaviour
+public class MenuManager : MonoBehaviour
 {
     private const string menuTag = "Menu";
     private static List<GameObject> _menus;

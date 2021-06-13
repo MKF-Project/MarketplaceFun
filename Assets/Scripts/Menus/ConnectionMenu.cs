@@ -36,12 +36,12 @@ public class ConnectionMenu : MonoBehaviour
         GameMenu.OnJoinGame += () => initializeConnectionMenu(false);
         GameMenu.OnHostGame += () => initializeConnectionMenu(true);
 
-        LoadingMenu.OnCancel += () => MenuController.toggleMenu(gameObject);
+        LoadingMenu.OnCancel += () => MenuManager.toggleMenu(gameObject);
     }
 
     private void initializeConnectionMenu(bool isHost)
     {
-        MenuController.toggleMenu(gameObject);
+        MenuManager.toggleMenu(gameObject);
 
         _isHost = isHost;
         _menuTitle.text = $"{(isHost? _hostText : _joinText)} Game:";

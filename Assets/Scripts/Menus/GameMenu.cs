@@ -17,11 +17,11 @@ public class GameMenu : MonoBehaviour
     private void Start()
     {
         // Start Enabled
-        MenuController.toggleMenu(gameObject);
+        MenuManager.toggleMenu(gameObject);
 
         OnQuitGame += () => Application.Quit();
 
-        ConnectionMenu.OnBack += () => MenuController.toggleMenu(gameObject);
+        ConnectionMenu.OnBack += () => MenuManager.toggleMenu(gameObject);
     }
 
     // Button Actions

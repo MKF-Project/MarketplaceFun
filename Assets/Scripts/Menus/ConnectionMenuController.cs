@@ -35,6 +35,8 @@ public class ConnectionMenuController : MonoBehaviour
     {
         GameMenuController.OnJoinGame += () => initializeConnectionMenu(false);
         GameMenuController.OnHostGame += () => initializeConnectionMenu(true);
+
+        LoadingMenuController.OnCancel += () => MenusController.toggleMenu(gameObject);
     }
 
     private void initializeConnectionMenu(bool isHost)

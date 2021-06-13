@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class GameMenuController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    // Events
+    public delegate void OnJoinGameDelegate();
+    public static event OnJoinGameDelegate OnJoinGame;
+
+    public delegate void OnHostGameDelegate();
+    public static event OnHostGameDelegate OnHostGame;
+
+    public delegate void OnQuitGameDelegate();
+    public static event OnQuitGameDelegate OnQuitGame;
+
+    private void Start()
     {
-        
+        // Start Enabled
+        MenusController.toggleMenu(gameObject);
+
+        OnQuitGame += () => Application.Quit();
+
+        ConnectionMenuController.OnBack += () => MenusController.toggleMenu(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // Button Actions
+    public void joinGame() => OnJoinGame?.Invoke();
+    public void hostGame() => OnHostGame?.Invoke();
+    public void quitGame() => OnQuitGame?.Invoke();
 }

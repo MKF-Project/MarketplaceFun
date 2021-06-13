@@ -10,7 +10,5 @@ public static class Extensions
         return root.GetComponentsInChildren<Transform>(includeInactive).Where(child => child.tag == tag).Select(child => child.gameObject);
     }
 
-    public static void toggleMenu(this MonoBehaviour menuScript) {
-        MenuManager.toggleMenu(menuScript.gameObject);
-    }
+    public static void toggleMenu(this MonoBehaviour menuScript) => MenuManager.toggleMenu(menuScript.gameObject);
 }

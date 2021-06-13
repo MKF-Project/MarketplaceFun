@@ -10,7 +10,6 @@ public class MenuManager : MonoBehaviour
     private void Awake()
     {
         _menus = _menus ?? new List<GameObject>(gameObject.FindChildrenWithTag(menuTag));
-        print(_menus);
     }
 
     public static void toggleMenu(GameObject activeMenu)

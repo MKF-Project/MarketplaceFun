@@ -14,14 +14,22 @@ public class GameMenu : MonoBehaviour
     public delegate void OnQuitGameDelegate();
     public static event OnQuitGameDelegate OnQuitGame;
 
+    private void Awake()
+    {
+        OnQuitGame += () => Application.Quit();
+
+        ConnectionMenu.OnBack += () => MenuManager.toggleMenu(gameObject);
+
+        NetworkController.OnDisconnected += (wasHost) => {
+            MenuManager.toggleMenu(gameObject);
+            print($"{(wasHost? "Host" : "Client")} disconnected");
+        };
+    }
+
     private void Start()
     {
         // Start Enabled
         MenuManager.toggleMenu(gameObject);
-
-        OnQuitGame += () => Application.Quit();
-
-        ConnectionMenu.OnBack += () => MenuManager.toggleMenu(gameObject);
     }
 
     // Button Actions

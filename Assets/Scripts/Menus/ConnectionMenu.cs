@@ -31,7 +31,7 @@ public class ConnectionMenu : MonoBehaviour
     // Transport Dropdown
     [SerializeField] private Dropdown _transportDropdown = null;
 
-    private void Start()
+    private void Awake()
     {
         GameMenu.OnJoinGame += () => initializeConnectionMenu(false);
         GameMenu.OnHostGame += () => initializeConnectionMenu(true);

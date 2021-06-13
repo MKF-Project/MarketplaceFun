@@ -13,7 +13,7 @@ public class LoadingMenu : MonoBehaviour
     private const string joinMessage = "Connecting to";
     [SerializeField] private Text _loadMessage = null;
 
-    private void Start()
+    private void Awake()
     {
         ConnectionMenu.OnGoToLobby += (bool isHost, NetworkTransportTypes _, string address) => initializeLoadingMenu(isHost, address);
     }

@@ -136,7 +136,7 @@ public class NetworkController : MonoBehaviour
             // Run self unsubscribing Action on this Client connected
             Action<ulong> clientIsConnected = null;
             clientIsConnected = (ulong clientID) => {
-                if(clientID == _netManager.ServerClientId)
+                if(clientID == _netManager.LocalClientId)
                 {
                     _netManager.OnClientConnectedCallback -= clientIsConnected;
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ConnectionMenuController : MonoBehaviour
 {
@@ -11,18 +12,78 @@ public class ConnectionMenuController : MonoBehaviour
     public delegate void OnBackDelegate();
     public static event OnBackDelegate OnBack;
 
+    private bool _isHost;
+
+    // Title
+    private const string _joinText = "Join";
+    private const string _hostText = "Host";
+    [SerializeField] private Text _menuTitle = null;
+
+    // Address Input
+    [SerializeField] private InputField _addressInput = null;
+
+    // Address Placeholder
+    private const string _placeholderIPPrompt = " Enter IP/Address...";
+    private const string _placeholderPhotonPrompt = " Enter Room Name...";
+    private const string _placeholderIgnore = " [Ignored]";
+    [SerializeField] private Text _addressPlaceholder = null;
+
+    // Transport Dropdown
+    [SerializeField] private Dropdown _transportDropdown = null;
+
     private void Start()
     {
         GameMenuController.OnJoinGame += () => initializeConnectionMenu(false);
         GameMenuController.OnHostGame += () => initializeConnectionMenu(true);
     }
 
-    private void initializeConnectionMenu(bool isHost) {
+    private void initializeConnectionMenu(bool isHost)
+    {
         MenusController.toggleMenu(gameObject);
-        print(isHost);
+
+        _isHost = isHost;
+        _menuTitle.text = $"{(isHost? _hostText : _joinText)} Game:";
+
+        onChangeTransport();
+    }
+
+    // Dropdown Action
+    public void onChangeTransport()
+    {
+        var isIPHost = _transportDropdown.value == 0 && _isHost;
+
+        _addressInput.interactable = !isIPHost;
+        if(_addressInput.interactable)
+        {
+            _addressPlaceholder.text = _transportDropdown.value == 0? _placeholderIPPrompt : _placeholderPhotonPrompt;
+        }
+        else
+        {
+            _addressPlaceholder.text = _placeholderIgnore;
+        }
+
+        if(isIPHost)
+        {
+            _addressInput.text = "";
+        }
     }
 
     // Button Actions
-    // public void goToLobby()
+    public void goToLobby() {
+        if(OnGoToLobby == null) {
+            return;
+        }
+
+        // Gather Info
+        var transport = _transportDropdown.value == 0? NetworkTransportTypes.Direct : NetworkTransportTypes.Relayed;
+        var address = _addressInput.text;
+
+        if(address == "" && (!_isHost || transport != NetworkTransportTypes.Direct)) {
+            return;
+        }
+
+        // Call Event
+        OnGoToLobby(_isHost, transport, address);
+    }
     public void back() => OnBack?.Invoke();
 }

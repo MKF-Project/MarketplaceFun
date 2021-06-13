@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConnectionMenuController : MonoBehaviour
+public class ConnectionMenu : MonoBehaviour
 {
     // Events
     public delegate void OnGoToLobbyDelegate(bool isHost, NetworkTransportTypes transport, string address);
@@ -33,15 +33,15 @@ public class ConnectionMenuController : MonoBehaviour
 
     private void Start()
     {
-        GameMenuController.OnJoinGame += () => initializeConnectionMenu(false);
-        GameMenuController.OnHostGame += () => initializeConnectionMenu(true);
+        GameMenu.OnJoinGame += () => initializeConnectionMenu(false);
+        GameMenu.OnHostGame += () => initializeConnectionMenu(true);
 
-        LoadingMenuController.OnCancel += () => MenusController.toggleMenu(gameObject);
+        LoadingMenu.OnCancel += () => MenuController.toggleMenu(gameObject);
     }
 
     private void initializeConnectionMenu(bool isHost)
     {
-        MenusController.toggleMenu(gameObject);
+        MenuController.toggleMenu(gameObject);
 
         _isHost = isHost;
         _menuTitle.text = $"{(isHost? _hostText : _joinText)} Game:";

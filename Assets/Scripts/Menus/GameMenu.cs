@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMenuController : MonoBehaviour
+public class GameMenu : MonoBehaviour
 {
     // Events
     public delegate void OnJoinGameDelegate();
@@ -17,11 +17,11 @@ public class GameMenuController : MonoBehaviour
     private void Start()
     {
         // Start Enabled
-        MenusController.toggleMenu(gameObject);
+        MenuController.toggleMenu(gameObject);
 
         OnQuitGame += () => Application.Quit();
 
-        ConnectionMenuController.OnBack += () => MenusController.toggleMenu(gameObject);
+        ConnectionMenu.OnBack += () => MenuController.toggleMenu(gameObject);
     }
 
     // Button Actions

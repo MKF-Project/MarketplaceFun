@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LobbyMenuController : MonoBehaviour
+public class LobbyMenu : MonoBehaviour
 {
     private void Start()
     {
-        
+
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoadingMenuController : MonoBehaviour
+public class LoadingMenu : MonoBehaviour
 {
     // Events
     public delegate void OnCancelDelegate();
@@ -15,11 +15,11 @@ public class LoadingMenuController : MonoBehaviour
 
     private void Start()
     {
-        ConnectionMenuController.OnGoToLobby += (bool isHost, NetworkTransportTypes _, string address) => initializeLoadingMenu(isHost, address);
+        ConnectionMenu.OnGoToLobby += (bool isHost, NetworkTransportTypes _, string address) => initializeLoadingMenu(isHost, address);
     }
 
     private void initializeLoadingMenu(bool isHost, string address) {
-        MenusController.toggleMenu(gameObject);
+        MenuController.toggleMenu(gameObject);
         _loadMessage.text = isHost? hostMessage : $"{joinMessage} {address}...";
     }
 

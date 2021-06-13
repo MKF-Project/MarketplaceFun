@@ -6,20 +6,20 @@ public class CameraMove : MonoBehaviour
 {
 
     public Transform Camera;
-    
+
     public bool MouseLocked;
 
     public float Sensitivity;
 
     private float _mouseX;
-    
+
     private float _mouseY;
 
-    void Update()
+    private void Update()
     {
         if (MouseLocked)
         {
-            Cursor.visible = false; 
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
             _mouseX = Input.GetAxis("Mouse X") * Sensitivity;

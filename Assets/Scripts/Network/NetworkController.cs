@@ -22,6 +22,12 @@ public class NetworkController : MonoBehaviour
     public delegate void OnDisconnectedDelegate(bool wasHost);
     public static event OnDisconnectedDelegate OnDisconnected;
 
+    public delegate void OnOtherClientConnectedDelegate(ulong otherClientID);
+    public static event OnOtherClientConnectedDelegate OnOtherClientConnected;
+
+    public delegate void OnOtherClientDisconnectedDelegate(ulong otherClientID);
+    public static event OnOtherClientDisconnectedDelegate OnOtherClientDisconnected;
+
     private const ushort _port = 53658;
 
     private NetworkManager _netManager = null;
@@ -76,12 +82,15 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         _netManager = GetComponent<NetworkManager>();
         _ipTransport = GetComponent<UNetTransport>();
         _relayedTransport = GetComponent<PhotonRealtimeTransport>();
 
+        // Listen on NetworkManager Events
+        _netManager.OnClientConnectedCallback += clientConnectEvent;
+        _netManager.OnClientDisconnectCallback += clientDisconnectEvent;
         // Event Subscribings
         ConnectionMenu.OnGoToLobby += startLobbyConnection;
 
@@ -162,6 +171,39 @@ public class NetworkController : MonoBehaviour
         }
     }
 
+    private void clientConnectEvent(ulong clientID) => handleClientEvent(clientID, false);
+    private void clientDisconnectEvent(ulong clientID) => handleClientEvent(clientID, true);
+
+    private void handleClientEvent(ulong clientID, bool isDisconnect)
+    {
+        #if UNITY_EDITOR
+            Debug.Log($"{(clientID == _netManager.LocalClientId? "Local" : "Other")} Client {(isDisconnect? "disconnected" : "connected")}. ID: {clientID}, Local: {_netManager.LocalClientId}");
+        #endif
+        if(clientID != _netManager.LocalClientId) // Other Client Event
+        {
+            if(isDisconnect)
+            {
+                OnOtherClientDisconnected?.Invoke(clientID);
+            }
+            else
+            {
+                OnOtherClientConnected?.Invoke(clientID);
+            }
+        }
+        else // Local Client has done something
+        {
+            // We don't need to consider Local Client -> Remote Host connection here,
+            // that's handled on the self unsubscribing event created during startLobbyConnection()
+
+            if(isDisconnect)
+            {
+                // Local Client has lost connection to the remote Host
+                // Intended disconnection is handled on the disconnect() method
+                OnDisconnected?.Invoke(false);
+            }
+        }
+    }
+
     private IEnumerator disconnectAfterDelay(float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
@@ -185,6 +227,7 @@ public class NetworkController : MonoBehaviour
         // else if(_netManager.IsServer)
         // {
         //     _netManager.StopServer();
+        //     OnDisconnected?.Invoke(true);
         // }
         else if(_netManager.IsClient)
         {

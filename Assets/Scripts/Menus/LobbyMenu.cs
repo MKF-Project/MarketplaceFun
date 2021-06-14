@@ -1,8 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 
-public class LobbyMenu : MonoBehaviour
+public class LobbyMenu : NetworkBehaviour
 {
     // Events
     public delegate void OnStartMatchDelegate();
@@ -11,15 +16,37 @@ public class LobbyMenu : MonoBehaviour
     public delegate void OnCancelMatchDelegate();
     public static event OnCancelMatchDelegate OnCancelMatch;
 
+    [SerializeField] private Text _playerList = null;
+
     private void Awake()
     {
-        NetworkController.OnConnected += (isHost) => this.toggleMenu();
+        // Opening Event
+        NetworkController.OnConnected += openLobbyMenu;
 
+        //////TEMP
         OnStartMatch += () => print("Start Match");
     }
 
+    private void Destroy()
+    {
+        // Opening Event
+        NetworkController.OnConnected -= openLobbyMenu;
+    }
+
+    private void openLobbyMenu(bool isHost)
+    {
+        this.toggleMenu();
+    }
+
     // Button Actions
-    public void startMatch() => OnStartMatch?.Invoke();
+    public void startMatch()
+    {
+        if(IsHost)
+        {
+            OnStartMatch?.Invoke();
+        }
+    }
+
     public void cancelMatch() => OnCancelMatch?.Invoke();
 
 }

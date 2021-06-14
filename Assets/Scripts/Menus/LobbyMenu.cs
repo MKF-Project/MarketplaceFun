@@ -17,6 +17,7 @@ public class LobbyMenu : NetworkBehaviour
     public static event OnCancelMatchDelegate OnCancelMatch;
 
     [SerializeField] private Text _playerList = null;
+    [SerializeField] private Button _startGame = null;
 
     private void Awake()
     {
@@ -31,6 +32,11 @@ public class LobbyMenu : NetworkBehaviour
     {
         // Opening Event
         NetworkController.OnConnected -= openLobbyMenu;
+    }
+
+    private void OnEnable()
+    {
+        _startGame.interactable = IsHost;
     }
 
     private void openLobbyMenu(bool isHost)

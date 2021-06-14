@@ -3547,6 +3547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerList: {fileID: 96119048}
+  _startGame: {fileID: 691198543}
 --- !u!114 &1639980620
 MonoBehaviour:
   m_ObjectHideFlags: 0

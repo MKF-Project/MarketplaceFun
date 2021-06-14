@@ -6,6 +6,7 @@ using MLAPI;
 using MLAPI.Transports;
 using MLAPI.Transports.UNET;
 using MLAPI.Transports.PhotonRealtime;
+using MLAPI.SceneManagement;
 
 public enum NetworkTransportTypes {
   Direct,
@@ -91,8 +92,10 @@ public class NetworkController : MonoBehaviour
         // Listen on NetworkManager Events
         _netManager.OnClientConnectedCallback += clientConnectEvent;
         _netManager.OnClientDisconnectCallback += clientDisconnectEvent;
+
         // Event Subscribings
         ConnectionMenu.OnGoToLobby += startLobbyConnection;
+        LobbyMenu.OnStartMatch += () => switchNetworkScene("SampleScene");
 
         // Disconnect Events
         LoadingMenu.OnCancel += disconnect;
@@ -202,6 +205,21 @@ public class NetworkController : MonoBehaviour
                 OnDisconnected?.Invoke(false);
             }
         }
+    }
+
+    private void switchNetworkScene(string sceneName)
+    {
+        if(!_netManager.IsServer)
+        {
+            return;
+        }
+
+        if(!_netManager.NetworkConfig.EnableSceneManagement || !_netManager.NetworkConfig.RegisteredScenes.Contains(sceneName))
+        {
+            return;
+        }
+
+        NetworkSceneManager.SwitchScene(sceneName);
     }
 
     private IEnumerator disconnectAfterDelay(float delaySeconds)

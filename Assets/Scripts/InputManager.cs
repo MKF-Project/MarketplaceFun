@@ -32,4 +32,19 @@ public class InputManager : MonoBehaviour
         WalkButton = Input.GetButton("Walk");
     }
 
+    public static bool FireButton()
+    {
+        return Input.GetMouseButton(0);
+    }
+
+    public static bool PressFireButton()
+    {
+        return Input.GetMouseButtonDown(0);
+    }
+
+    public static bool ReleaseFireButton()
+    {
+        return Input.GetMouseButtonDown(0);
+    }
+
 }

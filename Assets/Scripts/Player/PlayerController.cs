@@ -27,6 +27,8 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    public bool isFrozen = false;
+
     private Camera _playerCamera;
     private PlayerMovement _movementScript;
     private CameraMove _cameraScript;
@@ -42,7 +44,8 @@ public class PlayerController : NetworkBehaviour
         OnPlayerBehaviourChanged += updateBehaviourState;
 
         // Button events
-        InputManager.OnEscapeKeyPress += toggleFreezePlayer;
+        InputManager.OnEscapeKeyPress += freezePlayer;
+        ExitMenu.OnStayOnMatch += unfreezePlayer;
     }
 
     private void Start()
@@ -55,7 +58,8 @@ public class PlayerController : NetworkBehaviour
     {
         OnPlayerBehaviourChanged -= updateBehaviourState;
 
-        InputManager.OnEscapeKeyPress -= toggleFreezePlayer;
+        InputManager.OnEscapeKeyPress -= freezePlayer;
+        ExitMenu.OnStayOnMatch -= unfreezePlayer;
 
         usePlayerCamera(false);
     }
@@ -77,12 +81,16 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    private void toggleFreezePlayer()
+    private void freezePlayer() => toggleFreeze(true);
+    private void unfreezePlayer() => toggleFreeze(false);
+    private void toggleFreeze(bool frozen)
     {
-        if(IsOwner)
+        if(IsOwner && isFrozen != frozen)
         {
-            _cameraScript.MouseLocked = !_cameraScript.MouseLocked;
-            _movementScript.FreezeMovement = !_movementScript.FreezeMovement;
+            isFrozen = frozen;
+
+            _cameraScript.MouseLocked = !frozen;
+            _movementScript.FreezeMovement = frozen;
         }
     }
 }

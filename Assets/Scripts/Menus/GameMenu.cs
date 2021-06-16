@@ -19,11 +19,22 @@ public class GameMenu : MonoBehaviour
         OnQuitGame += () => Application.Quit();
 
         ConnectionMenu.OnBack += this.toggleMenu;
+        NetworkController.OnDisconnected += returnAfterDisconnect;
+    }
 
-        NetworkController.OnDisconnected += (wasHost) => {
-            this.toggleMenu();
-            print($"{(wasHost? "Host" : "Client")} disconnected");
-        };
+    private void OnDestroy()
+    {
+        ConnectionMenu.OnBack -= this.toggleMenu;
+        NetworkController.OnDisconnected -= returnAfterDisconnect;
+    }
+
+    private void returnAfterDisconnect(bool wasHost, bool wasIntended)
+    {
+        this.toggleMenu();
+
+        #if UNITY_EDITOR
+            print($"{(wasHost? "Host" : "Client")} {(wasIntended? "disconnected" : "lost connection")}.");
+        #endif
     }
 
     // Button Actions

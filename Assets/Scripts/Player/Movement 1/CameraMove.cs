@@ -17,11 +17,12 @@ public class CameraMove : MonoBehaviour
 
     private void Update()
     {
+        // Update Mouse lock State
+        Cursor.visible = !MouseLocked;
+        Cursor.lockState = MouseLocked? CursorLockMode.Locked : CursorLockMode.None;
+
         if (MouseLocked)
         {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-
             _mouseX = Input.GetAxis("Mouse X") * Sensitivity;
             _mouseY = Input.GetAxis("Mouse Y") * Sensitivity;
 
@@ -29,5 +30,6 @@ public class CameraMove : MonoBehaviour
 
             Camera.Rotate(Vector3.left, _mouseY);
         }
+
     }
 }

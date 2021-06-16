@@ -28,7 +28,7 @@ public class LobbyMenu : NetworkBehaviour
         OnStartMatch += () => print("Start Match");
     }
 
-    private void Destroy()
+    private void OnDestroy()
     {
         // Opening Event
         NetworkController.OnConnected -= openLobbyMenu;

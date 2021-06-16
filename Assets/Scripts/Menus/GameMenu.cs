@@ -26,14 +26,6 @@ public class GameMenu : MonoBehaviour
         };
     }
 
-    private void Start()
-    {
-        // Start Enabled
-        // This method *MUST* be run on Start, so that the other menus have the chance
-        // to subscribe their events and run their setups before they get deactivated here.
-        this.toggleMenu();
-    }
-
     // Button Actions
     public void joinGame() => OnJoinGame?.Invoke();
     public void hostGame() => OnHostGame?.Invoke();

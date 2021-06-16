@@ -15,10 +15,15 @@ public class LoadingMenu : MonoBehaviour
 
     private void Awake()
     {
-        ConnectionMenu.OnGoToLobby += (bool isHost, NetworkTransportTypes _, string address) => initializeLoadingMenu(isHost, address);
+        ConnectionMenu.OnGoToLobby += initializeLoadingMenu;
     }
 
-    private void initializeLoadingMenu(bool isHost, string address) {
+    private void OnDestroy()
+    {
+        ConnectionMenu.OnGoToLobby -= initializeLoadingMenu;
+    }
+
+    private void initializeLoadingMenu(bool isHost, NetworkTransportTypes type, string address) {
         this.toggleMenu();
         _loadMessage.text = isHost? hostMessage : $"{joinMessage} {address}...";
     }

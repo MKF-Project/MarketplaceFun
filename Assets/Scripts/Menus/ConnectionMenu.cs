@@ -33,12 +33,22 @@ public class ConnectionMenu : MonoBehaviour
 
     private void Awake()
     {
-        GameMenu.OnJoinGame += () => initializeConnectionMenu(false);
-        GameMenu.OnHostGame += () => initializeConnectionMenu(true);
+        GameMenu.OnJoinGame += initializeJoinMenu;
+        GameMenu.OnHostGame += initializeHostMenu;
 
         LoadingMenu.OnCancel += this.toggleMenu;
     }
 
+    private void OnDestroy()
+    {
+        GameMenu.OnJoinGame -= initializeJoinMenu;
+        GameMenu.OnHostGame -= initializeHostMenu;
+
+        LoadingMenu.OnCancel -= this.toggleMenu;
+    }
+
+    private void initializeJoinMenu() => initializeConnectionMenu(false);
+    private void initializeHostMenu() => initializeConnectionMenu(true);
     private void initializeConnectionMenu(bool isHost)
     {
         MenuManager.toggleMenu(gameObject);

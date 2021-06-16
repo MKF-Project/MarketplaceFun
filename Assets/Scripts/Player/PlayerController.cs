@@ -40,6 +40,9 @@ public class PlayerController : NetworkBehaviour
 
         // Listen on OnPlayerBehaviourChanged event
         OnPlayerBehaviourChanged += updateBehaviourState;
+
+        // Button events
+        InputManager.OnEscapeKeyPress += toggleFreezePlayer;
     }
 
     private void Start()
@@ -51,6 +54,8 @@ public class PlayerController : NetworkBehaviour
     private void OnDestroy()
     {
         OnPlayerBehaviourChanged -= updateBehaviourState;
+
+        InputManager.OnEscapeKeyPress -= toggleFreezePlayer;
 
         usePlayerCamera(false);
     }
@@ -69,6 +74,15 @@ public class PlayerController : NetworkBehaviour
         {
             _playerCamera.enabled = usePlayerCamera;
             ObjectsManager.OverviewCamera?.SetActive(!usePlayerCamera);
+        }
+    }
+
+    private void toggleFreezePlayer()
+    {
+        if(IsOwner)
+        {
+            _cameraScript.MouseLocked = !_cameraScript.MouseLocked;
+            _movementScript.FreezeMovement = !_movementScript.FreezeMovement;
         }
     }
 }

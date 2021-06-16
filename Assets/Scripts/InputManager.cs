@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    // Events
+    public delegate void OnEscapeKeyPressDelegate();
+    public static event OnEscapeKeyPressDelegate OnEscapeKeyPress;
+
     public static InputManager Instance { get; private set; }
 
     public float Frontal;
@@ -12,7 +16,6 @@ public class InputManager : MonoBehaviour
     public float Lateral;
 
     public bool WalkButton;
-    
 
     public void Awake()
     {
@@ -25,11 +28,20 @@ public class InputManager : MonoBehaviour
         Frontal = Input.GetAxis("Vertical");
         Lateral = Input.GetAxis("Horizontal");
         WalkButtonUpdate();
+        EscapeKeyUpdate();
     }
 
     private void WalkButtonUpdate()
     {
         WalkButton = Input.GetButton("Walk");
+    }
+
+    private void EscapeKeyUpdate()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnEscapeKeyPress?.Invoke();
+        }
     }
 
 }

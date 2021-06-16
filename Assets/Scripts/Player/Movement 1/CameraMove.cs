@@ -7,7 +7,7 @@ public class CameraMove : MonoBehaviour
 
     public Transform Camera;
 
-    public bool MouseLocked;
+    public bool MouseLocked = true;
 
     public float Sensitivity;
 

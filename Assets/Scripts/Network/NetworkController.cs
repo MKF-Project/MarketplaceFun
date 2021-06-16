@@ -20,7 +20,7 @@ public class NetworkController : MonoBehaviour
     public delegate void OnConnectedDelegate(bool isHost);
     public static event OnConnectedDelegate OnConnected;
 
-    public delegate void OnDisconnectedDelegate(bool wasHost, bool wasIntented);
+    public delegate void OnDisconnectedDelegate(bool wasHost, bool connectionWasLost);
     public static event OnDisconnectedDelegate OnDisconnected;
 
     public delegate void OnOtherClientConnectedDelegate(ulong otherClientID);
@@ -99,6 +99,7 @@ public class NetworkController : MonoBehaviour
         // Disconnect Events
         LoadingMenu.OnCancel += disconnect;
         LobbyMenu.OnCancelMatch += disconnect;
+        ExitMenu.OnLeaveMatch += disconnect;
     }
 
     private void startLobbyConnection(bool isHost, NetworkTransportTypes transportType, string address)
@@ -201,7 +202,7 @@ public class NetworkController : MonoBehaviour
             {
                 // Local Client has lost connection to the remote Host
                 // Intended disconnection is handled on the disconnect() method
-                OnDisconnected?.Invoke(false, false);
+                OnDisconnected?.Invoke(false, true);
             }
         }
     }
@@ -238,7 +239,7 @@ public class NetworkController : MonoBehaviour
         if(_netManager.IsHost)
         {
             _netManager.StopHost();
-            OnDisconnected?.Invoke(true, true);
+            OnDisconnected?.Invoke(true, false);
         }
         /* Not valid for this Game, as all Servers are also Hosts */
         // else if(_netManager.IsServer)
@@ -249,7 +250,7 @@ public class NetworkController : MonoBehaviour
         else if(_netManager.IsClient)
         {
             _netManager.StopClient();
-            OnDisconnected?.Invoke(false, true);
+            OnDisconnected?.Invoke(false, false);
         }
     }
 }

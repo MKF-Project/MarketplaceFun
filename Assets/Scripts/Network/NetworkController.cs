@@ -31,11 +31,11 @@ public class NetworkController : MonoBehaviour
 
     private const ushort _port = 53658;
 
-    private NetworkManager _netManager = null;
-    private UNetTransport _ipTransport = null;
-    private PhotonRealtimeTransport _relayedTransport = null;
+    private static NetworkManager _netManager = null;
+    private static UNetTransport _ipTransport = null;
+    private static PhotonRealtimeTransport _relayedTransport = null;
 
-    private NetworkTransport _transport
+    private  static NetworkTransport _transport
     {
         get
         {
@@ -51,7 +51,7 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    private NetworkTransportTypes _transportType
+    private static NetworkTransportTypes _transportType
     {
         get
         {
@@ -95,7 +95,6 @@ public class NetworkController : MonoBehaviour
 
         // Event Subscribings
         ConnectionMenu.OnGoToLobby += startLobbyConnection;
-        LobbyMenu.OnStartMatch += () => switchNetworkScene("SampleScene");
 
         // Disconnect Events
         LoadingMenu.OnCancel += disconnect;
@@ -207,7 +206,7 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    private void switchNetworkScene(string sceneName)
+    public static void switchNetworkScene(string sceneName)
     {
         if(!_netManager.IsServer)
         {
@@ -228,7 +227,7 @@ public class NetworkController : MonoBehaviour
         disconnect();
     }
 
-    public void disconnect()
+    public static void disconnect()
     {
         // Can't disconnect if you're neither a Server nor Client (Host is both)
         if(!(_netManager.IsServer || _netManager.IsClient))

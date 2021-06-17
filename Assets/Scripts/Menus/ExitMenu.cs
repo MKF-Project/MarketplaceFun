@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using MLAPI;
 
-public class ExitMenu : MonoBehaviour
+public class ExitMenu : NetworkBehaviour
 {
     // Events
     public delegate void OnLeaveMatchDelegate();
@@ -11,8 +13,13 @@ public class ExitMenu : MonoBehaviour
     public delegate void OnStayOnMatchDelegate();
     public static event OnStayOnMatchDelegate OnStayOnMatch;
 
+    private const string hostPrompt = "Stop";
+    private const string clientPrompt = "Leave";
+    [SerializeField] private Text _exitPrompt = null;
+
     private void Awake()
     {
+        _exitPrompt.text = $"{(IsHost? hostPrompt : clientPrompt)} Match?";
         InputManager.OnEscapeKeyPress += handleMenuState;
     }
 

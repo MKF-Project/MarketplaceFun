@@ -32,7 +32,7 @@ public class SceneManager : MonoBehaviour
         // And so should delete ourselves
         if(GameObject.FindGameObjectsWithTag(_selfTag).Length > 1)
         {
-            Destroy(gameObject);
+            DestroyImmediate(gameObject);
         }
     }
 

@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
-public class CameraMove : MonoBehaviour
+public class CameraMove : NetworkBehaviour
 {
-
     public Transform Camera;
 
     public bool MouseLocked = true;
@@ -17,9 +17,7 @@ public class CameraMove : MonoBehaviour
 
     private void Update()
     {
-        // Update Mouse lock State
-        Cursor.visible = !MouseLocked;
-        Cursor.lockState = MouseLocked? CursorLockMode.Locked : CursorLockMode.None;
+        updateMouseLock(MouseLocked);
 
         if (MouseLocked)
         {
@@ -30,6 +28,14 @@ public class CameraMove : MonoBehaviour
 
             Camera.Rotate(Vector3.left, _mouseY);
         }
+    }
 
+    private void updateMouseLock(bool shouldLock)
+    {
+        MouseLocked = shouldLock;
+
+        // Update Mouse lock State
+        Cursor.visible = !MouseLocked;
+        Cursor.lockState = MouseLocked? CursorLockMode.Locked : CursorLockMode.None;
     }
 }

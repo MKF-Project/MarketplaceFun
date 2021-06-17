@@ -51,7 +51,7 @@ public class PlayerController : NetworkBehaviour
     private void Start()
     {
         // Set initial behaviour state for this player
-        updateBehaviourState(playerBehaviourEnabled);
+        updateBehaviourState(IsOwner && playerBehaviourEnabled);
     }
 
     private void OnDestroy()

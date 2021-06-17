@@ -1,45 +1,55 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MLAPI;
 using UnityEngine;
 
-public class Throw : MonoBehaviour
+public class Throw : NetworkBehaviour
 {
-    public GameObject Bomb;
+    public GameObject BombPrefab;
+    private GameObject _bomb;
     private Rigidbody _bombRigidbody;
     public float Strength;
+
+    public float ArcThrow;
+    
+    public Vector3 targetFake;
     //public Camera Camera;
 
     //public GameObject InstantiatedBomb;
     // Start is called before the first frame update
     private void Awake()
     {
-        _bombRigidbody = Bomb.GetComponent<Rigidbody>();
+        if (IsServer)
+        {
+            _bomb = Instantiate(BombPrefab, Vector3.zero, Quaternion.identity);
+            _bomb.GetComponent<NetworkObject>().Spawn();
+            _bombRigidbody = _bomb.GetComponent<Rigidbody>();
+            _bomb.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     private void Update()
     {
-        Vector3 screenMiddle = new Vector3();
-        screenMiddle.x = Screen.width / 2;
-        screenMiddle.y = Screen.height / 2;
-        Ray ray = Camera.main.ScreenPointToRay(screenMiddle);
-            
-            
-        Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);
-        _bombRigidbody.useGravity = true;
-
-        if (InputManager.FireButton())
+        if (IsOwner)
         {
-            Bomb.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
-            Bomb.SetActive(true);
-            _bombRigidbody.useGravity = false;
-        }
+            Vector3 screenMiddle = new Vector3();
+            screenMiddle.x = Screen.width / 2;
+            screenMiddle.y = Screen.height / 2;
+            Ray ray = Camera.main.ScreenPointToRay(screenMiddle);
 
-        if(InputManager.ReleaseFireButton())
-        {
-            _bombRigidbody.useGravity = true;
-            _bombRigidbody.AddForce(ray.direction  * Strength, ForceMode.Force);
-            
+            Vector3 target = ray.direction * Strength;
+            target += Vector3.up * ArcThrow;
+
+            if (InputManager.PressFireButton())
+            {
+                _bombRigidbody.velocity = Vector3.zero;
+                _bomb.transform.position = new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
+                _bomb.SetActive(true);
+                _bombRigidbody.AddForce(target, ForceMode.Impulse);
+                targetFake = target;
+            }
         }
     }
+
 }

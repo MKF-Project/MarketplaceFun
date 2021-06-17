@@ -17,6 +17,11 @@ public class CameraMove : NetworkBehaviour
 
     private void Update()
     {
+        if(!IsOwner)
+        {
+            return;
+        }
+
         updateMouseLock(MouseLocked);
 
         if (MouseLocked)
@@ -27,6 +32,14 @@ public class CameraMove : NetworkBehaviour
             transform.Rotate(Vector3.up, _mouseX);
 
             Camera.Rotate(Vector3.left, _mouseY);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if(IsOwner)
+        {
+            updateMouseLock(false);
         }
     }
 

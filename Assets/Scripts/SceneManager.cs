@@ -24,9 +24,6 @@ public class SceneManager : MonoBehaviour
         LobbyMenu.OnStartMatch += loadMatch;
         NetworkController.OnDisconnected += returnToMainMenu;
 
-        // TEMP
-        OnMainMenuLostConnection += () => Debug.Log("CONNECTIONLOST, RETURNED TO MAIN MENU");
-
         // If, after moving to DontDestroyOnLoad, we detect more than one
         // SceneManager object, that means we are the duplicate one that came after
         // And so should delete ourselves
@@ -59,7 +56,7 @@ public class SceneManager : MonoBehaviour
             }
 
             // If we disconnected on purpose, no action is required
-            // howerver, if we lost connection, defer event triger until after scene components
+            // however, if we lost connection, defer event triger until after scene components
             //have been started
             if(connectionWasLost)
             {

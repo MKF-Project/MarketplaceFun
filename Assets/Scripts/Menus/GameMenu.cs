@@ -11,34 +11,24 @@ public class GameMenu : MonoBehaviour
     public delegate void OnHostGameDelegate();
     public static event OnHostGameDelegate OnHostGame;
 
-    public delegate void OnQuitGameDelegate();
-    public static event OnQuitGameDelegate OnQuitGame;
-
     private void Awake()
     {
-        OnQuitGame += () => Application.Quit();
-
         ConnectionMenu.OnBack += this.toggleMenu;
-        NetworkController.OnDisconnected += returnAfterDisconnect;
+        DisconnectMenu.OnPressOK += this.toggleMenu;
+        NetworkController.OnDisconnected += returnFromLobby;
     }
 
     private void OnDestroy()
     {
         ConnectionMenu.OnBack -= this.toggleMenu;
-        NetworkController.OnDisconnected -= returnAfterDisconnect;
+        DisconnectMenu.OnPressOK -= this.toggleMenu;
+        NetworkController.OnDisconnected -= returnFromLobby;
     }
 
-    private void returnAfterDisconnect(bool wasHost, bool wasIntended)
-    {
-        this.toggleMenu();
-
-        #if UNITY_EDITOR
-            print($"{(wasHost? "Host" : "Client")} {(wasIntended? "disconnected" : "lost connection")}.");
-        #endif
-    }
+    private void returnFromLobby(bool wasHost, bool wasIntended) => this.toggleMenu();
 
     // Button Actions
     public void joinGame() => OnJoinGame?.Invoke();
     public void hostGame() => OnHostGame?.Invoke();
-    public void quitGame() => OnQuitGame?.Invoke();
+    public void quitGame() => Application.Quit();
 }

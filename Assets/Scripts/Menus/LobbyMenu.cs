@@ -38,8 +38,10 @@ public class LobbyMenu : NetworkBehaviour
 
     private void openLobbyMenu(bool isHost)
     {
-        this.toggleMenu();
+
+        this.toggleMenuDelayed();
     }
+
 
     // Button Actions
     public void startMatch()

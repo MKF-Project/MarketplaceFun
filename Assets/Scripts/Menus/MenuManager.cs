@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
+    private static MenuManager _instance;
+
     private const string menuTag = "Menu";
     private static List<GameObject> _menus;
 
@@ -11,6 +13,7 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
+        _instance = _instance ?? this;
         _menus = _menus ?? new List<GameObject>(gameObject.FindChildrenWithTag(menuTag));
         initializeMenus();
     }
@@ -23,7 +26,17 @@ public class MenuManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        _menus = null;
+        if(_instance == this)
+        {
+            _instance = null;
+            _menus = null;
+        }
+    }
+
+    private void initializeMenus()
+    {
+        // Activate all menus and trigger their Awake() functions
+        _menus.ForEach(menu => menu.SetActive(true));
     }
 
     public static void toggleMenu(GameObject activeMenu)
@@ -43,9 +56,11 @@ public class MenuManager : MonoBehaviour
         _menus.ForEach(menu => menu.SetActive(menu == activeMenu));
     }
 
-    private void initializeMenus()
+    public static void toggleMenuDelayed(GameObject activeMenu) => _instance.StartCoroutine(menuToggleCoroutine(activeMenu));
+
+    private static IEnumerator menuToggleCoroutine(GameObject activeMenu)
     {
-        // Activate all menus and trigger their Awake() functions
-        _menus.ForEach(menu => menu.SetActive(true));
+        yield return new WaitForEndOfFrame();
+        toggleMenu(activeMenu);
     }
 }

@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
 
     private void EscapeKeyUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Q))
         {
             OnEscapeKeyPress?.Invoke();
         }

@@ -29,13 +29,16 @@ public class NetworkController : MonoBehaviour
     public delegate void OnOtherClientDisconnectedDelegate(ulong otherClientID);
     public static event OnOtherClientDisconnectedDelegate OnOtherClientDisconnected;
 
+    // Static
+    private static NetworkController _instance = null;
+
     private const ushort _port = 53658;
 
-    private static NetworkManager _netManager = null;
-    private static UNetTransport _ipTransport = null;
-    private static PhotonRealtimeTransport _relayedTransport = null;
+    private NetworkManager _netManager;
+    private UNetTransport _ipTransport;
+    private PhotonRealtimeTransport _relayedTransport;
 
-    private  static NetworkTransport _transport
+    private NetworkTransport _transport
     {
         get
         {
@@ -51,7 +54,7 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    private static NetworkTransportTypes _transportType
+    private NetworkTransportTypes _transportType
     {
         get
         {
@@ -85,6 +88,8 @@ public class NetworkController : MonoBehaviour
 
     private void Awake()
     {
+        _instance = _instance ?? this;
+
         _netManager = GetComponent<NetworkManager>();
         _ipTransport = GetComponent<UNetTransport>();
         _relayedTransport = GetComponent<PhotonRealtimeTransport>();
@@ -100,6 +105,24 @@ public class NetworkController : MonoBehaviour
         LoadingMenu.OnCancel += disconnect;
         LobbyMenu.OnCancelMatch += disconnect;
         ExitMenu.OnLeaveMatch += disconnect;
+
+        if(_instance != this)
+        {
+            DestroyImmediate(gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Disconnect from Events
+        _netManager.OnClientConnectedCallback -= clientConnectEvent;
+        _netManager.OnClientDisconnectCallback -= clientDisconnectEvent;
+
+        ConnectionMenu.OnGoToLobby -= startLobbyConnection;
+
+        LoadingMenu.OnCancel -= disconnect;
+        LobbyMenu.OnCancelMatch -= disconnect;
+        ExitMenu.OnLeaveMatch -= disconnect;
     }
 
     private void startLobbyConnection(bool isHost, NetworkTransportTypes transportType, string address)
@@ -207,7 +230,8 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public static void switchNetworkScene(string sceneName)
+    public static void switchNetworkScene(string sceneName) => _instance.switchManagerNetworkScene(sceneName);
+    private void switchManagerNetworkScene(string sceneName)
     {
         if(!_netManager.IsServer)
         {
@@ -228,7 +252,8 @@ public class NetworkController : MonoBehaviour
         disconnect();
     }
 
-    public static void disconnect()
+    public static void disconnect() => _instance.managerDisconnect();
+    private void managerDisconnect()
     {
         // Can't disconnect if you're neither a Server nor Client (Host is both)
         if(!(_netManager.IsServer || _netManager.IsClient))

@@ -152,9 +152,9 @@ public class NetworkController : MonoBehaviour
         // Defer connection event to trigger together with the _netManager events
         if(isHost)
         {
-            // Run self unsubscribing Action on Host Started
-            Action hostIsConnected = null;
-            hostIsConnected = () => {
+            // Run self unsubscribing Local Function on Host Started
+            void hostIsConnected()
+            {
                 _netManager.OnServerStarted -= hostIsConnected;
 
                 #if UNITY_EDITOR
@@ -162,15 +162,15 @@ public class NetworkController : MonoBehaviour
                 #endif
 
                 OnConnected?.Invoke(true);
-            };
+            }
 
             _netManager.OnServerStarted += hostIsConnected;
         }
         else
         {
-            // Run self unsubscribing Action on this Client connected
-            Action<ulong> clientIsConnected = null;
-            clientIsConnected = (ulong clientID) => {
+            // Run self unsubscribing Local Function on this Client connected
+            void clientIsConnected(ulong clientID)
+            {
                 if(clientID == _netManager.LocalClientId)
                 {
                     _netManager.OnClientConnectedCallback -= clientIsConnected;
@@ -181,7 +181,7 @@ public class NetworkController : MonoBehaviour
 
                     OnConnected?.Invoke(false);
                 }
-            };
+            }
 
             _netManager.OnClientConnectedCallback += clientIsConnected;
         }

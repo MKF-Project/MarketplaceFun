@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Realtime;
 using UnityEngine;
 
 public class SceneBuilder : MonoBehaviour
@@ -11,8 +12,10 @@ public class SceneBuilder : MonoBehaviour
     public GameObject FloorPrefab;
 
     public Transform SceneManager;
+    
+    
 
-    private void Awake()
+    private void Start()
     {
         Build(18, 12, 85);
     }
@@ -28,6 +31,8 @@ public class SceneBuilder : MonoBehaviour
         {
             height = height + 1;
         }
+        
+        
         
 
         List<Vector3> listFreeSpaces = new List<Vector3>();
@@ -87,6 +92,7 @@ public class SceneBuilder : MonoBehaviour
                 }
                 
                 listFreeSpaces.Add(position);
+                
             }
         }
 
@@ -101,10 +107,16 @@ public class SceneBuilder : MonoBehaviour
             listFreeSpaces.RemoveAt(random);
             numberOfBreakableWalls--;
         }
-        
+
+       
+        Vector3 playerPosition1 = new Vector3(1*10, 6, 1*10);
+        Vector3 playerPosition2 = new Vector3(1*10, 6,  (height - 2)*10);
+        Vector3 playerPosition3 = new Vector3((width - 2)*10, 6, 1*10);
+        Vector3 playerPosition4 = new Vector3((width - 2)*10, 6, (height - 2)*10);
+        MatchManager.Instance.SpawnPlayers(playerPosition1, playerPosition2, playerPosition3, playerPosition4);
     }
 
-   
+    
 
     public bool isEven(int value)
     {

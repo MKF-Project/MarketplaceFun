@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="InputManager.cs" t="Include" />
+          <e p="MatchManager.cs" t="Include" />
           <e p="Network" t="Include">
             <e p="NetworkController.cs" t="Include" />
           </e>

@@ -17,7 +17,7 @@ public class SceneBuilder : MonoBehaviour
 
     private void Start()
     {
-        Build(18, 12, 85);
+        Build(18, 12, 10);
     }
 
     public void Build(int width, int height, int percentage)

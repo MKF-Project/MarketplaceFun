@@ -294,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b653b92df163674ea5a1e4c8ee60880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFrozen: 0
 --- !u!114 &8816987188999332814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   WalkSpeed: 2
+  FreezeMovement: 0
 --- !u!114 &-8703463587070590722
 MonoBehaviour:
   m_ObjectHideFlags: 0

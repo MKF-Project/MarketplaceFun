@@ -1,27 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
-public class CameraMove : MonoBehaviour
+public class CameraMove : NetworkBehaviour
 {
-
     public Transform Camera;
-    
-    public bool MouseLocked;
+
+    public bool MouseLocked = true;
 
     public float Sensitivity;
 
     private float _mouseX;
-    
+
     private float _mouseY;
 
-    void Update()
+    private void Update()
     {
+        if(!IsOwner)
+        {
+            return;
+        }
+
+        updateMouseLock(MouseLocked);
+
         if (MouseLocked)
         {
-            Cursor.visible = false; 
-            Cursor.lockState = CursorLockMode.Locked;
-
             _mouseX = Input.GetAxis("Mouse X") * Sensitivity;
             _mouseY = Input.GetAxis("Mouse Y") * Sensitivity;
 
@@ -29,5 +33,22 @@ public class CameraMove : MonoBehaviour
 
             Camera.Rotate(Vector3.left, _mouseY);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if(IsOwner)
+        {
+            updateMouseLock(false);
+        }
+    }
+
+    private void updateMouseLock(bool shouldLock)
+    {
+        MouseLocked = shouldLock;
+
+        // Update Mouse lock State
+        Cursor.visible = !MouseLocked;
+        Cursor.lockState = MouseLocked? CursorLockMode.Locked : CursorLockMode.None;
     }
 }

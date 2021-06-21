@@ -12,6 +12,8 @@ public class PlayerMovement : NetworkBehaviour
 
     public float WalkSpeed;
 
+    public bool FreezeMovement = false;
+
     private float _realSpeed;
 
     private float _verticalSpeed;
@@ -25,7 +27,7 @@ public class PlayerMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(IsOwner)
+        if(!FreezeMovement && IsOwner)
         {
             UpdateSpeed();
             Move();

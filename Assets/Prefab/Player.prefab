@@ -119,7 +119,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8816987188005979570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalPosition: {x: 0, y: 0.83, z: -0.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8816987188999332808}
@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 5765398794026265388}
   - component: {fileID: 8816987188999332814}
   - component: {fileID: -8703463587070590722}
+  - component: {fileID: -6045655609219840054}
   - component: {fileID: -2412267911150120978}
   - component: {fileID: 1675007421004648749}
   m_Layer: 0
@@ -293,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b653b92df163674ea5a1e4c8ee60880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFrozen: 0
 --- !u!114 &8816987188999332814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   WalkSpeed: 2
+  FreezeMovement: 0
 --- !u!114 &-8703463587070590722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +325,23 @@ MonoBehaviour:
   Camera: {fileID: 8816987188005979575}
   MouseLocked: 1
   Sensitivity: 2
+--- !u!114 &-6045655609219840054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816987188999332804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c897505851021e439498b7e0f594bd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BombPrefab: {fileID: 2952949016012933129, guid: 3b724fc8cd321a34d85744717d66bae0,
+    type: 3}
+  Strength: 10
+  ArcThrow: 10
+  targetFake: {x: 0, y: 0, z: 0}
 --- !u!114 &-2412267911150120978
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -34,6 +34,8 @@
             <e p="Movement 2" t="Include">
               <e p="PlayerMovement2.cs" t="Include" />
             </e>
+            <e p="Pick.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
             <e p="PlayerController.cs" t="Include" />
             <e p="PlayerManager.cs" t="Include" />
             <e p="Throw.cs" t="Include" />

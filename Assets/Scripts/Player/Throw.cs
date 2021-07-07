@@ -53,14 +53,14 @@ public class Throw : NetworkBehaviour
 
                 if (InputManager.PressFireButton())
                 {
-                    ThrowServerRpc(target, initialPosition);
+                    ThrowItem(target, initialPosition);
                 }
             }
         }
     }
 
-    [ServerRpc]
-    public void ThrowServerRpc(Vector3 target, Vector3 initialPosition)
+    //[ServerRpc]
+    public void ThrowItem(Vector3 target, Vector3 initialPosition)
     {
         Rigidbody itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;

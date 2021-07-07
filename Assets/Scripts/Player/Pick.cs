@@ -10,7 +10,7 @@ public class Pick : NetworkBehaviour
     public Transform HeldPosition;
     public GameObject PickItemButton;
     private bool _canShowButton;
-    private bool _canPickUpItem;
+    public  bool _canPickUpItem;
     public ItemGenerator _ItemGenerator;
 
     private void Awake()

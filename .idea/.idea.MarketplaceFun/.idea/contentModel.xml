@@ -11,6 +11,7 @@
           <e p="InputManager.cs" t="Include" />
           <e p="Itens" t="Include">
             <e p="Item.cs" t="Include" />
+            <e p="ItemGenerator.cs" t="Include" />
           </e>
           <e p="MatchManager.cs" t="Include" />
           <e p="Menus" t="Include">
@@ -24,6 +25,7 @@
           </e>
           <e p="Network" t="Include">
             <e p="NetworkController.cs" t="Include" />
+            <e p="NetworkItemManager.cs" t="Include" />
           </e>
           <e p="ObjectsManager.cs" t="Include" />
           <e p="Player" t="Include">
@@ -34,6 +36,8 @@
             <e p="Movement 2" t="Include">
               <e p="PlayerMovement2.cs" t="Include" />
             </e>
+            <e p="Pick.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
             <e p="PlayerController.cs" t="Include" />
             <e p="PlayerManager.cs" t="Include" />
             <e p="Throw.cs" t="Include" />

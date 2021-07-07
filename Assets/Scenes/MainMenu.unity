@@ -3213,12 +3213,19 @@ MonoBehaviour:
     RegisteredScenes:
     - MainMenu
     - SampleScene
+    - RodrigoScene
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
         type: 3}
       PlayerPrefab: 1
     - Prefab: {fileID: 2952949016012933129, guid: 3b724fc8cd321a34d85744717d66bae0,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 4186146416904108268, guid: 033ccabf61fa44e4fa1f1e61ad6dadb4,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 1467091572927595630, guid: 79ba415021884264ea9d5cac04ab3676,
         type: 3}
       PlayerPrefab: 0
     PlayerPrefabHash:

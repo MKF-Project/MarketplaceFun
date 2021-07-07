@@ -92,7 +92,23 @@ public class SceneManager : MonoBehaviour
     private void loadMatch()
     {
         // TODO get scene name from lobby
-        NetworkController.switchNetworkScene("SampleScene");
+        NetworkController.switchNetworkScene("RodrigoScene");
+    }
+
+    private void TriggerSceneLoadEvent(UnityScene.Scene scene, UnityScene.LoadSceneMode mode)
+    {
+
+        if (scene.name == _mainMenu)
+        {
+            OnMenuLoaded?.Invoke(scene.name);
+        }
+        else
+        {
+            OnMatchLoaded?.Invoke(scene.name); 
+        }
+
+
+
     }
 
     private void TriggerSceneLoadEvent(UnityScene.Scene scene, UnityScene.LoadSceneMode mode)

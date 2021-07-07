@@ -7,6 +7,9 @@ TagManager:
   - Network
   - Menu
   - SceneManager
+  - Item
+  - PickItemButton
+  - ItemGenerator
   layers:
   - Default
   - TransparentFX

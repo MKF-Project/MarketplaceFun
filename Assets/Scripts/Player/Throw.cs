@@ -8,9 +8,9 @@ using UnityEngine.SceneManagement;
 
 public class Throw : NetworkBehaviour
 {
-    public GameObject BombPrefab;
-    private GameObject _bomb;
-    private Rigidbody _bombRigidbody;
+    private Player _player;
+    private Pick _pick;
+    
     public float Strength;
 
     public float ArcThrow;
@@ -23,25 +23,20 @@ public class Throw : NetworkBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        SceneManager.OnMatchLoaded += SpawnBomb;
+        _player = GetComponent<Player>();
+        _pick = GetComponent<Pick>();
+        SceneManager.OnMatchLoaded += TurnOn;
         _isOn = false;
+        
     }
 
     private void OnDestroy()
     {
-        SceneManager.OnMatchLoaded -= SpawnBomb;
+        SceneManager.OnMatchLoaded -= TurnOn;
     }
 
-    private void SpawnBomb(string sceneName)
+    private void TurnOn(string sceneName)
     {
-        if (IsServer)
-        {
-            _bomb = Instantiate(BombPrefab, Vector3.zero, Quaternion.identity);
-            _bomb.GetComponent<NetworkObject>().Spawn();
-            _bombRigidbody = _bomb.GetComponent<Rigidbody>();
-            _bomb.SetActive(false);
-        }
-
         _isOn = true;
     }
 
@@ -50,12 +45,16 @@ public class Throw : NetworkBehaviour
     {
         if (IsOwner && _isOn)
         {
-            Vector3 initialPosition =  new Vector3(transform.position.x, transform.position.y + 3, transform.position.z);
-            Vector3 target = CalculateTargetPosition();
-
-            if (InputManager.PressFireButton())
+            if (_player.IsHoldingItem)
             {
-                ThrowServerRpc(target, initialPosition);
+                Vector3 initialPosition = _player.HoldingItem.transform.position;
+
+                Vector3 target = CalculateTargetPosition();
+
+                if (InputManager.PressFireButton())
+                {
+                    ThrowServerRpc(target, initialPosition);
+                }
             }
         }
     }
@@ -63,10 +62,12 @@ public class Throw : NetworkBehaviour
     [ServerRpc]
     public void ThrowServerRpc(Vector3 target, Vector3 initialPosition)
     {
-        _bombRigidbody.velocity = Vector3.zero;
-        _bomb.transform.position = initialPosition;
-        _bomb.SetActive(true);
-        _bombRigidbody.AddForce(target, ForceMode.Impulse);
+        Rigidbody itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
+        itemRigidbody.velocity = Vector3.zero;
+        _player.HoldingItem.transform.position = initialPosition;
+        _player.HoldingItem.SetActive(true);
+        _pick.DropItem();
+        itemRigidbody.AddForce(target, ForceMode.Impulse);
     }
 
     private Vector3 CalculateTargetPosition()

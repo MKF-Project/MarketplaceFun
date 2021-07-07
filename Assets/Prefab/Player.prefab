@@ -539,13 +539,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8816987188999332804}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c897505851021e439498b7e0f594bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BombPrefab: {fileID: 2952949016012933129, guid: 3b724fc8cd321a34d85744717d66bae0,
-    type: 3}
   Strength: 10
   ArcThrow: 10
 --- !u!114 &-2412267911150120978
@@ -626,6 +624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HoldingItem: {fileID: 0}
+  IsHoldingItem: 0
 --- !u!114 &3641319562385682725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,3 +639,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeldPosition: {fileID: 7568264272828451814}
   PickItemButton: {fileID: 2854534919665786420}
+  _ItemGenerator: {fileID: 0}

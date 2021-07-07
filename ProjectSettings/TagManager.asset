@@ -9,6 +9,7 @@ TagManager:
   - SceneManager
   - Item
   - PickItemButton
+  - ItemGenerator
   layers:
   - Default
   - TransparentFX

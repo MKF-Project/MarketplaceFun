@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MLAPI;
 using UnityEngine;
 
-public class Pick : MonoBehaviour
+public class Pick : NetworkBehaviour
 {
     private Player _player;
     public Transform HeldPosition;
     public GameObject PickItemButton;
     private bool _canShowButton;
     private bool _canPickUpItem;
-    public GameObject _pickableItem;
+    public ItemGenerator _ItemGenerator;
 
     private void Awake()
     {
@@ -31,50 +32,39 @@ public class Pick : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                PickItem(_pickableItem);
+                _ItemGenerator.GetItem(PickItem);
             }
         }
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Item") && _canShowButton)
+        if (IsOwner)
         {
-            _canPickUpItem = true;
-            _pickableItem = other.gameObject;
-            PickItemButton.SetActive(true);
-        }
-        
-    }
-    
-
-    /*
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.CompareTag("Item") && !_player.IsHoldingItem)
-        {
-            if (Input.GetKey(KeyCode.E))
+            if (other.gameObject.CompareTag("ItemGenerator") && _canShowButton)
             {
-                PickItem(other.gameObject);
+                _canPickUpItem = true;
+                _ItemGenerator = other.gameObject.GetComponent<ItemGenerator>();
+                PickItemButton.SetActive(true);
             }
         }
-    }*/
-    
-    
+
+    }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Item"))
+        if (IsOwner)
         {
-            _canPickUpItem = false;
-            _pickableItem = null;
-            PickItemButton.SetActive(false);
+            if (other.gameObject.CompareTag("ItemGenerator"))
+            {
+                PickItemButton.SetActive(false);
+                _canPickUpItem = false;
+                _ItemGenerator = null;
+            }
         }
     }
-    
 
-    private void PickItem(GameObject item)
+    public void PickItem(GameObject item)
     {
         _player.HoldItem(item);
         item.GetComponent<Item>().BeHeld(HeldPosition);
@@ -82,7 +72,7 @@ public class Pick : MonoBehaviour
         _canShowButton = false;
     }
 
-    private void DropItem()
+    public void DropItem()
     {
         _player.HoldingItem.GetComponent<Item>().BeDropped();
         _player.DropItem();

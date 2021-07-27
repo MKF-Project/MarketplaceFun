@@ -10,10 +10,10 @@ public class SceneManager : MonoBehaviour
     // Events
     public delegate void OnMainMenuLostConnectionDelegate();
     public static event OnMainMenuLostConnectionDelegate OnMainMenuLostConnection;
-    
+
     public delegate void OnMenuLoadedDelegate(string sceneName);
     public static event OnMenuLoadedDelegate OnMenuLoaded;
-    
+
     public delegate void OnMatchLoadedDelegate(string sceneName);
     public static event OnMatchLoadedDelegate OnMatchLoaded;
 
@@ -104,26 +104,9 @@ public class SceneManager : MonoBehaviour
         }
         else
         {
-            OnMatchLoaded?.Invoke(scene.name); 
+            OnMatchLoaded?.Invoke(scene.name);
         }
-
-
 
     }
 
-    private void TriggerSceneLoadEvent(UnityScene.Scene scene, UnityScene.LoadSceneMode mode)
-    {
-
-        if (scene.name == _mainMenu)
-        {
-            OnMenuLoaded?.Invoke(scene.name);
-        }
-        else
-        {
-            OnMatchLoaded?.Invoke(scene.name); 
-        }
-
-
-
-    }
 }

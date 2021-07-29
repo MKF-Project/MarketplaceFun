@@ -30,15 +30,20 @@ public class PlayerController : NetworkBehaviour
     public bool isFrozen = false;
 
     private Camera _playerCamera;
+
+    private PlayerInput _playerInputScript;
+
     private PlayerMovement _movementScript;
-    private CameraMove _cameraScript;
+    // private CameraMove _cameraScript;
 
     private void Awake()
     {
         _playerCamera = gameObject.GetComponentInChildren<Camera>();
 
+        _playerInputScript = gameObject.GetComponent<PlayerInput>();
+
         _movementScript = gameObject.GetComponent<PlayerMovement>();
-        _cameraScript = gameObject.GetComponent<CameraMove>();
+        // _cameraScript = gameObject.GetComponent<CameraMove>();
 
         // Listen on OnPlayerBehaviourChanged event
         OnPlayerBehaviourChanged += updateBehaviourState;
@@ -66,8 +71,9 @@ public class PlayerController : NetworkBehaviour
 
     private void updateBehaviourState(bool behaviourEnabled)
     {
+        _playerInputScript.playerInputEnabled = behaviourEnabled;
+
         _movementScript.enabled = behaviourEnabled;
-        _cameraScript.enabled = behaviourEnabled;
 
         usePlayerCamera(behaviourEnabled);
     }
@@ -89,7 +95,6 @@ public class PlayerController : NetworkBehaviour
         {
             isFrozen = frozen;
 
-            _cameraScript.MouseLocked = !frozen;
             _movementScript.FreezeMovement = frozen;
         }
     }

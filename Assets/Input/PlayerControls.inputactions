@@ -170,7 +170,7 @@
                     "id": "2b5604f9-789c-47bd-93ed-35bc59c6a768",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "ScaleVector2(x=0.05,y=0.05)",
                     "groups": "Keyboard and Mouse",
                     "action": "Look",
                     "isComposite": false,

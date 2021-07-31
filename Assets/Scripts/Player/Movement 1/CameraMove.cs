@@ -9,20 +9,17 @@ public class CameraMove : NetworkBehaviour
 
     public float sensitivity;
 
-    private PlayerInput _playerInputScript;
-
     private Vector2 _nextRotation;
 
     private void Awake()
     {
-        _playerInputScript = GetComponent<PlayerInput>();
 
-        _playerInputScript.OnLook += onLook;
+        InputController.OnLook += onLook;
     }
 
     private void OnDestroy()
     {
-        _playerInputScript.OnLook  -= onLook;
+        InputController.OnLook  -= onLook;
     }
 
     private void Update()
@@ -33,7 +30,7 @@ public class CameraMove : NetworkBehaviour
 
     private void onLook(Vector2 lookDelta)
     {
-        if(!_playerInputScript.playerInputEnabled)
+        if(!InputController.playerInputEnabled)
         {
             return;
         }

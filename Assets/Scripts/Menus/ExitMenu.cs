@@ -20,12 +20,12 @@ public class ExitMenu : NetworkBehaviour
     private void Awake()
     {
         _exitPrompt.text = $"{(IsHost? hostPrompt : clientPrompt)} Match?";
-        InputManager.OnEscapeKeyPress += handleMenuState;
+        InputController.OnUnpause += handleMenuState;
     }
 
     private void OnDestroy()
     {
-        InputManager.OnEscapeKeyPress -= handleMenuState;
+        InputController.OnUnpause -= handleMenuState;
     }
 
     private void handleMenuState()

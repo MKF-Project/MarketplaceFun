@@ -37,36 +37,36 @@ public class PlayerMovement : NetworkBehaviour
     private void UpdateSpeed()
     {
         _realSpeed = MoveSpeed;
-        if (InputManager.Instance.WalkButton)
-        {
-            _realSpeed = WalkSpeed;
-        }
+        // if (InputManager.Instance.WalkButton)
+        // {
+        //     _realSpeed = WalkSpeed;
+        // }
     }
 
     private void Move()
     {
-        float _forwardInput = InputManager.Instance.Frontal;
-        float _lateralInput = InputManager.Instance.Lateral;
-        Vector3 moveDirection = _forwardInput * transform.forward + _lateralInput * transform.right;
+        // float _forwardInput = InputManager.Instance.Frontal;
+        // float _lateralInput = InputManager.Instance.Lateral;
+        // Vector3 moveDirection = _forwardInput * transform.forward + _lateralInput * transform.right;
 
-        if (moveDirection.sqrMagnitude > 1)
-        {
-            moveDirection.Normalize();
-        }
+        // if (moveDirection.sqrMagnitude > 1)
+        // {
+        //     moveDirection.Normalize();
+        // }
 
-        Vector3 frameMovement = _realSpeed * Time.deltaTime * moveDirection;
+        // Vector3 frameMovement = _realSpeed * Time.deltaTime * moveDirection;
 
-        if (_controller.isGrounded)
-        {
-            _verticalSpeed = 0;
-        }
-        else
-        {
-            float gravity = Physics.gravity.y;
-            _verticalSpeed += gravity * Time.deltaTime;
-            frameMovement += _verticalSpeed * Time.deltaTime * Vector3.up;
-        }
+        // if (_controller.isGrounded)
+        // {
+        //     _verticalSpeed = 0;
+        // }
+        // else
+        // {
+        //     float gravity = Physics.gravity.y;
+        //     _verticalSpeed += gravity * Time.deltaTime;
+        //     frameMovement += _verticalSpeed * Time.deltaTime * Vector3.up;
+        // }
 
-        _controller.Move(frameMovement);
+        // _controller.Move(frameMovement);
     }
 }

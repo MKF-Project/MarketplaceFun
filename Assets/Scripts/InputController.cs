@@ -1,0 +1,264 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using MLAPI;
+
+public class InputController : MonoBehaviour
+{
+    private static InputController _instance = null;
+
+    private PlayerInput _playerInput;
+    private InputActionMap _playerControls;
+    private InputActionMap _menuControls;
+
+    private bool _isInMenuMode;
+    public static bool isInMenuMode
+    {
+        get => (bool) _instance?._isInMenuMode;
+    }
+
+    private delegate void OnDestroyControllerDelegate();
+    private event OnDestroyControllerDelegate OnDestroyController;
+
+    private bool _playerInputEnabled;
+    public static bool playerInputEnabled
+    {
+        get => (bool) _instance?._playerInputEnabled;
+        set
+        {
+            _instance._playerInputEnabled = value;
+
+            Cursor.visible = !value;
+            Cursor.lockState = value? CursorLockMode.Locked : CursorLockMode.None;
+        }
+    }
+
+    private void Awake()
+    {
+        if(_instance == null)
+        {
+            _instance = this;
+            GameObject.DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            GameObject.DestroyImmediate(gameObject);
+            return;
+        }
+
+        _playerInput = GetComponent<PlayerInput>();
+
+        // In-Game Actions
+        _playerControls = _playerInput.actions.FindActionMap("PlayerControls");
+
+        watchInputAction(_playerControls, "Move",           OnMoveAction);
+        watchInputAction(_playerControls, "Look",           OnLookAction);
+        watchInputAction(_playerControls, "Jump",           OnJumpAction);
+        watchInputAction(_playerControls, "Interact/Throw", OnInteractOrThrowAction);
+        watchInputAction(_playerControls, "Walk",           OnWalkAction);
+        watchInputAction(_playerControls, "Pause",          OnPauseAction);
+
+        // Menu Actions
+        // Menu navigation is mostly handled by the default Unity AcionMap
+        // we only need to specify Custom behaviout here, such as Unpausing the game
+        _menuControls = _playerInput.actions.FindActionMap("MenuControls");
+        watchInputAction(_menuControls, "Unpause", OnUnpauseAction);
+
+        if(_playerInput.defaultActionMap == _menuControls.name)
+        {
+            SwitchToMenuControls();
+        }
+        else
+        {
+            SwitchToPlayerControls();
+        }
+
+    }
+
+    private void Destroy()
+    {
+        OnDestroyController?.Invoke();
+
+        if(_instance == this)
+        {
+            _instance = null;
+        }
+    }
+
+    // Subscribe and create unsubscribe callbacks for an InputAction
+    private void watchInputAction(InputActionMap actionMap, string actionName, Action<InputAction.CallbackContext> actionCallback)
+    {
+        var action = actionMap.FindAction(actionName);
+
+        action.started   += actionCallback;
+        action.performed += actionCallback;
+        action.canceled  += actionCallback;
+
+        void autoUnsubscribeOnDestroy()
+        {
+            OnDestroyController -= autoUnsubscribeOnDestroy;
+
+            action.started   -= actionCallback;
+            action.performed -= actionCallback;
+            action.canceled  -= actionCallback;
+        }
+
+        OnDestroyController += autoUnsubscribeOnDestroy;
+    }
+
+    // Mode Switch Events
+    public delegate void OnMenuControlsDelegate();
+    public static event OnMenuControlsDelegate OnMenuControls;
+
+    public static void SwitchToMenuControls() => _instance.instanceSwitchToMenuControls();
+    private void instanceSwitchToMenuControls()
+    {
+        _playerInput.SwitchCurrentActionMap(_menuControls.name);
+        playerInputEnabled = false;
+        _isInMenuMode = true;
+        OnMenuControls?.Invoke();
+    }
+
+
+    public delegate void OnPlayerControlsDelegate();
+    public static event OnPlayerControlsDelegate OnPlayerControls;
+
+    public static void SwitchToPlayerControls() => _instance.instanceSwitchToPlayerControls();
+    private void instanceSwitchToPlayerControls()
+    {
+        _playerInput.SwitchCurrentActionMap(_playerControls.name);
+        playerInputEnabled = true;
+        _isInMenuMode = false;
+        OnPlayerControls?.Invoke();
+    }
+
+    /** A quick overview of InputAction callback states:
+     *
+     * Disabled:  The action is disabled and willnot detect any input.
+     * Waiting:   The action is enabled and waiting for input. This is the sate the button is in when not pressed.
+     * Started:   The action was started. This is the state the button immediately goes, and stays on, while it's being pressed.
+     * Performed: The action was performed. This triggers exactly once, right after Started callback when the button is pressed. The action does not stay in this state.
+     * Canceled:  The action was canceled or stopped. This triggers exactly once when the button is released, then the action immediately goes to the Waiting state.
+     */
+
+    // In Game Controls
+    public delegate void OnMoveDelegate(Vector2 moveDirection);
+    public delegate void OnMoveReleasedDelegate();
+
+    public static event OnMoveDelegate OnMove;
+    public static event OnMoveReleasedDelegate OnMoveReleased;
+
+    private void OnMoveAction(InputAction.CallbackContext context)
+    {
+        switch(context.phase)
+        {
+            case InputActionPhase.Performed:
+                OnMove?.Invoke(context.ReadValue<Vector2>());
+                break;
+
+            case InputActionPhase.Canceled:
+                OnMoveReleased?.Invoke();
+                break;
+        }
+    }
+
+
+    public delegate void OnLookDelegate(Vector2 lookDirection);
+    public delegate void OnLookStopDelegate();
+
+    public static event OnLookDelegate OnLook;
+    public static event OnLookStopDelegate OnLookStop;
+
+    private void OnLookAction(InputAction.CallbackContext context)
+    {
+        switch(context.phase)
+        {
+            case InputActionPhase.Performed:
+                OnLook?.Invoke(context.ReadValue<Vector2>());
+                break;
+
+            case InputActionPhase.Canceled:
+                OnLook?.Invoke(Vector2.zero);
+                OnLookStop?.Invoke();
+                break;
+        }
+    }
+
+
+    public delegate void OnJumpDelegate();
+    public static event OnJumpDelegate OnJump;
+
+    private void OnJumpAction(InputAction.CallbackContext context)
+    {
+        if(context.performed) {
+            OnJump?.Invoke();
+        }
+    }
+
+
+    public delegate void OnInteractOrThrowDelegate();
+    public static event OnInteractOrThrowDelegate OnInteractOrThrow;
+
+    private void OnInteractOrThrowAction(InputAction.CallbackContext context)
+    {
+        if(context.performed) {
+            OnInteractOrThrow?.Invoke();
+        }
+    }
+
+
+    public delegate void OnWalkDelegate();
+    public delegate void OnWalkPressedDelegate();
+    public delegate void OnWalkReleasedDelegate();
+
+    public static event OnWalkDelegate OnWalk;
+    public static event OnWalkPressedDelegate OnWalkPressed;
+    public static event OnWalkReleasedDelegate OnWalkReleased;
+
+    private void OnWalkAction(InputAction.CallbackContext context)
+    {
+        switch(context.phase)
+        {
+            case InputActionPhase.Performed:
+                OnWalk?.Invoke();
+                break;
+
+            case InputActionPhase.Started:
+                OnWalkPressed?.Invoke();
+                break;
+
+            case InputActionPhase.Canceled:
+                OnWalkReleased?.Invoke();
+                break;
+        }
+    }
+
+
+    public delegate void OnPauseDelegate();
+    public static event OnPauseDelegate OnPause;
+
+    private void OnPauseAction(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            print("Pause");
+            OnPause?.Invoke();
+        }
+    }
+
+
+    // Menu Controls
+    public delegate void OnUnpauseDelegate();
+    public static event OnUnpauseDelegate OnUnpause;
+
+    private void OnUnpauseAction(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            print("Unpause");
+            OnUnpause?.Invoke();
+        }
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,59 @@ using MLAPI;
 
 public class InputController : MonoBehaviour
 {
+    /**
+     * Aggregates events and their return values from multiple sources
+     *
+     * Behaviour is such that a function that returns false should block the associated event from being fired.
+     */
+    public class EventBlocker
+    {
+        private List<Func<bool>> _eventListeners;
+        private Action _resultingEvent;
+
+        public EventBlocker(Action associatedEvent)
+        {
+            _resultingEvent = associatedEvent;
+            _eventListeners = new List<Func<bool>>();
+        }
+
+        public bool CanDispatchEvent() => _eventListeners.TrueForAll(fn => fn.Invoke());
+
+        public bool DispatchEvent()
+        {
+            if(CanDispatchEvent())
+            {
+                _resultingEvent?.Invoke();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void ClearDispatcher()
+        {
+            _eventListeners.Clear();
+        }
+
+        public static EventBlocker operator +(EventBlocker dispatcher, Func<bool> listener)
+        {
+            if(!dispatcher._eventListeners.Contains(listener))
+            {
+                dispatcher._eventListeners.Add(listener);
+            }
+
+            return dispatcher;
+        }
+
+        public static EventBlocker operator -(EventBlocker dispatcher, Func<bool> listener)
+        {
+            dispatcher._eventListeners.Remove(listener);
+            return dispatcher;
+        }
+    }
+
     private static InputController _instance = null;
 
     private PlayerInput _playerInput;
@@ -77,7 +131,7 @@ public class InputController : MonoBehaviour
 
     }
 
-    private void Destroy()
+    private void OnDestroy()
     {
         OnDestroyController?.Invoke();
 
@@ -112,7 +166,10 @@ public class InputController : MonoBehaviour
     public delegate void OnMenuControlsDelegate();
     public static event OnMenuControlsDelegate OnMenuControls;
 
-    public static void SwitchToMenuControls() => _instance.instanceSwitchToMenuControls();
+    public static EventBlocker OnAllowMenuControlsSwitch = new EventBlocker(SwitchToMenuControls);
+
+    public static bool RequestMenuControlsSwitch() => OnAllowMenuControlsSwitch.DispatchEvent();
+    private static void SwitchToMenuControls() => _instance?.instanceSwitchToMenuControls();
     private void instanceSwitchToMenuControls()
     {
         _playerInput.SwitchCurrentActionMap(_menuControls.name);
@@ -125,7 +182,10 @@ public class InputController : MonoBehaviour
     public delegate void OnPlayerControlsDelegate();
     public static event OnPlayerControlsDelegate OnPlayerControls;
 
-    public static void SwitchToPlayerControls() => _instance.instanceSwitchToPlayerControls();
+    public static EventBlocker OnAllowPlayerControlsSwitch = new EventBlocker(SwitchToPlayerControls);
+
+    public static bool RequestPlayerControlsSwitch() => OnAllowPlayerControlsSwitch.DispatchEvent();
+    private static void SwitchToPlayerControls() => _instance?.instanceSwitchToPlayerControls();
     private void instanceSwitchToPlayerControls()
     {
         _playerInput.SwitchCurrentActionMap(_playerControls.name);
@@ -245,6 +305,7 @@ public class InputController : MonoBehaviour
         {
             print("Pause");
             OnPause?.Invoke();
+            OnAllowMenuControlsSwitch.DispatchEvent();
         }
     }
 
@@ -259,6 +320,7 @@ public class InputController : MonoBehaviour
         {
             print("Unpause");
             OnUnpause?.Invoke();
+            OnAllowPlayerControlsSwitch.DispatchEvent();
         }
     }
 }

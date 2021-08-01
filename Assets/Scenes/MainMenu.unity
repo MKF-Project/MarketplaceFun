@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enablePlayerBehaviour: 0
+  allowControlSwitching: 0
 --- !u!4 &52212752
 Transform:
   m_ObjectHideFlags: 0

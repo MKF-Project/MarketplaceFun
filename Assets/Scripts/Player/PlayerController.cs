@@ -44,13 +44,6 @@ public class PlayerController : NetworkBehaviour
         // Listen on OnPlayerBehaviourChanged event
         OnPlayerBehaviourChanged += updateBehaviourState;
 
-        // Button events
-        if(IsOwner)
-        {
-            InputController.OnPause += InputController.SwitchToMenuControls;
-            InputController.OnUnpause += InputController.SwitchToPlayerControls;
-        }
-
     }
 
     private void Start()
@@ -63,26 +56,11 @@ public class PlayerController : NetworkBehaviour
     {
         OnPlayerBehaviourChanged -= updateBehaviourState;
 
-        if(IsOwner)
-        {
-            InputController.OnPause -= InputController.SwitchToMenuControls;
-            InputController.OnUnpause -= InputController.SwitchToPlayerControls;
-        }
-
         usePlayerCamera(false);
     }
 
     private void updateBehaviourState(bool behaviourEnabled)
     {
-        if(behaviourEnabled)
-        {
-            InputController.SwitchToPlayerControls();
-        }
-        else
-        {
-            InputController.SwitchToMenuControls();
-        }
-
         _movementScript.enabled = behaviourEnabled;
 
         usePlayerCamera(behaviourEnabled);

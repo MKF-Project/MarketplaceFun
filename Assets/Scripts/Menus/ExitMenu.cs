@@ -20,34 +20,35 @@ public class ExitMenu : NetworkBehaviour
     private void Awake()
     {
         _exitPrompt.text = $"{(IsHost? hostPrompt : clientPrompt)} Match?";
+
+        InputController.OnPause += handleMenuState;
         InputController.OnUnpause += handleMenuState;
     }
 
     private void OnDestroy()
     {
+        InputController.OnPause -= handleMenuState;
         InputController.OnUnpause -= handleMenuState;
     }
 
     private void handleMenuState()
     {
-        // Toggles menu active state
-        gameObject.SetActive(!gameObject.activeSelf);
-
-        // If pressing esc caused the menu to now be Inactive,
-        // Then trigger OnStayOnMatch
-        if(!gameObject.activeSelf)
+        if(gameObject.activeSelf)
         {
-            stayOnMatch();
+            if(InputController.RequestPlayerControlsSwitch())
+            {
+                gameObject.SetActive(false);
+                OnStayOnMatch?.Invoke();
+            }
+        }
+        else if(InputController.RequestMenuControlsSwitch())
+        {
+            gameObject.SetActive(true);
         }
     }
 
     // Button Events
     public void leaveMatch() => OnLeaveMatch?.Invoke();
-    public void stayOnMatch()
-    {
-        // Make sure menu is closed when the player decides to stay in the match
-        gameObject.SetActive(false);
-        OnStayOnMatch?.Invoke();
-    }
+    public void stayOnMatch() => handleMenuState();
 
 }

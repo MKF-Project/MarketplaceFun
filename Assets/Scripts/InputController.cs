@@ -24,7 +24,15 @@ public class InputController : MonoBehaviour
             _eventListeners = new List<Func<bool>>();
         }
 
-        public bool CanDispatchEvent() => _eventListeners.TrueForAll(fn => fn.Invoke());
+        public bool CanDispatchEvent()
+        {
+            if(_eventListeners.Count == 0)
+            {
+                return true;
+            }
+
+            return _eventListeners.TrueForAll(fn => fn.Invoke());
+        }
 
         public bool DispatchEvent()
         {

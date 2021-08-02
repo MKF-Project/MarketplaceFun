@@ -18,23 +18,13 @@ public class Pick : NetworkBehaviour
         _player = GetComponent<Player>();
         _canShowButton = true;
         _canPickUpItem = false;
+
+        InputController.OnInteractOrThrow += OnInteract;
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        if (_player.IsHoldingItem)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                DropItem();
-            }
-        }else if (_canPickUpItem)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                _ItemGenerator.GetItem(PickItem);
-            }
-        }
+        InputController.OnInteractOrThrow -= OnInteract;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -61,6 +51,18 @@ public class Pick : NetworkBehaviour
                 _canPickUpItem = false;
                 _ItemGenerator = null;
             }
+        }
+    }
+
+    private void OnInteract()
+    {
+        if(_player.IsHoldingItem)
+        {
+            DropItem();
+        }
+        else if(_canPickUpItem)
+        {
+            _ItemGenerator.GetItem(PickItem);
         }
     }
 

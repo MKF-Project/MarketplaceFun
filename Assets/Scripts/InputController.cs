@@ -75,12 +75,6 @@ public class InputController : MonoBehaviour
     private InputActionMap _playerControls;
     private InputActionMap _menuControls;
 
-    private bool _isInMenuMode;
-    public static bool isInMenuMode
-    {
-        get => (bool) _instance?._isInMenuMode;
-    }
-
     private delegate void OnDestroyControllerDelegate();
     private event OnDestroyControllerDelegate OnDestroyController;
 
@@ -182,7 +176,6 @@ public class InputController : MonoBehaviour
     {
         _playerInput.SwitchCurrentActionMap(_menuControls.name);
         playerInputEnabled = false;
-        _isInMenuMode = true;
         OnMenuControls?.Invoke();
     }
 
@@ -198,7 +191,6 @@ public class InputController : MonoBehaviour
     {
         _playerInput.SwitchCurrentActionMap(_playerControls.name);
         playerInputEnabled = true;
-        _isInMenuMode = false;
         OnPlayerControls?.Invoke();
     }
 
@@ -227,6 +219,7 @@ public class InputController : MonoBehaviour
                 break;
 
             case InputActionPhase.Canceled:
+                OnMove?.Invoke(Vector2.zero);
                 OnMoveReleased?.Invoke();
                 break;
         }

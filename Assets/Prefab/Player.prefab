@@ -581,7 +581,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   WalkSpeed: 2
-  FreezeMovement: 0
 --- !u!114 &-8703463587070590722
 MonoBehaviour:
   m_ObjectHideFlags: 0

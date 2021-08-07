@@ -7,66 +7,70 @@ public class PlayerMovement : NetworkBehaviour
 {
     private CharacterController _controller;
 
-
     public float MoveSpeed;
-
     public float WalkSpeed;
 
-    public bool FreezeMovement = false;
-
-    private float _realSpeed;
+    private float _currentSpeed = 0;
+    private Vector2 _currentDirection = Vector2.zero;
 
     private float _verticalSpeed;
-
+    private bool _isWalking = false;
 
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
+
+        if(IsOwner)
+        {
+            InputController.OnMove += updateDirection;
+            InputController.OnWalk += updateSpeed;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDestroy()
     {
-        if(!FreezeMovement && IsOwner)
+        if(IsOwner)
         {
-            UpdateSpeed();
+            InputController.OnMove -= updateDirection;
+            InputController.OnWalk -= updateSpeed;
+        }
+    }
+
+    private void Start()
+    {
+        _currentSpeed = MoveSpeed;
+    }
+
+    private void Update()
+    {
+        if(IsOwner)
+        {
             Move();
         }
+
     }
 
-    private void UpdateSpeed()
+    private void updateSpeed()
     {
-        _realSpeed = MoveSpeed;
-        if (InputManager.Instance.WalkButton)
-        {
-            _realSpeed = WalkSpeed;
-        }
+        _isWalking = !_isWalking;
+        _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
+    }
+
+    private void updateDirection(Vector2 direction)
+    {
+        _currentDirection = direction;
     }
 
     private void Move()
     {
-        float _forwardInput = InputManager.Instance.Frontal;
-        float _lateralInput = InputManager.Instance.Lateral;
-        Vector3 moveDirection = _forwardInput * transform.forward + _lateralInput * transform.right;
+        var planeMovement = _currentSpeed * _currentDirection;
+        var currentVelocity = new Vector3(planeMovement.x, 0, planeMovement.y);
 
-        if (moveDirection.sqrMagnitude > 1)
+        if(!_controller.isGrounded)
         {
-            moveDirection.Normalize();
+            currentVelocity += Physics.gravity;
         }
 
-        Vector3 frameMovement = _realSpeed * Time.deltaTime * moveDirection;
-
-        if (_controller.isGrounded)
-        {
-            _verticalSpeed = 0;
-        }
-        else
-        {
-            float gravity = Physics.gravity.y;
-            _verticalSpeed += gravity * Time.deltaTime;
-            frameMovement += _verticalSpeed * Time.deltaTime * Vector3.up;
-        }
-
-        _controller.Move(frameMovement);
+        _controller.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
     }
 }

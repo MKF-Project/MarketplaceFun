@@ -7,48 +7,34 @@ public class CameraMove : NetworkBehaviour
 {
     public Transform Camera;
 
-    public bool MouseLocked = true;
+    public float sensitivity;
 
-    public float Sensitivity;
+    private Vector2 _nextRotation;
 
-    private float _mouseX;
-
-    private float _mouseY;
-
-    private void Update()
+    private void Awake()
     {
-        if(!IsOwner)
-        {
-            return;
-        }
 
-        updateMouseLock(MouseLocked);
-
-        if (MouseLocked)
-        {
-            _mouseX = Input.GetAxis("Mouse X") * Sensitivity;
-            _mouseY = Input.GetAxis("Mouse Y") * Sensitivity;
-
-            transform.Rotate(Vector3.up, _mouseX);
-
-            Camera.Rotate(Vector3.left, _mouseY);
-        }
+        InputController.OnLook += onLook;
     }
 
     private void OnDestroy()
     {
-        if(IsOwner)
-        {
-            updateMouseLock(false);
-        }
+        InputController.OnLook  -= onLook;
     }
 
-    private void updateMouseLock(bool shouldLock)
+    private void Update()
     {
-        MouseLocked = shouldLock;
+        transform.Rotate(Vector3.up, _nextRotation.x);
+        Camera.Rotate(Vector3.left, _nextRotation.y);
+    }
 
-        // Update Mouse lock State
-        Cursor.visible = !MouseLocked;
-        Cursor.lockState = MouseLocked? CursorLockMode.Locked : CursorLockMode.None;
+    private void onLook(Vector2 lookDelta)
+    {
+        if(!InputController.playerInputEnabled)
+        {
+            return;
+        }
+
+        _nextRotation = lookDelta * sensitivity;
     }
 }

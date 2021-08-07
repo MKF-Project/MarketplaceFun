@@ -30,22 +30,20 @@ public class PlayerController : NetworkBehaviour
     public bool isFrozen = false;
 
     private Camera _playerCamera;
+
     private PlayerMovement _movementScript;
-    private CameraMove _cameraScript;
+    // private CameraMove _cameraScript;
 
     private void Awake()
     {
         _playerCamera = gameObject.GetComponentInChildren<Camera>();
 
         _movementScript = gameObject.GetComponent<PlayerMovement>();
-        _cameraScript = gameObject.GetComponent<CameraMove>();
+        // _cameraScript = gameObject.GetComponent<CameraMove>();
 
         // Listen on OnPlayerBehaviourChanged event
         OnPlayerBehaviourChanged += updateBehaviourState;
 
-        // Button events
-        InputManager.OnEscapeKeyPress += freezePlayer;
-        ExitMenu.OnStayOnMatch += unfreezePlayer;
     }
 
     private void Start()
@@ -58,16 +56,12 @@ public class PlayerController : NetworkBehaviour
     {
         OnPlayerBehaviourChanged -= updateBehaviourState;
 
-        InputManager.OnEscapeKeyPress -= freezePlayer;
-        ExitMenu.OnStayOnMatch -= unfreezePlayer;
-
         usePlayerCamera(false);
     }
 
     private void updateBehaviourState(bool behaviourEnabled)
     {
         _movementScript.enabled = behaviourEnabled;
-        _cameraScript.enabled = behaviourEnabled;
 
         usePlayerCamera(behaviourEnabled);
     }
@@ -78,19 +72,6 @@ public class PlayerController : NetworkBehaviour
         {
             _playerCamera.enabled = usePlayerCamera;
             ObjectsManager.OverviewCamera?.SetActive(!usePlayerCamera);
-        }
-    }
-
-    private void freezePlayer() => toggleFreeze(true);
-    private void unfreezePlayer() => toggleFreeze(false);
-    private void toggleFreeze(bool frozen)
-    {
-        if(IsOwner && isFrozen != frozen)
-        {
-            isFrozen = frozen;
-
-            _cameraScript.MouseLocked = !frozen;
-            _movementScript.FreezeMovement = frozen;
         }
     }
 }

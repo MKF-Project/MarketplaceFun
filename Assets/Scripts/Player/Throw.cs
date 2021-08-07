@@ -10,13 +10,13 @@ public class Throw : NetworkBehaviour
 {
     private Player _player;
     private Pick _pick;
-    
+
     public float Strength;
 
     public float ArcThrow;
 
     private bool _isOn;
-    
+
     //public Camera Camera;
 
     //public GameObject InstantiatedBomb;
@@ -27,7 +27,7 @@ public class Throw : NetworkBehaviour
         _pick = GetComponent<Pick>();
         SceneManager.OnMatchLoaded += TurnOn;
         _isOn = false;
-        
+
     }
 
     private void OnDestroy()
@@ -51,10 +51,10 @@ public class Throw : NetworkBehaviour
 
                 Vector3 target = CalculateTargetPosition();
 
-                if (InputManager.PressFireButton())
-                {
-                    ThrowItem(target, initialPosition);
-                }
+                // if (InputManager.PressFireButton())
+                // {
+                //     ThrowItem(target, initialPosition);
+                // }
             }
         }
     }

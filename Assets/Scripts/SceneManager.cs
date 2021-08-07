@@ -106,7 +106,5 @@ public class SceneManager : MonoBehaviour
         {
             OnMatchLoaded?.Invoke(scene.name);
         }
-
     }
-
 }

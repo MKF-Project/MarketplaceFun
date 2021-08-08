@@ -9,17 +9,16 @@ public class CameraMove : NetworkBehaviour
 
     public float sensitivity;
 
-    private Vector2 _nextRotation;
+    private Vector2 _nextRotation = Vector2.zero;
 
     private void Awake()
     {
-
         InputController.OnLook += onLook;
     }
 
     private void OnDestroy()
     {
-        InputController.OnLook  -= onLook;
+        InputController.OnLook -= onLook;
     }
 
     private void Update()
@@ -30,11 +29,10 @@ public class CameraMove : NetworkBehaviour
 
     private void onLook(Vector2 lookDelta)
     {
-        if(!InputController.playerInputEnabled)
+        if(InputController.playerInputEnabled && IsOwner)
         {
-            return;
+            _nextRotation = lookDelta * sensitivity;
         }
 
-        _nextRotation = lookDelta * sensitivity;
     }
 }

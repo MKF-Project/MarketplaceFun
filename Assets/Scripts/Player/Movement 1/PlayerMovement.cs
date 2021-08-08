@@ -20,20 +20,14 @@ public class PlayerMovement : NetworkBehaviour
     {
         _controller = GetComponent<CharacterController>();
 
-        if(IsOwner)
-        {
-            InputController.OnMove += updateDirection;
-            InputController.OnWalk += updateSpeed;
-        }
+        InputController.OnMove += updateDirection;
+        InputController.OnWalk += updateSpeed;
     }
 
     private void OnDestroy()
     {
-        if(IsOwner)
-        {
-            InputController.OnMove -= updateDirection;
-            InputController.OnWalk -= updateSpeed;
-        }
+        InputController.OnMove -= updateDirection;
+        InputController.OnWalk -= updateSpeed;
     }
 
     private void Start()
@@ -52,13 +46,19 @@ public class PlayerMovement : NetworkBehaviour
 
     private void updateSpeed()
     {
-        _isWalking = !_isWalking;
-        _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
+        if(IsOwner)
+        {
+            _isWalking = !_isWalking;
+            _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
+        }
     }
 
     private void updateDirection(Vector2 direction)
     {
-        _currentDirection = direction;
+        if(IsOwner)
+        {
+            _currentDirection = direction;
+        }
     }
 
     private void Move()

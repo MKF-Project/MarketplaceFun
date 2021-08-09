@@ -68,7 +68,7 @@ public class PlayerController : NetworkBehaviour
         _freeMovementControls = gameObject.GetComponent<FreeMovementControls>();
         _cartControls = gameObject.GetComponent<CartControls>();
 
-        ControlScheme = PlayerControlSchemes.CartControls;
+        ControlScheme = PlayerControlSchemes.FreeMovementControls;
 
         // Listen on OnPlayerBehaviourChanged event
         OnPlayerBehaviourChanged += updateBehaviourState;

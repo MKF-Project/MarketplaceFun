@@ -39,17 +39,17 @@ public class PlayerController : NetworkBehaviour
             {
                 case PlayerControlSchemes.None:
                     _freeMovementControls.enabled = false;
-                    // _cartControls.enabled = false;
+                    _cartControls.enabled = false;
                     break;
 
                 case PlayerControlSchemes.FreeMovementControls:
                     _freeMovementControls.enabled = true;
-                    // _cartControls.enabled = false;
+                    _cartControls.enabled = false;
                     break;
 
                 case PlayerControlSchemes.CartControls:
                     _freeMovementControls.enabled = false;
-                    // _cartControls.enabled = true;
+                    _cartControls.enabled = true;
                     break;
             }
         }
@@ -57,7 +57,7 @@ public class PlayerController : NetworkBehaviour
 
     private PlayerControlSchemes _currentControlScheme;
     private FreeMovementControls _freeMovementControls = null;
-    // private CartControls _cartControls = null;
+    private CartControls _cartControls = null;
 
     public bool isFrozen = false;
 
@@ -66,9 +66,9 @@ public class PlayerController : NetworkBehaviour
         _playerCamera = gameObject.GetComponentInChildren<Camera>();
 
         _freeMovementControls = gameObject.GetComponent<FreeMovementControls>();
-        // _cartControls = gameObject.GetComponent<CartControls>();
+        _cartControls = gameObject.GetComponent<CartControls>();
 
-        ControlScheme = PlayerControlSchemes.FreeMovementControls;
+        ControlScheme = PlayerControlSchemes.CartControls;
 
         // Listen on OnPlayerBehaviourChanged event
         OnPlayerBehaviourChanged += updateBehaviourState;

@@ -10,12 +10,15 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
 
     private float _currentSpeed = 0;
     private bool _isWalking = false;
+    private float _currentRotation = 0;
     private Vector2 _currentDirection = Vector2.zero;
     private Vector2 _nextRotation = Vector2.zero;
 
     public float MoveSpeed;
     public float WalkSpeed;
     public float Sensitivity = 1;
+
+    public float MaximumViewAngle = 90f;
 
     private void Awake()
     {
@@ -105,12 +108,19 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
             currentVelocity += Physics.gravity;
         }
 
-        _controller.Move(gameObject.transform.TransformDirection(currentVelocity) * Time.deltaTime);
+        _controller.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
     }
 
     private void updateCamera()
     {
-        gameObject.transform.Rotate(Vector3.up, _nextRotation.x);
-        _camera.Rotate(Vector3.left, _nextRotation.y);
+        transform.Rotate(Vector3.up, _nextRotation.x);
+
+        _currentRotation += _nextRotation.y;
+        if(_currentRotation <= MaximumViewAngle && _currentRotation >= -MaximumViewAngle)
+        {
+            _camera.Rotate(Vector3.left, _nextRotation.y);
+        }
+
+        _currentRotation = Mathf.Clamp(_currentRotation, -MaximumViewAngle, MaximumViewAngle);
     }
 }

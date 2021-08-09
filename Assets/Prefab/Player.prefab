@@ -545,6 +545,7 @@ MonoBehaviour:
   MoveSpeed: 5
   WalkSpeed: 1
   Sensitivity: 1
+  MaximumViewAngle: 90
 --- !u!114 &-6045655609219840054
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -27,23 +27,51 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    public bool isFrozen = false;
-
     private Camera _playerCamera;
 
-    private PlayerMovement _movementScript;
-    // private CameraMove _cameraScript;
+    public PlayerControlSchemes ControlScheme
+    {
+        get => _currentControlScheme;
+        set
+        {
+            _currentControlScheme = value;
+            switch(value)
+            {
+                case PlayerControlSchemes.None:
+                    _freeMovementControls.enabled = false;
+                    _cartControls.enabled = false;
+                    break;
+
+                case PlayerControlSchemes.FreeMovementControls:
+                    _freeMovementControls.enabled = true;
+                    _cartControls.enabled = false;
+                    break;
+
+                case PlayerControlSchemes.CartControls:
+                    _freeMovementControls.enabled = false;
+                    _cartControls.enabled = true;
+                    break;
+            }
+        }
+    }
+
+    private PlayerControlSchemes _currentControlScheme;
+    private FreeMovementControls _freeMovementControls = null;
+    private CartControls _cartControls = null;
+
+    public bool isFrozen = false;
 
     private void Awake()
     {
         _playerCamera = gameObject.GetComponentInChildren<Camera>();
 
-        _movementScript = gameObject.GetComponent<PlayerMovement>();
-        // _cameraScript = gameObject.GetComponent<CameraMove>();
+        _freeMovementControls = gameObject.GetComponent<FreeMovementControls>();
+        _cartControls = gameObject.GetComponent<CartControls>();
+
+        ControlScheme = PlayerControlSchemes.FreeMovementControls;
 
         // Listen on OnPlayerBehaviourChanged event
         OnPlayerBehaviourChanged += updateBehaviourState;
-
     }
 
     private void Start()
@@ -54,6 +82,8 @@ public class PlayerController : NetworkBehaviour
 
     private void OnDestroy()
     {
+        ControlScheme = PlayerControlSchemes.None;
+
         OnPlayerBehaviourChanged -= updateBehaviourState;
 
         usePlayerCamera(false);
@@ -61,8 +91,6 @@ public class PlayerController : NetworkBehaviour
 
     private void updateBehaviourState(bool behaviourEnabled)
     {
-        _movementScript.enabled = behaviourEnabled;
-
         usePlayerCamera(behaviourEnabled);
     }
 

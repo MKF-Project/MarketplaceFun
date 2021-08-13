@@ -397,8 +397,8 @@ GameObject:
   - component: {fileID: -2412267911150120978}
   - component: {fileID: 1675007421004648749}
   - component: {fileID: 5765398794026265388}
-  - component: {fileID: 8816987188999332814}
-  - component: {fileID: -8703463587070590722}
+  - component: {fileID: 3284909891683801097}
+  - component: {fileID: 7903483743102282125}
   - component: {fileID: -6045655609219840054}
   - component: {fileID: 6060007277188276103}
   - component: {fileID: 3641319562385682725}
@@ -531,7 +531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFrozen: 0
---- !u!114 &8816987188999332814
+--- !u!114 &3284909891683801097
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -540,12 +540,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8816987188999332804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73256b376233e274da94b4c56b7e1829, type: 3}
+  m_Script: {fileID: 11500000, guid: b1ec5cbf96de81e49acfb9bc54e09880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 10
-  WalkSpeed: 2
---- !u!114 &-8703463587070590722
+  WalkSpeed: 1
+  Sensitivity: 1
+  MaximumViewAngle: 90
+--- !u!114 &7903483743102282125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -554,11 +556,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8816987188999332804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f14feb7c5fb05b4ca81167585118256, type: 3}
+  m_Script: {fileID: 11500000, guid: e5ac7f4f806ca604ea5849cdf721d8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 8816987188005979575}
-  sensitivity: 1
+  MoveSpeed: 10
+  WalkSpeed: 1
+  MovingTurnSpeed: 100
+  InPlaceTurnSpeed: 40
+  Sensitivity: 1
+  Deadzone: 0.5
+  MaximumViewAngle: 60
 --- !u!114 &-6045655609219840054
 MonoBehaviour:
   m_ObjectHideFlags: 0

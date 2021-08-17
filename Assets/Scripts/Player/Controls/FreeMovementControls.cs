@@ -13,10 +13,12 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     private float _currentRotation = 0;
     private Vector2 _currentDirection = Vector2.zero;
     private Vector2 _nextRotation = Vector2.zero;
+    private bool _isJumping = false;
 
     public float MoveSpeed;
     public float WalkSpeed;
     public float Sensitivity = 1;
+    public float JumpHeight;
 
     public float MaximumViewAngle = 90f;
 
@@ -57,6 +59,11 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
         }
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
+
     public void Move(Vector2 direction)
     {
         if(IsOwner)
@@ -77,7 +84,7 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     {
         if(IsOwner)
         {
-
+            _isJumping = true;
         }
     }
 
@@ -101,14 +108,19 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     private void updateMovement()
     {
         var planeMovement = _currentSpeed * _currentDirection;
-        var currentVelocity = new Vector3(planeMovement.x, 0, planeMovement.y);
+        var currentVelocity = new Vector3(planeMovement.x, _controller.velocity.y, planeMovement.y);
 
-        if(!_controller.isGrounded)
-        {
-            currentVelocity += Physics.gravity;
-        }
+        print(_controller.velocity.y);
+
+        currentVelocity += Physics.gravity * Time.deltaTime;
+
+        // if(_isJumping && _controller.isGrounded)
+        // {
+        //     currentVelocity.y = JumpHeight;
+        // }
 
         _controller.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
+        _isJumping = false;
     }
 
     private void updateCamera()

@@ -8,12 +8,14 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     private CharacterController _controller;
     private Transform _camera;
 
-    private float _currentSpeed = 0;
-    private bool _isWalking = false;
-    private float _currentRotation = 0;
+    private Vector3 _currentVelocity = Vector3.zero;
     private Vector2 _currentDirection = Vector2.zero;
     private Vector2 _nextRotation = Vector2.zero;
+    private float _currentSpeed = 0;
+    private float _currentRotation = 0;
+    private bool _isWalking = false;
     private bool _isJumping = false;
+    private bool _previousFrameGrounded = false;
 
     public float MoveSpeed;
     public float WalkSpeed;
@@ -57,11 +59,6 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
             updateCamera();
             updateMovement();
         }
-    }
-
-    private void FixedUpdate()
-    {
-        
     }
 
     public void Move(Vector2 direction)
@@ -108,19 +105,30 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     private void updateMovement()
     {
         var planeMovement = _currentSpeed * _currentDirection;
-        var currentVelocity = new Vector3(planeMovement.x, _controller.velocity.y, planeMovement.y);
+        _currentVelocity.Set(planeMovement.x, _currentVelocity.y, planeMovement.y);
 
-        print(_controller.velocity.y);
+        // Reset vertical acceleration if the player was grounded on the previous frame
+        if(_previousFrameGrounded)
+        {
+            _currentVelocity.y = 0;
+        }
 
-        currentVelocity += Physics.gravity * Time.deltaTime;
+        // Always apply gravity, even when the player is possibly already Grounded
+        _currentVelocity += Physics.gravity * Time.deltaTime;
 
-        // if(_isJumping && _controller.isGrounded)
-        // {
-        //     currentVelocity.y = JumpHeight;
-        // }
+        if(_controller.isGrounded && _isJumping)
+        {
+            // if Jumping Apply instant vertical velocity change, overriding gravity
+            _currentVelocity.y = JumpHeight;
+        }
 
-        _controller.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
+        _controller.Move(transform.TransformDirection(_currentVelocity) * Time.deltaTime);
+
+        // Reset jumpstate after every frame
         _isJumping = false;
+
+        // Store calculated grounded state for the next frame
+        _previousFrameGrounded = _controller.isGrounded;
     }
 
     private void updateCamera()

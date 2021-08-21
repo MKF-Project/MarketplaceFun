@@ -546,7 +546,8 @@ MonoBehaviour:
   MoveSpeed: 10
   WalkSpeed: 1
   Sensitivity: 1
-  JumpHeight: 5
+  JumpHeight: 3
+  JumpDampening: 0
   MaximumViewAngle: 90
 --- !u!114 &7903483743102282125
 MonoBehaviour:

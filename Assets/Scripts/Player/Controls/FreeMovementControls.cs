@@ -15,12 +15,12 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     private float _currentRotation = 0;
     private bool _isWalking = false;
     private bool _isJumping = false;
-    private bool _previousFrameGrounded = false;
 
     public float MoveSpeed;
     public float WalkSpeed;
     public float Sensitivity = 1;
     public float JumpHeight;
+    public float JumpDampening;
 
     public float MaximumViewAngle = 90f;
 
@@ -107,8 +107,9 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
         var planeMovement = _currentSpeed * _currentDirection;
         _currentVelocity.Set(planeMovement.x, _currentVelocity.y, planeMovement.y);
 
-        // Reset vertical acceleration if the player was grounded on the previous frame
-        if(_previousFrameGrounded)
+        // Reset vertical acceleration if some external force causes it to be affected
+        // Like hitting the floor or ceiling
+        if(_controller.velocity.y == 0)
         {
             _currentVelocity.y = 0;
         }
@@ -119,16 +120,13 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
         if(_controller.isGrounded && _isJumping)
         {
             // if Jumping Apply instant vertical velocity change, overriding gravity
-            _currentVelocity.y = JumpHeight;
+            _currentVelocity.y = Mathf.Sqrt(2 * Physics.gravity.magnitude * JumpHeight);
         }
 
         _controller.Move(transform.TransformDirection(_currentVelocity) * Time.deltaTime);
 
         // Reset jumpstate after every frame
         _isJumping = false;
-
-        // Store calculated grounded state for the next frame
-        _previousFrameGrounded = _controller.isGrounded;
     }
 
     private void updateCamera()

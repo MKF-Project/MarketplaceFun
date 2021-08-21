@@ -18,6 +18,7 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
 
     public float MoveSpeed;
     public float WalkSpeed;
+    public float JumpSpeed;
     public float Sensitivity = 1;
     public float JumpHeight;
     public float JumpDampening;
@@ -26,7 +27,6 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
 
     private void Awake()
     {
-
         _controller = gameObject.GetComponent<CharacterController>();
 
         // Get the GameObject that contains the camera
@@ -104,7 +104,7 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
 
     private void updateMovement()
     {
-        var planeMovement = _currentSpeed * _currentDirection;
+        var planeMovement = (_controller.isGrounded? _currentSpeed : JumpSpeed) * _currentDirection;
         _currentVelocity.Set(planeMovement.x, _currentVelocity.y, planeMovement.y);
 
         // Reset vertical acceleration if some external force causes it to be affected

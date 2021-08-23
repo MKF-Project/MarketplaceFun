@@ -544,11 +544,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 10
-  WalkSpeed: 1
-  JumpSpeed: 3.5
+  WalkSpeed: 3
+  FallSpeed: 5
   Sensitivity: 1
   JumpHeight: 3
-  JumpDampening: 0
   MaximumViewAngle: 90
 --- !u!114 &7903483743102282125
 MonoBehaviour:

@@ -18,10 +18,9 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
 
     public float MoveSpeed;
     public float WalkSpeed;
-    public float JumpSpeed;
+    public float FallSpeed;
     public float Sensitivity = 1;
     public float JumpHeight;
-    public float JumpDampening;
 
     public float MaximumViewAngle = 90f;
 
@@ -104,7 +103,7 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
 
     private void updateMovement()
     {
-        var planeMovement = (_controller.isGrounded? _currentSpeed : JumpSpeed) * _currentDirection;
+        var planeMovement = (_controller.isGrounded? _currentSpeed : FallSpeed) * _currentDirection;
         _currentVelocity.Set(planeMovement.x, _currentVelocity.y, planeMovement.y);
 
         // Reset vertical acceleration if some external force causes it to be affected

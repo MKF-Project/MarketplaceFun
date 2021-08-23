@@ -402,6 +402,7 @@ GameObject:
   - component: {fileID: -6045655609219840054}
   - component: {fileID: 6060007277188276103}
   - component: {fileID: 3641319562385682725}
+  - component: {fileID: -4058306511684965661}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -610,3 +611,15 @@ MonoBehaviour:
   PickItemButton: {fileID: 2854534919665786420}
   _canPickUpItem: 0
   _ItemGenerator: {fileID: 0}
+--- !u!114 &-4058306511684965661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816987188999332804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b671f22c445904b4b89b89050a2c03d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

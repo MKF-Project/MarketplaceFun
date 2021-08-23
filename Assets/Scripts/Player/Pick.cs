@@ -70,6 +70,7 @@ public class Pick : NetworkBehaviour
     {
         _player.HoldItem(item);
         item.GetComponent<Item>().BeHeld(HeldPosition);
+        
         PickItemButton.SetActive(false);
         _canShowButton = false;
     }

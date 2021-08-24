@@ -6,7 +6,6 @@ public class Player : MonoBehaviour
 {
     public GameObject HoldingItem;
 
-
     public bool IsHoldingItem; //{get;  set; }
 
     private void Awake()
@@ -22,9 +21,15 @@ public class Player : MonoBehaviour
 
     public void DropItem()
     {
+        HoldingItem.GetComponent<Item>().BeDropped();
         HoldingItem = null;
         IsHoldingItem = false;
     }
 
+
+    public Item GetItemComponent()
+    {
+        return HoldingItem.GetComponent<Item>();
+    }
 
 }

@@ -47,16 +47,18 @@ public class ItemGenerator : NetworkBehaviour
       
         itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
         
-        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, clientRpcParams);
+        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, clientRpcParams);
     }
     
 
     [ClientRpc]
-    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
+    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, int itemTypeCode, ClientRpcParams clientRpcParams = default)
     {
         GameObject itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
+        
         if (itemGenerated != null)
         {
+            itemGenerated.GetComponent<Item>().ItemTypeCode = itemTypeCode;
             _onItemGenerated?.Invoke(itemGenerated);
             _onItemGenerated = null;
         }

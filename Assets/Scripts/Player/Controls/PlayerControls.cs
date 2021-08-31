@@ -61,9 +61,12 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         if(IsOwner)
         {
+            #if UNITY_EDITOR
+                Debug.DrawRay(_camera.transform.position, _camera.transform.forward * InteractionDistance, Color.red);
+            #endif
+
             if(Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
             {
-
                 // Was looking at something different than current object
                 if(_currentLookingObject != hitInfo.transform.gameObject)
                 {

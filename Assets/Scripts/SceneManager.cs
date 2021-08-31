@@ -7,16 +7,27 @@ using UnityScene = UnityEngine.SceneManagement;
 
 public class SceneManager : MonoBehaviour
 {
+    
+    
     // Events
     public delegate void OnMainMenuLostConnectionDelegate();
     public static event OnMainMenuLostConnectionDelegate OnMainMenuLostConnection;
 
+    
     public delegate void OnMenuLoadedDelegate(string sceneName);
     public static event OnMenuLoadedDelegate OnMenuLoaded;
 
+
     public delegate void OnMatchLoadedDelegate(string sceneName);
     public static event OnMatchLoadedDelegate OnMatchLoaded;
+    
+    
+    public delegate void OnSceneLoadedDelegate(string sceneName);
+    public static event OnSceneLoadedDelegate OnSceneLoaded;
 
+
+    public String MatchScene;
+    
     private const string _selfTag = "SceneManager";
 
     private const string _mainMenu = "MainMenu";
@@ -30,6 +41,7 @@ public class SceneManager : MonoBehaviour
         Object.DontDestroyOnLoad(gameObject);
 
         LobbyMenu.OnStartMatch += loadMatch;
+        
         NetworkController.OnDisconnected += returnToMainMenu;
 
         UnityScene.SceneManager.sceneLoaded += TriggerSceneLoadEvent;
@@ -92,11 +104,12 @@ public class SceneManager : MonoBehaviour
     private void loadMatch()
     {
         // TODO get scene name from lobby
-        NetworkController.switchNetworkScene("RodrigoScene");
+        NetworkController.switchNetworkScene(MatchScene);
     }
 
     private void TriggerSceneLoadEvent(UnityScene.Scene scene, UnityScene.LoadSceneMode mode)
     {
+        OnSceneLoaded?.Invoke(scene.name);
 
         if (scene.name == _mainMenu)
         {

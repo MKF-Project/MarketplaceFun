@@ -9,14 +9,12 @@ public class Pick : NetworkBehaviour
     private Player _player;
     public Transform HeldPosition;
     public GameObject PickItemButton;
-    private bool _canShowButton;
     public  bool _canPickUpItem;
     public ItemGenerator _ItemGenerator;
 
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _canShowButton = true;
         _canPickUpItem = false;
 
         InputController.OnInteractOrThrow += OnInteract;
@@ -31,14 +29,13 @@ public class Pick : NetworkBehaviour
     {
         if (IsOwner)
         {
-            if (other.gameObject.CompareTag("ItemGenerator") && _canShowButton)
+            if (other.gameObject.CompareTag("ItemGenerator") && !_player.IsHoldingItem)
             {
                 _canPickUpItem = true;
                 _ItemGenerator = other.gameObject.GetComponent<ItemGenerator>();
                 PickItemButton.SetActive(true);
             }
         }
-
     }
 
     private void OnTriggerExit(Collider other)
@@ -71,14 +68,11 @@ public class Pick : NetworkBehaviour
         _player.HoldItem(item);
         item.GetComponent<Item>().BeHeld(HeldPosition);
         PickItemButton.SetActive(false);
-        _canShowButton = false;
     }
 
     public void DropItem()
     {
-        _player.HoldingItem.GetComponent<Item>().BeDropped();
         _player.DropItem();
-        _canShowButton = true;
 
     }
 }

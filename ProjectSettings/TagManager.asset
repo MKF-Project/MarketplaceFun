@@ -11,6 +11,7 @@ TagManager:
   - PickItemButton
   - ItemGenerator
   - Interactable
+  - ShoppingListUI
   layers:
   - Default
   - TransparentFX

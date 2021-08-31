@@ -116,6 +116,7 @@ public class InputController : MonoBehaviour
         watchInputAction(_playerControls, "Walk",           OnWalkAction);
         watchInputAction(_playerControls, "Pause",          OnPauseAction);
         watchInputAction(_playerControls, "Put",            OnPutAction);
+        watchInputAction(_playerControls, "Drop",           OnDropAction);
 
         // Menu Actions
         // Menu navigation is mostly handled by the default Unity AcionMap
@@ -335,6 +336,16 @@ public class InputController : MonoBehaviour
     {
         if(context.performed) {
             OnPut?.Invoke();
+        }
+    }
+    
+    public delegate void OnDropDelegate();
+    public static event OnDropDelegate OnDrop;
+
+    private void OnDropAction(InputAction.CallbackContext context)
+    {
+        if(context.performed) {
+            OnDrop?.Invoke();
         }
     }
 }

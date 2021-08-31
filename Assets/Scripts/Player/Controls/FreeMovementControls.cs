@@ -8,21 +8,24 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     private CharacterController _controller;
     private Transform _camera;
 
-    private float _currentSpeed = 0;
-    private bool _isWalking = false;
-    private float _currentRotation = 0;
+    private Vector3 _currentVelocity = Vector3.zero;
     private Vector2 _currentDirection = Vector2.zero;
     private Vector2 _nextRotation = Vector2.zero;
+    private float _currentSpeed = 0;
+    private float _currentRotation = 0;
+    private bool _isWalking = false;
+    private bool _isJumping = false;
 
     public float MoveSpeed;
     public float WalkSpeed;
+    public float FallSpeed;
     public float Sensitivity = 1;
+    public float JumpHeight;
 
     public float MaximumViewAngle = 90f;
 
     private void Awake()
     {
-
         _controller = gameObject.GetComponent<CharacterController>();
 
         // Get the GameObject that contains the camera
@@ -77,7 +80,7 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
     {
         if(IsOwner)
         {
-
+            _isJumping = true;
         }
     }
 
@@ -100,15 +103,29 @@ public class FreeMovementControls : NetworkBehaviour, PlayerControls
 
     private void updateMovement()
     {
-        var planeMovement = _currentSpeed * _currentDirection;
-        var currentVelocity = new Vector3(planeMovement.x, 0, planeMovement.y);
+        var planeMovement = (_controller.isGrounded? _currentSpeed : FallSpeed) * _currentDirection;
+        _currentVelocity.Set(planeMovement.x, _currentVelocity.y, planeMovement.y);
 
-        if(!_controller.isGrounded)
+        // Reset vertical acceleration if some external force causes it to be affected
+        // Like hitting the floor or ceiling
+        if(_controller.velocity.y == 0)
         {
-            currentVelocity += Physics.gravity;
+            _currentVelocity.y = 0;
         }
 
-        _controller.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
+        // Always apply gravity, even when the player is possibly already Grounded
+        _currentVelocity += Physics.gravity * Time.deltaTime;
+
+        if(_controller.isGrounded && _isJumping)
+        {
+            // if Jumping Apply instant vertical velocity change, overriding gravity
+            _currentVelocity.y = Mathf.Sqrt(2 * Physics.gravity.magnitude * JumpHeight);
+        }
+
+        _controller.Move(transform.TransformDirection(_currentVelocity) * Time.deltaTime);
+
+        // Reset jumpstate after every frame
+        _isJumping = false;
     }
 
     private void updateCamera()

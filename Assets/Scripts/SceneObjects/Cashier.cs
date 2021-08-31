@@ -10,19 +10,22 @@ public class Cashier : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (other.GetComponent<Player>().IsListComplete)
+            Player player = other.GetComponent<Player>();
+            if (MatchManager.Instance.IsMainPlayer(player))
             {
-                MatchMessages.Instance.EditMessage("You Win");
-                MatchMessages.Instance.ShowMessage();
-                
-                //InMatchCanvas.Instance.EndText
-            }
-            else
-            {
-                MatchMessages.Instance.EditMessage("List not complete");
-                MatchMessages.Instance.ShowMessage();
-            }
+                if (player.IsListComplete)
+                {
+                    MatchMessages.Instance.EditMessage("You Win");
+                    MatchMessages.Instance.ShowMessage();
 
+                    //InMatchCanvas.Instance.EndText
+                }
+                else
+                {
+                    MatchMessages.Instance.EditMessage("List not complete");
+                    MatchMessages.Instance.ShowMessage();
+                }
+            }
 
         }
     }

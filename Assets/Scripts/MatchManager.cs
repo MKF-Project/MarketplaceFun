@@ -32,4 +32,9 @@ public class MatchManager : MonoBehaviour
         Player4.transform.position = position4;
         Player4.SetActive(true);
     }
+
+    public bool IsMainPlayer(Player player)
+    {
+        return MainPlayer.Equals(player);
+    }
 }

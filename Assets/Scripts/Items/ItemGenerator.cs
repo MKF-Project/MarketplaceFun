@@ -11,7 +11,50 @@ using UnityEngine;
 public class ItemGenerator : NetworkBehaviour
 {
     public GameObject ItemPrefab;
+
     private Action<GameObject> _onItemGenerated = null;
+    private Interactable _interactScript = null;
+
+    private void Awake()
+    {
+        _interactScript = gameObject.GetComponentInChildren<Interactable>();
+
+        if(_interactScript == null)
+        {
+            return;
+        }
+
+        _interactScript.OnLookEnter += showButtonPrompt;
+        _interactScript.OnLookExit += hideButtonPrompt;
+        _interactScript.OnInteract += generateItem;
+    }
+
+    private void OnDestroy()
+    {
+        if(_interactScript == null)
+        {
+            return;
+        }
+
+        _interactScript.OnLookEnter -= showButtonPrompt;
+        _interactScript.OnLookExit -= hideButtonPrompt;
+        _interactScript.OnInteract -= generateItem;
+    }
+
+    private void showButtonPrompt(GameObject player)
+    {
+        Debug.Log($"[{gameObject}]: Showing button prompt");
+    }
+
+    private void hideButtonPrompt(GameObject player)
+    {
+        Debug.Log($"[{gameObject}]: Hiding button prompt");
+    }
+
+    private void generateItem(GameObject player)
+    {
+        Debug.Log($"[{gameObject}]: Trigger generate item");
+    }
 
     public void GetItem(Action<GameObject> onItemGenerated)
     {
@@ -29,16 +72,16 @@ public class ItemGenerator : NetworkBehaviour
                 TargetClientIds = new ulong[] {rpcReceiveParams.Receive.SenderClientId}
             }
         };
-        
+
         GameObject generatedItem = Instantiate(ItemPrefab, Vector3.zero, Quaternion.identity);
 
         var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
-      
+
         itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
-        
+
         GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, clientRpcParams);
     }
-    
+
 
     [ClientRpc]
     private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
@@ -50,5 +93,5 @@ public class ItemGenerator : NetworkBehaviour
             _onItemGenerated = null;
         }
     }
-    
+
 }

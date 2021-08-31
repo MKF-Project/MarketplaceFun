@@ -591,8 +591,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   WalkSpeed: 3
-  FallSpeed: 5
   Sensitivity: 1
+  InteractionDistance: 2
+  FallSpeed: 5
   JumpHeight: 3
   MaximumViewAngle: 90
 --- !u!114 &7903483743102282125
@@ -609,9 +610,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   WalkSpeed: 1
+  Sensitivity: 1
+  InteractionDistance: 2
   MovingTurnSpeed: 100
   InPlaceTurnSpeed: 40
-  Sensitivity: 1
   Deadzone: 0.5
   MaximumViewAngle: 60
 --- !u!114 &-6045655609219840054

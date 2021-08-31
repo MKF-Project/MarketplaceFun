@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
+using MLAPI.Serialization;
 using UnityEngine;
 
 public class Item : NetworkBehaviour
@@ -9,6 +10,7 @@ public class Item : NetworkBehaviour
     private Transform _heldPosition;
     private bool _isHeld;
     private NetworkObject _networkObject;
+    public int ItemTypeCode;
 
     
     //Object needs to be registered not before NetworkStart, like Awake

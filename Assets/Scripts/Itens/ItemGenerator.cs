@@ -10,8 +10,15 @@ using UnityEngine;
 
 public class ItemGenerator : NetworkBehaviour
 {
-    public GameObject ItemPrefab;
+    private GameObject _itemPrefab;
+    public int ItemTypeCode;
     private Action<GameObject> _onItemGenerated = null;
+
+    public void Awake()
+    {
+        _itemPrefab = ItemTypeList.ItemList[ItemTypeCode].ItemPrefab;
+    }
+
 
     public void GetItem(Action<GameObject> onItemGenerated)
     {
@@ -30,22 +37,28 @@ public class ItemGenerator : NetworkBehaviour
             }
         };
         
-        GameObject generatedItem = Instantiate(ItemPrefab, Vector3.zero, Quaternion.identity);
+        GameObject generatedItem = Instantiate(_itemPrefab, Vector3.zero, Quaternion.identity);
+
+        var item = generatedItem.GetComponent<Item>();
+
+        item.ItemTypeCode = ItemTypeCode;
 
         var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
       
         itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
         
-        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, clientRpcParams);
+        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, clientRpcParams);
     }
     
 
     [ClientRpc]
-    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
+    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, int itemTypeCode, ClientRpcParams clientRpcParams = default)
     {
         GameObject itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
+        
         if (itemGenerated != null)
         {
+            itemGenerated.GetComponent<Item>().ItemTypeCode = itemTypeCode;
             _onItemGenerated?.Invoke(itemGenerated);
             _onItemGenerated = null;
         }

@@ -59,7 +59,32 @@ public abstract class PlayerControls : NetworkBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if(IsOwner)
+        {
+            if(Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
+            {
 
+                // Was looking at something different than current object
+                if(_currentLookingObject != hitInfo.transform.gameObject)
+                {
+                    // Was looking at one object, now looking at another
+                    if(_currentLookingObject != null)
+                    {
+                        _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
+                    }
+
+                    // Update current looking object
+                    _currentLookingObject = hitInfo.transform.gameObject;
+                    _currentLookingObject.GetComponent<Interactable>()?.TriggerLookEnter(gameObject);
+                }
+            }
+            // Is no longer looking at a previous object. Call the object's OnLookExit
+            else if(_currentLookingObject != null)
+            {
+                _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
+                _currentLookingObject = null;
+            }
+        }
     }
 
     public virtual void Move(Vector2 direction)
@@ -94,7 +119,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
     public virtual void Interact()
     {
-
+        _currentLookingObject.GetComponent<Interactable>()?.TriggerInteract(gameObject);
     }
 
 }

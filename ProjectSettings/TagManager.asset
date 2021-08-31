@@ -10,6 +10,7 @@ TagManager:
   - Item
   - PickItemButton
   - ItemGenerator
+  - Interactable
   layers:
   - Default
   - TransparentFX

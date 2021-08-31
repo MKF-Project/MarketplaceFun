@@ -1,38 +1,72 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
-public abstract class Interactable : MonoBehaviour
+public class Interactable : NetworkBehaviour
 {
-    protected const string TAG_NAME = "Interactable";
-    protected const string LAYER_NAME = "Interact";
-    protected readonly int LAYER_MASK = LayerMask.NameToLayer(LAYER_NAME);
+    public const string TAG_NAME = "Interactable";
+    public const string LAYER_NAME = "Interact";
+    public static readonly int LAYER_MASK = LayerMask.NameToLayer(LAYER_NAME);
 
-    protected Collider _interactionCollider = null;
+    private Collider _interactionCollider = null;
+    private bool _configured = false;
 
-    protected virtual void Awake()
+    private void Awake()
     {
         if(gameObject.tag != TAG_NAME || gameObject.layer != LAYER_MASK)
         {
+            #if UNITY_EDITOR
+                Debug.LogWarning($"[{gameObject}::Interactable]: Could not find suitable interactable gameobject. Tag: {gameObject.tag}, Layer: {LayerMask.LayerToName(gameObject.layer)}");
+            #endif
+
             return;
         }
 
         _interactionCollider = GetComponent<Collider>();
+        _configured = true;
     }
 
-    public virtual void OnLookEnter(GameObject player)
+    public delegate void OnLookEnterDelegate(GameObject player);
+    public event OnLookEnterDelegate OnLookEnter;
+    public void TriggerLookEnter(GameObject player)
     {
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject}::OnLookEnter]: {player}, Configured: ${_configured}");
+        #endif
 
+        if(_configured)
+        {
+            OnLookEnter?.Invoke(player);
+        }
     }
 
-    public virtual void OnLookExit(GameObject player)
+    public delegate void OnLookExitDelegate(GameObject player);
+    public event OnLookExitDelegate OnLookExit;
+    public void TriggerLookExit(GameObject player)
     {
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject}::OnLookExit]: {player}, Configured: ${_configured}");
+        #endif
 
+        if(_configured)
+        {
+            OnLookExit?.Invoke(player);
+        }
     }
 
-    public virtual void OnInteract(GameObject player)
+    public delegate void OnInteractDelegate(GameObject player);
+    public event OnInteractDelegate OnInteract;
+    public void TriggerInteract(GameObject player)
     {
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject}::OnInteract]: {player}, Configured: ${_configured}");
+        #endif
 
+        if(_configured)
+        {
+            OnInteract?.Invoke(player);
+        }
     }
 
 }

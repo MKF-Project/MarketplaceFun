@@ -33,7 +33,7 @@ public abstract class PlayerControls : NetworkBehaviour
         #if UNITY_EDITOR
             if(_camera == null)
             {
-                Debug.LogError($"[{gameObject}::PlayerControls]: Player Camera not Found!");
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera not Found!");
             }
         #endif
 

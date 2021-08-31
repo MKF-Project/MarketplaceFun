@@ -43,17 +43,17 @@ public class ItemGenerator : NetworkBehaviour
 
     private void showButtonPrompt(GameObject player)
     {
-        Debug.Log($"[{gameObject}]: Showing button prompt");
+        Debug.Log($"[{gameObject.name}]: Showing button prompt");
     }
 
     private void hideButtonPrompt(GameObject player)
     {
-        Debug.Log($"[{gameObject}]: Hiding button prompt");
+        Debug.Log($"[{gameObject.name}]: Hiding button prompt");
     }
 
     private void generateItem(GameObject player)
     {
-        Debug.Log($"[{gameObject}]: Trigger generate item");
+        Debug.Log($"[{gameObject.name}]: Trigger generate item");
     }
 
     public void GetItem(Action<GameObject> onItemGenerated)

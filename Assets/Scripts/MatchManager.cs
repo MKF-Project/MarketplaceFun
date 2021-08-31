@@ -6,6 +6,8 @@ public class MatchManager : MonoBehaviour
 {
     public static MatchManager Instance { get; private set; }
 
+    public Player MainPlayer;
+    
     private void Awake()
     {
         Instance = this;
@@ -20,7 +22,6 @@ public class MatchManager : MonoBehaviour
     {
         Player1.SetActive(true);
         Player1.transform.position = position1;
-        
         
         Player2.transform.position = position2;
         Player2.SetActive(true);

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
 using UnityEngine;
@@ -15,6 +16,15 @@ public class Put : NetworkBehaviour
         InputController.OnPut += OnPut;
     }
 
+
+    public override void NetworkStart()
+    {
+        if (!IsOwner)
+        {
+            Destroy(this);
+        }
+    }
+
     private void OnDestroy()
     {
         InputController.OnPut -= OnPut;
@@ -27,6 +37,11 @@ public class Put : NetworkBehaviour
             bool isChecked = CheckItem(_player.GetItemComponent().ItemTypeCode);
             if (isChecked)
             {
+                if (_shoppingList.IsListChecked())
+                {
+                    _player.ListComplete();
+                }
+
                 _player.DropItem();
             }
         }

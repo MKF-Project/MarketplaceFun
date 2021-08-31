@@ -8,6 +8,9 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="Extensions.cs" t="Include" />
+          <e p="InMatchCanvas" t="Include">
+            <e p="MatchMessages.cs" t="Include" />
+          </e>
           <e p="InputController.cs" t="Include" />
           <e p="Itens" t="Include">
             <e p="Item.cs" t="Include" />
@@ -28,7 +31,6 @@
           <e p="Network" t="Include">
             <e p="NetworkController.cs" t="Include" />
             <e p="NetworkItemManager.cs" t="Include" />
-            <e p="ShoppingListGenerator.cs" t="Include" />
           </e>
           <e p="ObjectsManager.cs" t="Include" />
           <e p="Player" t="Include">
@@ -46,6 +48,7 @@
           </e>
           <e p="SceneManager.cs" t="Include" />
           <e p="SceneObjects" t="Include">
+            <e p="Cashier.cs" t="Include" />
             <e p="Shelf.cs" t="Include" />
           </e>
           <e p="ShoppingList" t="Include">

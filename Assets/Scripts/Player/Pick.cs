@@ -36,7 +36,6 @@ public class Pick : NetworkBehaviour
                 PickItemButton.SetActive(true);
             }
         }
-
     }
 
     private void OnTriggerExit(Collider other)

@@ -13,9 +13,12 @@ public class ShoppingList : NetworkBehaviour
     //public List<ShoppingListItem> ItemList;
     public ShoppingListUI ShoppingListUi;
 
+    private int _quantityChecked;
+
     // Start is called before the first frame update
     void Start()
     {
+        _quantityChecked = 0;
         ItemDictionary = new Dictionary<int, ShoppingListItem>();
         
         if (IsOwner)
@@ -116,6 +119,7 @@ public class ShoppingList : NetworkBehaviour
         ItemDictionary.Remove(itemCode);
         ItemDictionary.Add(itemCode, listItem);
         ShoppingListUi.CheckItem(itemCode);
+        _quantityChecked++;
         return true;
     }
 
@@ -126,6 +130,7 @@ public class ShoppingList : NetworkBehaviour
         ItemDictionary.Remove(itemCode);
         ItemDictionary.Add(itemCode, listItem);
         ShoppingListUi.UncheckItem(itemCode);
+        _quantityChecked--;
     }
 
     public bool IsOnList(int itemCode)
@@ -133,6 +138,16 @@ public class ShoppingList : NetworkBehaviour
         return ItemDictionary.ContainsKey(itemCode);
     }
 
+
+    public bool IsListChecked()
+    {
+        if (_quantityChecked == ItemDictionary.Count)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
 
 

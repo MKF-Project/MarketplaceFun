@@ -44,25 +44,6 @@ public class Throw : NetworkBehaviour
         _isOn = true;
     }
 
-    // Update is called once per frame
-    /*
-    private void Update()
-    {
-        if (IsOwner && _isOn)
-        {
-            if (_player.IsHoldingItem)
-            {
-                Vector3 initialPosition = _player.HoldingItem.transform.position;
-
-                Vector3 target = CalculateTargetPosition();
-
-                // if (InputManager.PressFireButton())
-                // {
-                //     ThrowItem(target, initialPosition);
-                // }
-            }
-        }
-    }*/
 
     public void OnThrow()
     {

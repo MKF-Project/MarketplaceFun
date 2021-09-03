@@ -60,6 +60,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Drop",
+                    "type": "Button",
+                    "id": "d8b24887-ea3c-4861-b753-2b085c07976d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -88,7 +96,7 @@
                 {
                     "name": "",
                     "id": "45769728-5902-4534-935b-667a6cbd6d62",
-                    "path": "<Keyboard>/e",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
@@ -258,6 +266,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Put",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ccc37a13-d1d4-472e-838d-a8381a4dc531",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

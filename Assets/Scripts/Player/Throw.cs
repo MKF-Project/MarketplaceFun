@@ -15,7 +15,7 @@ public class Throw : NetworkBehaviour
 
     public float ArcThrow;
 
-    private bool _isOn;
+    public bool _isOn;
 
     //public Camera Camera;
 
@@ -27,12 +27,16 @@ public class Throw : NetworkBehaviour
         _pick = GetComponent<Pick>();
         SceneManager.OnMatchLoaded += TurnOn;
         _isOn = false;
+        InputController.OnInteractOrThrow += OnThrow;
+
 
     }
 
     private void OnDestroy()
     {
         SceneManager.OnMatchLoaded -= TurnOn;
+        InputController.OnInteractOrThrow -= OnThrow;
+
     }
 
     private void TurnOn(string sceneName)
@@ -40,8 +44,8 @@ public class Throw : NetworkBehaviour
         _isOn = true;
     }
 
-    // Update is called once per frame
-    private void Update()
+
+    public void OnThrow()
     {
         if (IsOwner && _isOn)
         {
@@ -53,7 +57,7 @@ public class Throw : NetworkBehaviour
 
                 // if (InputManager.PressFireButton())
                 // {
-                //     ThrowItem(target, initialPosition);
+                ThrowItem(target, initialPosition);
                 // }
             }
         }

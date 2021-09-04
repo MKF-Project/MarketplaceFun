@@ -59,70 +59,89 @@ public abstract class PlayerControls : NetworkBehaviour
 
     protected virtual void FixedUpdate()
     {
-        if(IsOwner)
+        if(!IsOwner)
         {
-            #if UNITY_EDITOR
-                Debug.DrawRay(_camera.transform.position, _camera.transform.forward * InteractionDistance, Color.red);
-            #endif
+            return;
+        }
 
-            if(Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
+        #if UNITY_EDITOR
+            Debug.DrawRay(_camera.transform.position, _camera.transform.forward * InteractionDistance, Color.red);
+        #endif
+
+        if(Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
+        {
+            // Was looking at something different than current object
+            if(_currentLookingObject != hitInfo.transform.gameObject)
             {
-                // Was looking at something different than current object
-                if(_currentLookingObject != hitInfo.transform.gameObject)
+                // Was looking at one object, now looking at another
+                if(_currentLookingObject != null)
                 {
-                    // Was looking at one object, now looking at another
-                    if(_currentLookingObject != null)
-                    {
-                        _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
-                    }
-
-                    // Update current looking object
-                    _currentLookingObject = hitInfo.transform.gameObject;
-                    _currentLookingObject.GetComponent<Interactable>()?.TriggerLookEnter(gameObject);
+                    _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
                 }
+
+                // Update current looking object
+                _currentLookingObject = hitInfo.transform.gameObject;
+                _currentLookingObject.GetComponent<Interactable>()?.TriggerLookEnter(gameObject);
             }
-            // Is no longer looking at a previous object. Call the object's OnLookExit
-            else if(_currentLookingObject != null)
-            {
-                _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
-                _currentLookingObject = null;
-            }
+        }
+
+        // Is no longer looking at a previous object. Call the object's OnLookExit
+        else if(_currentLookingObject != null)
+        {
+            _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
+            _currentLookingObject = null;
         }
     }
 
     public virtual void Move(Vector2 direction)
     {
-        if(IsOwner)
+        if(!(isActiveAndEnabled && IsOwner))
         {
-            _currentDirection = direction;
+            return;
         }
+
+        _currentDirection = direction;
     }
 
     public virtual void Look(Vector2 direction)
     {
-        if(IsOwner)
+        if(!(isActiveAndEnabled && IsOwner))
         {
-            _nextRotation = direction * Sensitivity;
+            return;
         }
+
+        _nextRotation = direction * Sensitivity;
     }
 
     public virtual void Jump()
     {
+        if(!(isActiveAndEnabled && IsOwner))
+        {
+            return;
+        }
 
     }
 
     public virtual void Walk()
     {
-        if(IsOwner)
+        if(!(isActiveAndEnabled && IsOwner))
         {
-            _isWalking = !_isWalking;
-            _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
+            return;
         }
+
+
+        _isWalking = !_isWalking;
+        _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
     }
 
     public virtual void Interact()
     {
-        _currentLookingObject.GetComponent<Interactable>()?.TriggerInteract(gameObject);
+        if(!(isActiveAndEnabled && IsOwner))
+        {
+            return;
+        }
+
+        _currentLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
     }
 
 }

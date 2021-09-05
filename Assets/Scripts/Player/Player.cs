@@ -6,9 +6,11 @@ using UnityEngine;
 public class Player : NetworkBehaviour
 {
     public bool IsListComplete;
-    
-    public GameObject HoldingItem;
 
+    private const string HELP_POSITION_NAME = "HeldPosition";
+    public Transform HeldPosition {get; private set;}
+
+    public GameObject HoldingItem;
     public bool IsHoldingItem;
 
 
@@ -22,6 +24,8 @@ public class Player : NetworkBehaviour
 
     private void Awake()
     {
+        HeldPosition = gameObject.transform.Find(HELP_POSITION_NAME);
+
         IsHoldingItem = false;
         IsListComplete = false;
     }
@@ -29,6 +33,7 @@ public class Player : NetworkBehaviour
     public void HoldItem(GameObject item)
     {
         HoldingItem = item;
+        item.GetComponent<Item>().BeHeld(HeldPosition);
         IsHoldingItem = true;
     }
 
@@ -38,7 +43,6 @@ public class Player : NetworkBehaviour
         HoldingItem = null;
         IsHoldingItem = false;
     }
-
 
     public Item GetItemComponent()
     {
@@ -50,6 +54,5 @@ public class Player : NetworkBehaviour
         MatchMessages.Instance.EditMessage("Your list is complete");
         MatchMessages.Instance.ShowMessage();
         IsListComplete = true;
-        
     }
 }

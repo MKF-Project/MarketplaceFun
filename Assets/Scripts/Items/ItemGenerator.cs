@@ -10,9 +10,11 @@ using UnityEngine;
 
 public class ItemGenerator : NetworkBehaviour
 {
-    private GameObject _itemPrefab;
     public int ItemTypeCode;
-    private Action<GameObject> _onItemGenerated = null;
+
+    private GameObject _itemPrefab;
+    private GameObject _player = null;
+    // private Action<GameObject> _onItemGenerated = null;
     private Interactable _interactScript = null;
 
     private void Awake()
@@ -45,28 +47,54 @@ public class ItemGenerator : NetworkBehaviour
 
     private void showButtonPrompt(GameObject player)
     {
-        Debug.Log($"[{gameObject.name}]: Showing button prompt");
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject.name}]: Showing button prompt");
+        #endif
+
+        // Show UI if not holding item
+        var objectScript = player.GetComponent<Player>();
+        if(objectScript != null && !objectScript.IsHoldingItem)
+        {
+            _interactScript.InteractUI.SetActive(true);
+        }
     }
 
     private void hideButtonPrompt(GameObject player)
     {
-        Debug.Log($"[{gameObject.name}]: Hiding button prompt");
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject.name}]: Hiding button prompt");
+        #endif
+
+        // Hide button prompt
+        _interactScript.InteractUI.SetActive(false);
     }
 
     private void generateItem(GameObject player)
     {
-        Debug.Log($"[{gameObject.name}]: Trigger generate item");
-    }
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject.name}]: Trigger generate item");
+        #endif
 
-    public void GetItem(Action<GameObject> onItemGenerated)
-    {
-        _onItemGenerated = onItemGenerated;
+        if(_player != null)
+        {
+            return;
+        }
+
+        _player = player;
         GenerateItem_ServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void GenerateItem_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
+        GameObject generatedItem = Instantiate(_itemPrefab, Vector3.zero, Quaternion.identity);
+
+        var item = generatedItem.GetComponent<Item>();
+        item.ItemTypeCode = ItemTypeCode;
+
+        var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
+        itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
+
         var clientRpcParams = new ClientRpcParams
         {
             Send = new ClientRpcSendParams
@@ -74,16 +102,6 @@ public class ItemGenerator : NetworkBehaviour
                 TargetClientIds = new ulong[] {rpcReceiveParams.Receive.SenderClientId}
             }
         };
-
-        GameObject generatedItem = Instantiate(_itemPrefab, Vector3.zero, Quaternion.identity);
-
-        var item = generatedItem.GetComponent<Item>();
-
-        item.ItemTypeCode = ItemTypeCode;
-
-        var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
-
-        itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
 
         GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, clientRpcParams);
     }
@@ -94,11 +112,12 @@ public class ItemGenerator : NetworkBehaviour
     {
         GameObject itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
 
-        if (itemGenerated != null)
+        if (itemGenerated != null && _player != null)
         {
             itemGenerated.GetComponent<Item>().ItemTypeCode = itemTypeCode;
-            _onItemGenerated?.Invoke(itemGenerated);
-            _onItemGenerated = null;
+            _player.GetComponent<Player>().HoldItem(itemGenerated);
+
+            _interactScript.InteractUI.SetActive(false);
         }
     }
 

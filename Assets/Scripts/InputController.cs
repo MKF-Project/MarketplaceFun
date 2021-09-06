@@ -151,6 +151,15 @@ public class InputController : MonoBehaviour
     {
         var action = actionMap.FindAction(actionName);
 
+        if(action == null)
+        {
+            #if UNITY_EDITOR
+                Debug.LogError($"[InputController]: Action \"{actionMap.name}/{actionName}\" not found!");
+            #endif
+
+            return;
+        }
+
         action.started   += actionCallback;
         action.performed += actionCallback;
         action.canceled  += actionCallback;

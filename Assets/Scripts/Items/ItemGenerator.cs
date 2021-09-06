@@ -75,11 +75,6 @@ public class ItemGenerator : NetworkBehaviour
             Debug.Log($"[{gameObject.name}]: Trigger generate item");
         #endif
 
-        if(_player != null)
-        {
-            return;
-        }
-
         _player = player;
         GenerateItem_ServerRpc();
     }

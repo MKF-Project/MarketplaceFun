@@ -12,6 +12,7 @@ public abstract class PlayerControls : NetworkBehaviour
     protected CharacterController _controller;
     protected Transform _camera;
     protected GameObject _currentLookingObject = null;
+    protected Player _playerScript = null;
 
     protected Vector2 _currentDirection = Vector2.zero;
     protected Vector2 _nextRotation = Vector2.zero;
@@ -28,33 +29,41 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         _controller = gameObject.GetComponent<CharacterController>();
 
-        // Get the GameObject that contains the camera
         _camera = gameObject.GetComponentInChildren<Camera>()?.transform;
+        _playerScript = gameObject.GetComponent<Player>();
         #if UNITY_EDITOR
             if(_camera == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera not Found!");
+            }
+            if(_playerScript == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Script not Found!");
             }
         #endif
 
         _currentSpeed = MoveSpeed;
 
         // Control Events
-        InputController.OnLook += Look;
-        InputController.OnMove += Move;
-        InputController.OnJump += Jump;
-        InputController.OnWalk += Walk;
-        InputController.OnInteractOrThrow += Interact;
+        InputController.OnLook     += Look;
+        InputController.OnMove     += Move;
+        InputController.OnJump     += Jump;
+        InputController.OnWalk     += Walk;
+        InputController.OnInteract += Interact;
+        InputController.OnThrow    += Throw;
+        InputController.OnDrop     += Drop;
     }
 
     protected virtual void OnDestroy()
     {
         // Control Events
-        InputController.OnLook -= Look;
-        InputController.OnMove -= Move;
-        InputController.OnJump -= Jump;
-        InputController.OnWalk -= Walk;
-        InputController.OnInteractOrThrow -= Interact;
+        InputController.OnLook     -= Look;
+        InputController.OnMove     -= Move;
+        InputController.OnJump     -= Jump;
+        InputController.OnWalk     -= Walk;
+        InputController.OnInteract -= Interact;
+        InputController.OnThrow    -= Throw;
+        InputController.OnDrop     -= Drop;
     }
 
     protected virtual void FixedUpdate()
@@ -136,12 +145,36 @@ public abstract class PlayerControls : NetworkBehaviour
 
     public virtual void Interact()
     {
-        if(!(isActiveAndEnabled && IsOwner))
+        // Can only Interact if not holding anything
+        if(!(isActiveAndEnabled && IsOwner) || _playerScript.IsHoldingItem)
         {
             return;
         }
 
         _currentLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
+
+    }
+
+    public virtual void Throw()
+    {
+        // Can only Throw if holding something
+        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.IsHoldingItem)
+        {
+            return;
+        }
+
+        _playerScript.ThrowItem();
+    }
+
+    public virtual void Drop()
+    {
+        // Can only Drop if holding something
+        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.IsHoldingItem)
+        {
+            return;
+        }
+
+        _playerScript.DropItem();
     }
 
 }

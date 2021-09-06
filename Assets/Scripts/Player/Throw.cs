@@ -9,13 +9,10 @@ using UnityEngine.SceneManagement;
 public class Throw : NetworkBehaviour
 {
     private Player _player;
-    private Pick _pick;
+    private bool _shouldThrow = false;
 
     public float Strength;
-
     public float ArcThrow;
-
-    private bool _isOn;
 
     //public Camera Camera;
 
@@ -24,50 +21,40 @@ public class Throw : NetworkBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _pick = GetComponent<Pick>();
-        SceneManager.OnMatchLoaded += TurnOn;
-        _isOn = false;
 
     }
 
-    private void OnDestroy()
+    private void FixedUpdate()
     {
-        SceneManager.OnMatchLoaded -= TurnOn;
-    }
-
-    private void TurnOn(string sceneName)
-    {
-        _isOn = true;
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        if (IsOwner && _isOn)
+        if(_shouldThrow && IsOwner && _player.IsHoldingItem)
         {
-            if (_player.IsHoldingItem)
-            {
-                Vector3 initialPosition = _player.HoldingItem.transform.position;
+            var initialPosition = _player.HoldingItem.transform.position;
+            var target = CalculateTargetPosition();
 
-                Vector3 target = CalculateTargetPosition();
-
-                // if (InputManager.PressFireButton())
-                // {
-                //     ThrowItem(target, initialPosition);
-                // }
-            }
+            PerformThrow(target, initialPosition);
         }
+
+        _shouldThrow = false;
     }
 
-    //[ServerRpc]
-    public void ThrowItem(Vector3 target, Vector3 initialPosition)
+    private void PerformThrow(Vector3 target, Vector3 initialPosition)
     {
-        Rigidbody itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
+        var itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;
         _player.HoldingItem.transform.position = initialPosition;
         _player.HoldingItem.SetActive(true);
-        _pick.DropItem();
+
+        _player.DropItem();
+
         itemRigidbody.AddForce(target, ForceMode.Impulse);
+    }
+
+    public void ThrowItem()
+    {
+        if(IsOwner && _player.IsHoldingItem)
+        {
+            _shouldThrow = true;
+        }
     }
 
     private Vector3 CalculateTargetPosition()

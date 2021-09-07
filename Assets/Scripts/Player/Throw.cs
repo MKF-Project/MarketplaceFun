@@ -14,10 +14,6 @@ public class Throw : NetworkBehaviour
     public float Strength;
     public float ArcThrow;
 
-    //public Camera Camera;
-
-    //public GameObject InstantiatedBomb;
-    // Start is called before the first frame update
     private void Awake()
     {
         _player = GetComponent<Player>();
@@ -37,6 +33,14 @@ public class Throw : NetworkBehaviour
         _shouldThrow = false;
     }
 
+    public void ThrowItem()
+    {
+        if(IsOwner && _player.IsHoldingItem)
+        {
+            _shouldThrow = true;
+        }
+    }
+
     private void PerformThrow(Vector3 target, Vector3 initialPosition)
     {
         var itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
@@ -47,14 +51,6 @@ public class Throw : NetworkBehaviour
         _player.DropItem();
 
         itemRigidbody.AddForce(target, ForceMode.Impulse);
-    }
-
-    public void ThrowItem()
-    {
-        if(IsOwner && _player.IsHoldingItem)
-        {
-            _shouldThrow = true;
-        }
     }
 
     private Vector3 CalculateTargetPosition()

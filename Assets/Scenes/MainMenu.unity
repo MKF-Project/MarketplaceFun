@@ -4521,6 +4521,7 @@ MonoBehaviour:
     - SampleScene
     - RodrigoScene
     - ItemListTestScene
+    - _VerticalSlice
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
@@ -4557,6 +4558,33 @@ MonoBehaviour:
         type: 3}
       PlayerPrefab: 0
     - Prefab: {fileID: 3133438055858914724, guid: 2fb00fe7abbc180448c4db73f644b1e2,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 1418102247371811481, guid: 9b8998fa28c915b42a22c88bf32fb111,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 2006318359958258604, guid: e1ccc0f6e58dc5e47920fdb17369ebc5,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 8137390273752814735, guid: 4610ebf4f8f55a34f831d44c50f2a8b0,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 5980153035501391212, guid: 942a48e8eed051c4aa54ef0de558f77f,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 504874124064471015, guid: fa51d5816e3fb02499aaf563e4c91ab1,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 6778888815260135945, guid: 5b2124470a4094f49b87fd65a40a7605,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 2877201779106764459, guid: a5105ba7769fdc845a3e9f33e6225667,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 3463337441158482716, guid: 9ce260ca06f072348a03fe78f1619dd6,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 2403696505123898690, guid: fe04dcbb9eefd78499fb6884770df6a8,
         type: 3}
       PlayerPrefab: 0
     PlayerPrefabHash:
@@ -7785,7 +7813,7 @@ PrefabInstance:
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
       propertyPath: MatchScene
-      value: ItemListTestScene
+      value: _VerticalSlice
       objectReference: {fileID: 0}
     - target: {fileID: 3806232346622104752, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}

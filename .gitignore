@@ -32,6 +32,10 @@ ExportedObj/
 *.opendb
 *.VC.db
 
+# Blender backup files
+*.blend1
+*.blend1.meta
+
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta

@@ -54,7 +54,7 @@ public class Player : NetworkBehaviour
 
     public void ThrowItem()
     {
-        _throwScript.ThrowItem();
+        _throwScript.OnThrow();
     }
 
     public void DropItem()

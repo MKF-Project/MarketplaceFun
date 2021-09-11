@@ -27,13 +27,13 @@ public class Throw : NetworkBehaviour
             var initialPosition = _player.HoldingItem.transform.position;
             var target = CalculateTargetPosition();
 
-            PerformThrow(target, initialPosition);
+            ThrowItem(target, initialPosition);
         }
 
         _shouldThrow = false;
     }
 
-    public void ThrowItem()
+    public void OnThrow()
     {
         if(IsOwner && _player.IsHoldingItem)
         {
@@ -41,7 +41,7 @@ public class Throw : NetworkBehaviour
         }
     }
 
-    private void PerformThrow(Vector3 target, Vector3 initialPosition)
+    private void ThrowItem(Vector3 target, Vector3 initialPosition)
     {
         var itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;

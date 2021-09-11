@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 5295567960322932827}
   - component: {fileID: 264301463066686274}
   - component: {fileID: 5985162255224570394}
-  - component: {fileID: 1126737510589561562}
+  - component: {fileID: 2840725829884022168}
   m_Layer: 12
   m_Name: Expositor_Frutas
   m_TagString: ItemGenerator
@@ -192,6 +192,7 @@ Transform:
   - {fileID: 8298786198730648910}
   - {fileID: 1587176581789682762}
   - {fileID: 2545141580582410524}
+  - {fileID: 1250802582867385048}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -225,7 +226,7 @@ MonoBehaviour:
   PrefabHashGenerator: Expositor_Frutas
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!65 &1126737510589561562
+--- !u!65 &2840725829884022168
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -233,11 +234,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3463337441158482716}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.5, y: 1.8, z: 1.5}
-  m_Center: {x: 0, y: 0, z: 0.75}
+  m_Size: {x: 2.4438486, y: 1.8000007, z: 1.1501467}
+  m_Center: {x: 0, y: 0, z: 0.575}
 --- !u!1 &4065252525749724498
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,6 +318,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &1148576492475366079
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5208826860877466264}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.4438486, y: 1.8000007, z: 1.1501467}
+  m_Center: {x: 0, y: 0, z: 0.575}
 --- !u!1 &5954868924167320594
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,7 +342,6 @@ GameObject:
   - component: {fileID: 2545141580582410524}
   - component: {fileID: 3878316846526725923}
   - component: {fileID: 1965039876495499317}
-  - component: {fileID: 7730701279013134150}
   m_Layer: 12
   m_Name: Expositor Frutas
   m_TagString: Untagged
@@ -397,16 +410,84 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &7730701279013134150
-BoxCollider:
+--- !u!1001 &555737598423649572
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5954868924167320594}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.4438486, y: 1.8000007, z: 1.0774392}
-  m_Center: {x: 0, y: 1.3206412, z: -0.37582877}
+  m_Modification:
+    m_TransformParent: {fileID: 5295567960322932827}
+    m_Modifications:
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_Name
+      value: InteractObject
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fee8405d92c31f74dab45dbad02fddf3, type: 3}
+--- !u!1 &5208826860877466264 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
+    type: 3}
+  m_PrefabInstance: {fileID: 555737598423649572}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1250802582867385048 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1652220956685195260, guid: fee8405d92c31f74dab45dbad02fddf3,
+    type: 3}
+  m_PrefabInstance: {fileID: 555737598423649572}
+  m_PrefabAsset: {fileID: 0}

@@ -34,22 +34,25 @@
           </e>
           <e p="ObjectsManager.cs" t="Include" />
           <e p="Player" t="Include">
+            <e p="Actions" t="Include">
+              <e p="Pick.cs" t="Include" />
+              <e p="Put.cs" t="Include" />
+              <e p="Throw.cs" t="Include" />
+            </e>
             <e p="Controls" t="Include">
               <e p="CartControls.cs" t="Include" />
               <e p="FreeMovementControls.cs" t="Include" />
               <e p="PlayerControls.cs" t="Include" />
             </e>
-            <e p="Pick.cs" t="Include" />
             <e p="Player.cs" t="Include" />
             <e p="PlayerController.cs" t="Include" />
             <e p="PlayerManager.cs" t="Include" />
-            <e p="Put.cs" t="Include" />
-            <e p="Throw.cs" t="Include" />
           </e>
           <e p="SceneManager.cs" t="Include" />
           <e p="SceneObjects" t="Include">
             <e p="Cashier.cs" t="Include" />
             <e p="Shelf.cs" t="Include" />
+            <e p="Target.cs" t="Include" />
           </e>
           <e p="ShoppingList" t="Include">
             <e p="SerializedShoppingList.cs" t="Include" />

@@ -7,7 +7,7 @@ using UnityEngine;
 public class Pick : NetworkBehaviour
 {
     private Player _player;
-    public Transform HeldPosition;
+    
     public GameObject PickItemButton;
     public  bool _canPickUpItem;
     public ItemGenerator _ItemGenerator;
@@ -66,7 +66,7 @@ public class Pick : NetworkBehaviour
     public void PickItem(GameObject item)
     {
         _player.HoldItem(item);
-        item.GetComponent<Item>().BeHeld(HeldPosition);
+        item.GetComponent<Item>().BeHeld(_player.HeldPosition);
         PickItemButton.SetActive(false);
     }
 

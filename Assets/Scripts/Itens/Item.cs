@@ -46,6 +46,8 @@ public class Item : NetworkBehaviour
         if (_isHeld)
         {
             transform.position = _heldPosition.position;
+            transform.forward = _heldPosition.forward;
+            Debug.DrawRay(_heldPosition.position, _heldPosition.forward* 10, Color.red);
         }
     }
 
@@ -60,6 +62,7 @@ public class Item : NetworkBehaviour
         _heldPosition = null;
         _isHeld = false;
     }
+    
 
 
 }

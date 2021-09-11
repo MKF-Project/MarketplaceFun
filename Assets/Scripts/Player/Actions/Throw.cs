@@ -8,13 +8,14 @@ using UnityEngine.SceneManagement;
 
 public class Throw : NetworkBehaviour
 {
+    
     private Player _player;
     private Pick _pick;
 
     public float Strength;
 
-    public float ArcThrow;
-
+    public float Distance;
+    
     public bool _isOn;
 
     //public Camera Camera;
@@ -44,21 +45,18 @@ public class Throw : NetworkBehaviour
         _isOn = true;
     }
 
-
     public void OnThrow()
     {
         if (IsOwner && _isOn)
         {
             if (_player.IsHoldingItem)
             {
-                Vector3 initialPosition = _player.HoldingItem.transform.position;
+                Vector3 initialPosition = _player.HeldPosition.position;
 
                 Vector3 target = CalculateTargetPosition();
 
-                // if (InputManager.PressFireButton())
-                // {
-                ThrowItem(target, initialPosition);
-                // }
+             
+                ThrowItem(target, initialPosition); 
             }
         }
     }
@@ -69,20 +67,36 @@ public class Throw : NetworkBehaviour
         Rigidbody itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;
         _player.HoldingItem.transform.position = initialPosition;
+        _player.HoldingItem.transform.LookAt(target);
         _player.HoldingItem.SetActive(true);
         _pick.DropItem();
-        itemRigidbody.AddForce(target, ForceMode.Impulse);
+        Vector3 direction = target - initialPosition;
+        itemRigidbody.velocity = direction.normalized * Strength;
     }
 
     private Vector3 CalculateTargetPosition()
     {
         Vector3 screenMiddle = new Vector3();
-        screenMiddle.x = Screen.width / 2;
-        screenMiddle.y = Screen.height / 2;
+        screenMiddle.x = Screen.width / 2f;
+        screenMiddle.y = Screen.height / 2f;
         Ray ray = Camera.main.ScreenPointToRay(screenMiddle);
 
-        Vector3 target = ray.direction * Strength;
-        target += Vector3.up * ArcThrow;
+        Vector3 target;
+        #if UNITY_EDITOR
+            Debug.DrawRay(ray.origin, ray.direction * Distance, Color.green);
+        #endif
+        
+        bool raycastHit = Physics.Raycast(ray.origin, ray.direction, out var hitInfo, Distance);
+        if (raycastHit)
+        {
+            
+            target = hitInfo.point;
+        }
+        else
+        {
+            target = ray.origin + ray.direction * Distance;    
+        }
+        
         return target;
     }
 

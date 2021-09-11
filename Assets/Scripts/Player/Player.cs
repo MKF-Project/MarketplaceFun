@@ -10,6 +10,8 @@ public class Player : NetworkBehaviour
     public GameObject HoldingItem;
 
     public bool IsHoldingItem;
+    
+    public Transform HeldPosition;
 
 
     public override void NetworkStart()

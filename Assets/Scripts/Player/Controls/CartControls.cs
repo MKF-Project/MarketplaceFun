@@ -3,53 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 
-public class CartControls : NetworkBehaviour, PlayerControls
+public class CartControls : PlayerControls
 {
-    private CharacterController _controller;
-    private Transform _camera;
-
-    private float _currentSpeed = 0;
-    private bool _isWalking = false;
-    private Vector2 _currentDirection = Vector2.zero;
-    private Vector2 _nextRotation = Vector2.zero;
     private Vector2 _currentLookAngle = Vector2.zero;
 
-    public float MoveSpeed;
-    public float WalkSpeed;
     public float MovingTurnSpeed;
     public float InPlaceTurnSpeed;
-    public float Sensitivity;
     public float Deadzone;
 
     public float MaximumViewAngle = 60f;
-
-
-    private void Awake()
-    {
-        _controller = gameObject.GetComponent<CharacterController>();
-
-        // Get the GameObject that contains the camera
-        _camera = gameObject.GetComponentInChildren<Camera>().transform;
-
-        _currentSpeed = MoveSpeed;
-
-        // Control Events
-        InputController.OnLook += Look;
-        InputController.OnMove += Move;
-        InputController.OnJump += Jump;
-        InputController.OnWalk += Walk;
-        InputController.OnInteractOrThrow += Interact;
-    }
-
-    private void OnDestroy()
-    {
-        // Control Events
-        InputController.OnLook -= Look;
-        InputController.OnMove -= Move;
-        InputController.OnJump -= Jump;
-        InputController.OnWalk -= Walk;
-        InputController.OnInteractOrThrow -= Interact;
-    }
 
     private void Update()
     {
@@ -60,45 +22,9 @@ public class CartControls : NetworkBehaviour, PlayerControls
         }
     }
 
-    public void Move(Vector2 direction)
+    public override void Jump()
     {
-        if(IsOwner)
-        {
-            _currentDirection = direction;
-        }
-    }
 
-    public void Look(Vector2 direction)
-    {
-        if(IsOwner)
-        {
-            _nextRotation = direction * Sensitivity;
-        }
-    }
-
-    public void Jump()
-    {
-        if(IsOwner)
-        {
-
-        }
-    }
-
-    public void Walk()
-    {
-        if(IsOwner)
-        {
-            _isWalking = !_isWalking;
-            _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
-        }
-    }
-
-    public void Interact()
-    {
-        if(IsOwner)
-        {
-
-        }
     }
 
     private void updateMovement()

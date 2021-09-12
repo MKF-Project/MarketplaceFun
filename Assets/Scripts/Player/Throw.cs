@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
@@ -8,70 +8,51 @@ using UnityEngine.SceneManagement;
 
 public class Throw : NetworkBehaviour
 {
-    
     private Player _player;
-    private Pick _pick;
+    private bool _shouldThrow = false;
 
     public float Strength;
-
     public float Distance;
-    
-    public bool _isOn;
 
-    //public Camera Camera;
-
-    //public GameObject InstantiatedBomb;
-    // Start is called before the first frame update
     private void Awake()
     {
         _player = GetComponent<Player>();
-        _pick = GetComponent<Pick>();
-        SceneManager.OnMatchLoaded += TurnOn;
-        _isOn = false;
-        InputController.OnInteractOrThrow += OnThrow;
-
 
     }
 
-    private void OnDestroy()
+    private void FixedUpdate()
     {
-        SceneManager.OnMatchLoaded -= TurnOn;
-        InputController.OnInteractOrThrow -= OnThrow;
+        if(_shouldThrow && IsOwner && _player.IsHoldingItem)
+        {
+            var initialPosition = _player.HoldingItem.transform.position;
+            var target = CalculateTargetPosition();
 
-    }
+            ThrowItem(target, initialPosition);
+        }
 
-    private void TurnOn(string sceneName)
-    {
-        _isOn = true;
+        _shouldThrow = false;
     }
 
     public void OnThrow()
     {
-        if (IsOwner && _isOn)
+        if(IsOwner && _player.IsHoldingItem)
         {
-            if (_player.IsHoldingItem)
-            {
-                Vector3 initialPosition = _player.HeldPosition.position;
-
-                Vector3 target = CalculateTargetPosition();
-
-             
-                ThrowItem(target, initialPosition); 
-            }
+            _shouldThrow = true;
         }
     }
 
-    //[ServerRpc]
-    public void ThrowItem(Vector3 target, Vector3 initialPosition)
+    private void ThrowItem(Vector3 target, Vector3 initialPosition)
     {
-        Rigidbody itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
+        var itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;
         _player.HoldingItem.transform.position = initialPosition;
         _player.HoldingItem.transform.LookAt(target);
         _player.HoldingItem.SetActive(true);
-        _pick.DropItem();
+        _player.DropItem();
+
         Vector3 direction = target - initialPosition;
         itemRigidbody.velocity = direction.normalized * Strength;
+
     }
 
     private Vector3 CalculateTargetPosition()

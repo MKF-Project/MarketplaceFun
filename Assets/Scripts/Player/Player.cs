@@ -20,7 +20,7 @@ public class Player : NetworkBehaviour
     {
         if(IsOwner)
         {
-            MatchManager.Instance.MainPlayer = this;
+            MatchManager.Instance.MainPlayer = gameObject;
         }
     }
 

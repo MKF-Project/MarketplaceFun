@@ -11,7 +11,7 @@ public class Cashier : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
-            if (MatchManager.Instance.IsMainPlayer(player))
+            if (MatchManager.Instance.IsMainPlayer(player.gameObject))
             {
                 if (player.IsListComplete)
                 {

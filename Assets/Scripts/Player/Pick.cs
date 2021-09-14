@@ -17,12 +17,12 @@ public class Pick : NetworkBehaviour
         _player = GetComponent<Player>();
         _canPickUpItem = false;
 
-        InputController.OnInteractOrThrow += OnInteract;
+        InputController.OnDrop += OnInteract;
     }
 
     private void OnDestroy()
     {
-        InputController.OnInteractOrThrow -= OnInteract;
+        InputController.OnDrop -= OnInteract;
     }
 
     private void OnTriggerEnter(Collider other)

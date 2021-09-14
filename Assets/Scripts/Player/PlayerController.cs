@@ -86,20 +86,9 @@ public class PlayerController : NetworkBehaviour
 
         OnPlayerBehaviourChanged -= updateBehaviourState;
 
-        usePlayerCamera(false);
     }
 
     private void updateBehaviourState(bool behaviourEnabled)
     {
-        usePlayerCamera(behaviourEnabled);
-    }
-
-    private void usePlayerCamera(bool usePlayerCamera)
-    {
-        if(IsOwner)
-        {
-            _playerCamera.enabled = usePlayerCamera;
-            ObjectsManager.OverviewCamera?.SetActive(!usePlayerCamera);
-        }
     }
 }

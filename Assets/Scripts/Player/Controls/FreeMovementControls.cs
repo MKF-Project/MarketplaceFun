@@ -65,7 +65,7 @@ public class FreeMovementControls : PlayerControls
         _currentRotation += _nextRotation.y;
         if(_currentRotation <= MaximumViewAngle && _currentRotation >= -MaximumViewAngle)
         {
-            _camera.Rotate(Vector3.left, _nextRotation.y);
+            _cameraPosition.transform.Rotate(Vector3.left, _nextRotation.y);
         }
 
         _currentRotation = Mathf.Clamp(_currentRotation, -MaximumViewAngle, MaximumViewAngle);

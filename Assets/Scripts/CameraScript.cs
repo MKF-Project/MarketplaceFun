@@ -33,7 +33,7 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
-        if(PlayerController.playerBehaviourEnabled && MatchManager.Instance.MainPlayer != null)
+        if(PlayerManager.AllowPlayerControls && MatchManager.Instance.MainPlayer != null)
         {
             _currentPlayer = MatchManager.Instance.MainPlayer;
             _playerCameraObject = _currentPlayer.FindChildWithTag(CAMERA_TAG, false);

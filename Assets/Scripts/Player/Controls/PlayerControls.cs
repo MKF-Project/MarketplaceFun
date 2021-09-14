@@ -9,8 +9,10 @@ public enum PlayerControlSchemes {
 
 public abstract class PlayerControls : NetworkBehaviour
 {
+    protected const string CAMERA_TAG = "MainCamera";
+
     protected CharacterController _controller;
-    protected Transform _camera;
+    protected GameObject _cameraPosition;
     protected GameObject _currentLookingObject = null;
     protected Player _playerScript = null;
 
@@ -29,12 +31,12 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         _controller = gameObject.GetComponent<CharacterController>();
 
-        _camera = gameObject.GetComponentInChildren<Camera>()?.transform;
+        _cameraPosition = gameObject.FindChildWithTag(CAMERA_TAG);
         _playerScript = gameObject.GetComponent<Player>();
         #if UNITY_EDITOR
-            if(_camera == null)
+            if(_cameraPosition == null)
             {
-                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera not Found!");
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera Position not Found!");
             }
             if(_playerScript == null)
             {
@@ -74,10 +76,10 @@ public abstract class PlayerControls : NetworkBehaviour
         }
 
         #if UNITY_EDITOR
-            Debug.DrawRay(_camera.transform.position, _camera.transform.forward * InteractionDistance, Color.red);
+            Debug.DrawRay(_cameraPosition.transform.position, _cameraPosition.transform.forward * InteractionDistance, Color.red);
         #endif
 
-        if(Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
+        if(Physics.Raycast(_cameraPosition.transform.position, _cameraPosition.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
         {
             // Was looking at something different than current object
             if(_currentLookingObject != hitInfo.transform.gameObject)

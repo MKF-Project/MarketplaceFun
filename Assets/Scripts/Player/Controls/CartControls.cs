@@ -22,6 +22,11 @@ public class CartControls : PlayerControls
         }
     }
 
+    private void OnEnable()
+    {
+        ControlScheme = PlayerControlSchemes.CartControls;
+    }
+
     public override void Jump()
     {
 

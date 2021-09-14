@@ -11,6 +11,41 @@ public abstract class PlayerControls : NetworkBehaviour
 {
     protected const string CAMERA_TAG = "MainCamera";
 
+    private PlayerControlSchemes _currentControlScheme;
+    private FreeMovementControls _freeMovementControls = null;
+    private CartControls _cartControls = null;
+
+    public PlayerControlSchemes ControlScheme
+    {
+        get => _currentControlScheme;
+        set
+        {
+            if(_currentControlScheme == value)
+            {
+                return;
+            }
+
+            _currentControlScheme = value;
+            switch(value)
+            {
+                case PlayerControlSchemes.None:
+                    _freeMovementControls.enabled = false;
+                    _cartControls.enabled = false;
+                    break;
+
+                case PlayerControlSchemes.FreeMovementControls:
+                    _freeMovementControls.enabled = true;
+                    _cartControls.enabled = false;
+                    break;
+
+                case PlayerControlSchemes.CartControls:
+                    _freeMovementControls.enabled = false;
+                    _cartControls.enabled = true;
+                    break;
+            }
+        }
+    }
+
     protected CharacterController _controller;
     protected GameObject _cameraPosition;
     protected GameObject _currentLookingObject = null;
@@ -33,16 +68,20 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _cameraPosition = gameObject.FindChildWithTag(CAMERA_TAG);
         _playerScript = gameObject.GetComponent<Player>();
+
         #if UNITY_EDITOR
             if(_cameraPosition == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera Position not Found!");
             }
+
             if(_playerScript == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Script not Found!");
             }
         #endif
+
+        initializeControlScheme();
 
         _currentSpeed = MoveSpeed;
 
@@ -56,8 +95,41 @@ public abstract class PlayerControls : NetworkBehaviour
         InputController.OnDrop     += Drop;
     }
 
+    private void initializeControlScheme()
+    {
+        _freeMovementControls = gameObject.GetComponent<FreeMovementControls>();
+        _cartControls = gameObject.GetComponent<CartControls>();
+
+        #if UNITY_EDITOR
+            if(_freeMovementControls == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Free Movement Controls not Found!");
+            }
+
+            if(_cartControls == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Cart Controls not Found!");
+            }
+        #endif
+
+        if(_freeMovementControls.enabled && !_cartControls.enabled)
+        {
+            ControlScheme = PlayerControlSchemes.FreeMovementControls;
+        }
+        else if(!_freeMovementControls.enabled && _cartControls.enabled)
+        {
+            ControlScheme = PlayerControlSchemes.CartControls;
+        }
+        else
+        {
+            ControlScheme = PlayerControlSchemes.None;
+        }
+    }
+
     protected virtual void OnDestroy()
     {
+        ControlScheme = PlayerControlSchemes.None;
+
         // Control Events
         InputController.OnLook     -= Look;
         InputController.OnMove     -= Move;

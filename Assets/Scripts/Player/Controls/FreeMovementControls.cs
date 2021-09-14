@@ -23,6 +23,11 @@ public class FreeMovementControls : PlayerControls
         }
     }
 
+    private void OnEnable()
+    {
+        ControlScheme = PlayerControlSchemes.FreeMovementControls;
+    }
+
     public override void Jump()
     {
         if(IsOwner)

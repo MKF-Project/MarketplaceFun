@@ -3188,7 +3188,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1210873246}
-  - component: {fileID: 1210873244}
   - component: {fileID: 1210873243}
   m_Layer: 0
   m_Name: Managers
@@ -3211,19 +3210,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enablePlayerBehaviour: 1
   allowControlSwitching: 1
---- !u!114 &1210873244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1210873242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5f49dc29e6040145b209d2a4230e5d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _overviewCamera: {fileID: 874644457}
 --- !u!4 &1210873246
 Transform:
   m_ObjectHideFlags: 0

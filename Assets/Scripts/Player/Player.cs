@@ -50,6 +50,7 @@ public class Player : NetworkBehaviour
         HoldingItem = item;
         item.GetComponent<Item>().BeHeld(HeldPosition);
         IsHoldingItem = true;
+        AimCanvas.Instance.ActivateAim();
     }
 
     public void ThrowItem()
@@ -62,6 +63,7 @@ public class Player : NetworkBehaviour
         HoldingItem.GetComponent<Item>().BeDropped();
         HoldingItem = null;
         IsHoldingItem = false;
+        AimCanvas.Instance.DisableAim();
     }
 
     public Item GetItemComponent()

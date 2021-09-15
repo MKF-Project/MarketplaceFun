@@ -10,6 +10,7 @@ TagManager:
   - Item
   - PickItemButton
   - ItemGenerator
+  - Interactable
   - ShoppingListUI
   layers:
   - Default
@@ -20,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Interact
   - 
   - Teto
   - Parede

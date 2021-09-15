@@ -109,14 +109,15 @@ public class InputController : MonoBehaviour
         // In-Game Actions
         _playerControls = _playerInput.actions.FindActionMap("PlayerControls");
 
-        watchInputAction(_playerControls, "Move",           OnMoveAction);
-        watchInputAction(_playerControls, "Look",           OnLookAction);
-        watchInputAction(_playerControls, "Jump",           OnJumpAction);
-        watchInputAction(_playerControls, "Interact/Throw", OnInteractOrThrowAction);
-        watchInputAction(_playerControls, "Walk",           OnWalkAction);
-        watchInputAction(_playerControls, "Pause",          OnPauseAction);
-        watchInputAction(_playerControls, "Put",            OnPutAction);
-        watchInputAction(_playerControls, "Drop",           OnDropAction);
+        watchInputAction(_playerControls, "Move",     OnMoveAction);
+        watchInputAction(_playerControls, "Look",     OnLookAction);
+        watchInputAction(_playerControls, "Jump",     OnJumpAction);
+        watchInputAction(_playerControls, "Interact", OnInteractAction);
+        watchInputAction(_playerControls, "Throw",    OnThrowAction);
+        watchInputAction(_playerControls, "Drop",     OnDropAction);
+        watchInputAction(_playerControls, "Put",      OnPutAction);
+        watchInputAction(_playerControls, "Walk",     OnWalkAction);
+        watchInputAction(_playerControls, "Pause",    OnPauseAction);
 
         // Menu Actions
         // Menu navigation is mostly handled by the default Unity AcionMap
@@ -149,6 +150,15 @@ public class InputController : MonoBehaviour
     private void watchInputAction(InputActionMap actionMap, string actionName, Action<InputAction.CallbackContext> actionCallback)
     {
         var action = actionMap.FindAction(actionName);
+
+        if(action == null)
+        {
+            #if UNITY_EDITOR
+                Debug.LogError($"[InputController]: Action \"{actionMap.name}/{actionName}\" not found!");
+            #endif
+
+            return;
+        }
 
         action.started   += actionCallback;
         action.performed += actionCallback;
@@ -198,7 +208,7 @@ public class InputController : MonoBehaviour
 
     /** A quick overview of InputAction callback states:
      *
-     * Disabled:  The action is disabled and willnot detect any input.
+     * Disabled:  The action is disabled and will not detect any input.
      * Waiting:   The action is enabled and waiting for input. This is the sate the button is in when not pressed.
      * Started:   The action was started. This is the state the button immediately goes, and stays on, while it's being pressed.
      * Performed: The action was performed. This triggers exactly once, right after Started callback when the button is pressed. The action does not stay in this state.
@@ -261,16 +271,49 @@ public class InputController : MonoBehaviour
     }
 
 
-    public delegate void OnInteractOrThrowDelegate();
-    public static event OnInteractOrThrowDelegate OnInteractOrThrow;
+    public delegate void OnInteractDelegate();
+    public static event OnInteractDelegate OnInteract;
 
-    private void OnInteractOrThrowAction(InputAction.CallbackContext context)
+    private void OnInteractAction(InputAction.CallbackContext context)
     {
         if(context.performed) {
-            OnInteractOrThrow?.Invoke();
+            OnInteract?.Invoke();
         }
     }
 
+
+    public delegate void OnThrowDelegate();
+    public static event OnThrowDelegate OnThrow;
+
+    private void OnThrowAction(InputAction.CallbackContext context)
+    {
+        if(context.performed) {
+            OnThrow?.Invoke();
+        }
+    }
+
+
+    public delegate void OnDropDelegate();
+    public static event OnDropDelegate OnDrop;
+
+    private void OnDropAction(InputAction.CallbackContext context)
+    {
+        if(context.performed) {
+            OnDrop?.Invoke();
+        }
+    }
+
+
+    public delegate void OnPutDelegate();
+    public static event OnPutDelegate OnPut;
+
+    private void OnPutAction(InputAction.CallbackContext context)
+    {
+        if(context.performed) {
+            OnPut?.Invoke();
+        }
+    }
+    
 
     public delegate void OnWalkDelegate();
     public delegate void OnWalkPressedDelegate();
@@ -306,7 +349,6 @@ public class InputController : MonoBehaviour
     {
         if(context.performed)
         {
-            print("Pause");
             OnPause?.Invoke();
             OnAllowMenuControlsSwitch.DispatchEvent();
         }
@@ -321,31 +363,8 @@ public class InputController : MonoBehaviour
     {
         if(context.performed)
         {
-            print("Unpause");
             OnUnpause?.Invoke();
             OnAllowPlayerControlsSwitch.DispatchEvent();
-        }
-    }
-    
-    
-    
-    public delegate void OnPutDelegate();
-    public static event OnPutDelegate OnPut;
-
-    private void OnPutAction(InputAction.CallbackContext context)
-    {
-        if(context.performed) {
-            OnPut?.Invoke();
-        }
-    }
-    
-    public delegate void OnDropDelegate();
-    public static event OnDropDelegate OnDrop;
-
-    private void OnDropAction(InputAction.CallbackContext context)
-    {
-        if(context.performed) {
-            OnDrop?.Invoke();
         }
     }
 }

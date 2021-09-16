@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1587176581789682762}
   - component: {fileID: 3156425835620498882}
   - component: {fileID: 4148787109493731744}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Caixa de FRuta
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 8298786198730648910}
   - component: {fileID: 3298866996663636231}
   - component: {fileID: 3137708460900589141}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Caixa de FRuta.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 264301463066686274}
   - component: {fileID: 5985162255224570394}
   - component: {fileID: 2840725829884022168}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Expositor_Frutas
   m_TagString: ItemGenerator
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 6197926293294826087}
   - component: {fileID: 4375839456121267754}
   - component: {fileID: 3403136523012500694}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Caixa de FRuta.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 2545141580582410524}
   - component: {fileID: 3878316846526725923}
   - component: {fileID: 1965039876495499317}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Expositor Frutas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -472,10 +472,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3356180859147035515, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3356180859147035515, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
         type: 3}
       propertyPath: m_Name
       value: InteractObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7495407682964969629, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7495407682964969629, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fee8405d92c31f74dab45dbad02fddf3, type: 3}

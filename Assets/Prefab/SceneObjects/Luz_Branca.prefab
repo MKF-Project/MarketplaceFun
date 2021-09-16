@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1221010541101827833}
   - component: {fileID: 1221010541101827832}
   - component: {fileID: 1221010541101827783}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Luz_Branca
   m_TagString: Untagged
   m_Icon: {fileID: 0}

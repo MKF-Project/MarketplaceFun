@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2824869449970766462}
   - component: {fileID: 952261107464373276}
   - component: {fileID: 3116675905161515149}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 2581293926467420463}
   - component: {fileID: 5010520320369923857}
   - component: {fileID: 876551484705633789}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 5547839738171927361}
   - component: {fileID: 7217212156373471731}
   - component: {fileID: 7065382727179711883}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,12 +303,12 @@ GameObject:
   - component: {fileID: 7217940779332295534}
   - component: {fileID: 5825730035737913093}
   - component: {fileID: 5519280883774043404}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Modelo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &7217940779332295534
 Transform:
@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: -8847150871191183568}
   - component: {fileID: -8427612087767040845}
   - component: {fileID: 1796400871776653285}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Expositor M
   m_TagString: ItemGenerator
   m_Icon: {fileID: 0}
@@ -466,7 +466,7 @@ GameObject:
   - component: {fileID: 1087215795885190708}
   - component: {fileID: 7066434457463637059}
   - component: {fileID: 3068712683620746501}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -609,10 +609,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3356180859147035515, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3356180859147035515, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
         type: 3}
       propertyPath: m_Name
       value: InteractObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7495407682964969629, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7495407682964969629, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fee8405d92c31f74dab45dbad02fddf3, type: 3}

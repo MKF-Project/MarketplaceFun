@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 7769590181674988324}
   - component: {fileID: 1722989956394329268}
   - component: {fileID: 8996537916955694013}
-  m_Layer: 16
+  m_Layer: 31
   m_Name: "Placa_Identifica\xE7\xE3o"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &7769590181674988324
 Transform:

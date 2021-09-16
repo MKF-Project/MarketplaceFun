@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6817014670299072908}
   - component: {fileID: 6423046363256386421}
   - component: {fileID: 7848023805866711343}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Item_Pink
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 5131422300093805815}
   - component: {fileID: 7122098517168659637}
   - component: {fileID: 3827190134803192679}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

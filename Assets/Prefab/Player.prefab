@@ -456,8 +456,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c897505851021e439498b7e0f594bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Strength: 10
+  TargetGameObject: {fileID: 7147044144316019232, guid: 599963bc7b6c1fa4f963a84876ec206a,
+    type: 3}
+  Strength: 20
+  Distance: 20
   ArcThrow: 10
+  _isOn: 0
 --- !u!114 &6060007277188276103
 MonoBehaviour:
   m_ObjectHideFlags: 0

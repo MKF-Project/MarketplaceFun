@@ -41,10 +41,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.3746245
+  m_Height: 1.5586779
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: -0.0050150156, y: -0.22066104, z: 0}
 --- !u!1 &2417384740046596368
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +213,7 @@ Camera:
   m_GameObject: {fileID: 8816987188005979570}
   m_Enabled: 0
   serializedVersion: 2
-  m_ClearFlags: 4
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 6060007277188276103}
   - component: {fileID: -4058306511684965661}
   - component: {fileID: -2014535450862663308}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}

@@ -169,7 +169,6 @@ GameObject:
   - component: {fileID: 5295567960322932827}
   - component: {fileID: 264301463066686274}
   - component: {fileID: 5985162255224570394}
-  - component: {fileID: 2840725829884022168}
   m_Layer: 27
   m_Name: Expositor_Frutas
   m_TagString: ItemGenerator
@@ -227,19 +226,6 @@ MonoBehaviour:
   PrefabHashGenerator: Expositor_Frutas
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
---- !u!65 &2840725829884022168
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3463337441158482716}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.4438486, y: 1.8000007, z: 1.159943}
-  m_Center: {x: 0, y: 1.1354231e-15, z: 0.5798982}
 --- !u!1 &4065252525749724498
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,6 +373,7 @@ GameObject:
   - component: {fileID: 2545141580582410524}
   - component: {fileID: 3878316846526725923}
   - component: {fileID: 1965039876495499317}
+  - component: {fileID: 8233673411955723093}
   m_Layer: 27
   m_Name: Expositor Frutas
   m_TagString: Untagged
@@ -455,6 +442,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &8233673411955723093
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5954868924167320594}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5541725209676610704, guid: fd7ac6b5927f5a546b23a8b1894c1cec, type: 3}
 --- !u!1001 &555737598423649572
 PrefabInstance:
   m_ObjectHideFlags: 0

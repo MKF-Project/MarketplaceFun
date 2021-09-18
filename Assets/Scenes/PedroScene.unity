@@ -1115,8 +1115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebad06f3b3f3b234792bc7e7e5705d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enablePlayerBehaviour: 1
-  allowControlSwitching: 1
+  _allowPlayerControls: 1
+  _allowControlSwitching: 1
 --- !u!4 &482195541
 Transform:
   m_ObjectHideFlags: 0
@@ -4138,8 +4138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebad06f3b3f3b234792bc7e7e5705d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enablePlayerBehaviour: 1
-  allowControlSwitching: 1
+  _allowPlayerControls: 1
+  _allowControlSwitching: 1
 --- !u!4 &1775695998
 Transform:
   m_ObjectHideFlags: 0

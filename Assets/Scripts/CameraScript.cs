@@ -9,10 +9,8 @@ public class CameraScript : MonoBehaviour
     private Vector3 _initalPosition = Vector3.zero;
     private Quaternion _initialRotation = Quaternion.identity;
 
+    /* Player related variables */
     private GameObject _currentPlayer = null;
-
-    private GameObject _playerCameraObject = null;
-
 
     private void Awake()
     {
@@ -20,35 +18,41 @@ public class CameraScript : MonoBehaviour
         _initialRotation = transform.rotation;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if(_playerCameraObject != null)
-        {
-            transform.position = _playerCameraObject.transform.position;
-            transform.rotation = _playerCameraObject.transform.rotation;
-        }
-
         if(MatchManager.Instance.MainPlayer == _currentPlayer)
         {
             return;
         }
 
+        // Current player is not the same as Local player
         if(PlayerManager.AllowPlayerControls && MatchManager.Instance.MainPlayer != null)
         {
             _currentPlayer = MatchManager.Instance.MainPlayer;
-            _playerCameraObject = _currentPlayer.FindChildWithTag(CAMERA_TAG, false);
-            if(_playerCameraObject != null)
-            {
-                transform.position = _playerCameraObject.transform.position;
-                transform.rotation = _playerCameraObject.transform.rotation;
+            var playerCameraObject = _currentPlayer.FindChildWithTag(CAMERA_TAG, false);
 
+            #if UNITY_EDITOR
+                if(playerCameraObject == null)
+                {
+                    Debug.LogError($"[{gameObject.name}]: Player ({_currentPlayer.name}) has no Camera placeholder object");
+                }
+            #endif
+
+            if(playerCameraObject != null)
+            {
+                transform.position = Vector3.zero;
+                transform.rotation = Quaternion.identity;
+                transform.SetParent(playerCameraObject.transform, false);
                 return;
             }
         }
 
+        // Reset Player variables if no valid Local player was found
         _currentPlayer = null;
-        _playerCameraObject = null;
+
         transform.position = _initalPosition;
         transform.rotation = _initialRotation;
     }
+
+
 }

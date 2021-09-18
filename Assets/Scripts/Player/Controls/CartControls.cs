@@ -18,7 +18,7 @@ public class CartControls : PlayerControls
         if(IsOwner)
         {
             updateCamera();
-            updateMovement();
+            updateMovementOLD();
         }
     }
 
@@ -32,28 +32,28 @@ public class CartControls : PlayerControls
 
     }
 
-    private void updateMovement()
+    private void updateMovementOLD()
     {
-        var currentVelocity = Vector3.zero;
-        var rotationAngle = 0f;
+        // var currentVelocity = Vector3.zero;
+        // var rotationAngle = 0f;
 
-        if(Mathf.Abs(_currentDirection.y) > Deadzone)
-        {
-            currentVelocity = Vector3.forward * (_currentDirection.y > 0? 1 : -1) * _currentDirection.magnitude * _currentSpeed;
-            rotationAngle = _currentDirection.x * MovingTurnSpeed;
-        }
-        else if(_currentDirection.sqrMagnitude > 0)
-        {
-            rotationAngle = _currentDirection.x * InPlaceTurnSpeed;
-        }
+        // if(Mathf.Abs(_currentDirection.y) > Deadzone)
+        // {
+        //     currentVelocity = Vector3.forward * (_currentDirection.y > 0? 1 : -1) * _currentDirection.magnitude * _currentSpeed;
+        //     rotationAngle = _currentDirection.x * MovingTurnSpeed;
+        // }
+        // else if(_currentDirection.sqrMagnitude > 0)
+        // {
+        //     rotationAngle = _currentDirection.x * InPlaceTurnSpeed;
+        // }
 
-        if(!_controller.isGrounded)
-        {
-            currentVelocity += Physics.gravity;
-        }
+        // if(!_rigidBody.isGrounded)
+        // {
+        //     currentVelocity += Physics.gravity;
+        // }
 
-        _controller.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
-        transform.Rotate(Vector3.up, rotationAngle * Time.deltaTime);
+        // _rigidBody.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
+        // transform.Rotate(Vector3.up, rotationAngle * Time.deltaTime);
     }
 
     private void updateCamera()

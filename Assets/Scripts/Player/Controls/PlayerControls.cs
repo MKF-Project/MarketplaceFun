@@ -11,6 +11,10 @@ public abstract class PlayerControls : NetworkBehaviour
 {
     protected const string CAMERA_TAG = "MainCamera";
 
+    // This is the maximum speed the player is allowed to turn,
+    // regardless of other factors. Keep this at a high value to allow fast mouse movement
+    private const float MAX_ANGULAR_VELOCITY = 25;
+
     private PlayerControlSchemes _currentControlScheme;
     private FreeMovementControls _freeMovementControls = null;
     private CartControls _cartControls = null;
@@ -46,7 +50,7 @@ public abstract class PlayerControls : NetworkBehaviour
         }
     }
 
-    protected CharacterController _controller;
+    protected Rigidbody _rigidBody;
     protected GameObject _cameraPosition;
     protected GameObject _currentLookingObject = null;
     protected Player _playerScript = null;
@@ -64,7 +68,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
     protected virtual void Awake()
     {
-        _controller = gameObject.GetComponent<CharacterController>();
+        _rigidBody = gameObject.GetComponent<Rigidbody>();
+        _rigidBody.maxAngularVelocity = MAX_ANGULAR_VELOCITY;
 
         _cameraPosition = gameObject.FindChildWithTag(CAMERA_TAG);
         _playerScript = gameObject.GetComponent<Player>();

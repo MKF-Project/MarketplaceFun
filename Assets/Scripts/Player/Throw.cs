@@ -43,11 +43,14 @@ public class Throw : NetworkBehaviour
 
     private void ThrowItem(Vector3 target, Vector3 initialPosition)
     {
-        var itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
+        GameObject holdingItem = _player.HoldingItem;
+        var itemRigidbody = holdingItem.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;
-        _player.HoldingItem.transform.position = initialPosition;
-        _player.HoldingItem.transform.LookAt(target);
-        _player.HoldingItem.SetActive(true);
+        
+        holdingItem.transform.position = initialPosition;
+        holdingItem.transform.LookAt(target);
+        holdingItem.SetActive(true);
+        holdingItem.GetComponent<Item>().IsOnThrow = true;    
         _player.DropItem();
 
         Vector3 direction = target - initialPosition;

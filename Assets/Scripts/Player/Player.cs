@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MLAPI;
 using UnityEngine;
 
+[SelectionBase]
 public class Player : NetworkBehaviour
 {
     public bool IsListComplete;

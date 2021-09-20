@@ -172,6 +172,13 @@ public abstract class PlayerControls : NetworkBehaviour
         InputController.OnDrop     -= Drop;
     }
 
+    protected virtual void OnDisable()
+    {
+        // Send final rotation and direction deltas when disabling
+        _currentDirection = Vector3.zero;
+        _nextRotation = Vector3.zero;
+    }
+
     protected virtual void FixedUpdate()
     {
         if(!IsOwner)

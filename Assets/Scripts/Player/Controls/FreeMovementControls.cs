@@ -39,6 +39,19 @@ public class FreeMovementControls : PlayerControls
         ControlScheme = PlayerControlSchemes.FreeMovementControls;
     }
 
+    protected override void OnDisable()
+    {
+        // Stop propagation of previous forces when disabling the script
+        base.OnDisable();
+
+        updateMovement();
+
+        updatePlayerRotation();
+        updateCameraRotation();
+
+        _shouldJump = false;
+    }
+
     public override void Jump()
     {
         if(IsOwner)

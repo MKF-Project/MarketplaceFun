@@ -36,6 +36,9 @@
           </e>
           <e p="ObjectsManager.cs" t="Include" />
           <e p="Player" t="Include">
+            <e p="Actions" t="Include">
+              <e p="TakeEffect.cs" t="Include" />
+            </e>
             <e p="Controls" t="Include">
               <e p="CartControls.cs" t="Include" />
               <e p="FreeMovementControls.cs" t="Include" />

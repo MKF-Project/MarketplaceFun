@@ -275,6 +275,7 @@ GameObject:
   - component: {fileID: 6060007277188276103}
   - component: {fileID: -4058306511684965661}
   - component: {fileID: -2014535450862663308}
+  - component: {fileID: 162437846829725900}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -456,12 +457,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c897505851021e439498b7e0f594bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetGameObject: {fileID: 7147044144316019232, guid: 599963bc7b6c1fa4f963a84876ec206a,
-    type: 3}
   Strength: 20
   Distance: 20
-  ArcThrow: 10
-  _isOn: 0
 --- !u!114 &6060007277188276103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -498,6 +495,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b33f4b253133d0a43b933842762427bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &162437846829725900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816987188999332804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b106e56f08f18324b9bd336d7ef7f024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4386959448261034583

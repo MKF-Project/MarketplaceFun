@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
@@ -12,7 +12,7 @@ public class Throw : NetworkBehaviour
     private bool _shouldThrow = false;
 
     public float Strength;
-    public float ArcThrow;
+    public float Distance;
 
     private void Awake()
     {
@@ -43,25 +43,44 @@ public class Throw : NetworkBehaviour
 
     private void ThrowItem(Vector3 target, Vector3 initialPosition)
     {
-        var itemRigidbody = _player.HoldingItem.GetComponent<Rigidbody>();
+        GameObject holdingItem = _player.HoldingItem;
+        var itemRigidbody = holdingItem.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;
-        _player.HoldingItem.transform.position = initialPosition;
-        _player.HoldingItem.SetActive(true);
-
+        
+        holdingItem.transform.position = initialPosition;
+        holdingItem.transform.LookAt(target);
+        holdingItem.SetActive(true);
+        holdingItem.GetComponent<Item>().IsOnThrow = true;    
         _player.DropItem();
 
-        itemRigidbody.AddForce(target, ForceMode.Impulse);
+        Vector3 direction = target - initialPosition;
+        itemRigidbody.velocity = direction.normalized * Strength;
+
     }
 
     private Vector3 CalculateTargetPosition()
     {
         Vector3 screenMiddle = new Vector3();
-        screenMiddle.x = Screen.width / 2;
-        screenMiddle.y = Screen.height / 2;
+        screenMiddle.x = Screen.width / 2f;
+        screenMiddle.y = Screen.height / 2f;
         Ray ray = Camera.main.ScreenPointToRay(screenMiddle);
 
-        Vector3 target = ray.direction * Strength;
-        target += Vector3.up * ArcThrow;
+        Vector3 target;
+        #if UNITY_EDITOR
+            Debug.DrawRay(ray.origin, ray.direction * Distance, Color.green);
+        #endif
+        
+        bool raycastHit = Physics.Raycast(ray.origin, ray.direction, out var hitInfo, Distance);
+        if (raycastHit)
+        {
+            
+            target = hitInfo.point;
+        }
+        else
+        {
+            target = ray.origin + ray.direction * Distance;    
+        }
+        
         return target;
     }
 

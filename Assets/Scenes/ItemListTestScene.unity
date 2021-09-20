@@ -888,9 +888,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7579aea5298aa0b46b04aaac5d51f887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 20
-  WalkSpeed: 10
-  RotateSensitivity: 2
 --- !u!23 &815380458
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2193,7 +2190,7 @@ GameObject:
   - component: {fileID: 2055337380}
   - component: {fileID: 2055337384}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Cachier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

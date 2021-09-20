@@ -20,8 +20,18 @@ public class ItemTypeList : MonoBehaviour
     public void Awake()
     {
         DontDestroyOnLoad(gameObject);
+        PopulatePrefabCodes();
         ItemList = StartingItemsList;
         CheckedImage = StartingCheckedImage;
     }
+
+    public void PopulatePrefabCodes()
+    {
+        foreach (ItemType itemType in StartingItemsList)
+        {
+            itemType.ItemPrefab.GetComponent<Item>().ItemTypeCode = itemType.Code;
+        }
+    }
     
+
 }

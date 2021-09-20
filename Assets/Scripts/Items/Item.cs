@@ -10,13 +10,23 @@ public class Item : NetworkBehaviour
     private Transform _heldPosition;
     private bool _isHeld;
     private NetworkObject _networkObject;
+    
+    [HideInInspector]
+    public bool IsOnThrow;
+    
+    [HideInInspector]
     public int ItemTypeCode;
 
-    
+
+    public int EffectType;
+
+    public TakeEffect takeEffect;
     //Object needs to be registered not before NetworkStart, like Awake
     //Because before this the object doesn't have an networkId
     public override void NetworkStart()
     {
+        IsOnThrow = false;
+        EffectType = 0;
         _networkObject = GetComponent<NetworkObject>();
         RegisterItem();
     }
@@ -49,6 +59,14 @@ public class Item : NetworkBehaviour
             transform.forward = _heldPosition.forward;
             Debug.DrawRay(_heldPosition.position, _heldPosition.forward* 10, Color.red);
         }
+
+        if (IsOnThrow)
+        {
+            if (gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude <= 0.1)
+            {
+                TriggerDestroyItem();
+            }
+        }
     }
 
     public void BeHeld(Transform holderPosition)
@@ -62,7 +80,31 @@ public class Item : NetworkBehaviour
         _heldPosition = null;
         _isHeld = false;
     }
-    
 
 
+    public void OnCollisionEnter(Collision other)
+    {
+        if (IsOnThrow)
+        {
+            GameObject hitObject = other.gameObject;
+            if (hitObject.CompareTag("Player"))
+            {
+                takeEffect = hitObject.GetComponent<TakeEffect>();
+                takeEffect.OnTakeEffect(0);
+                TriggerDestroyItem();
+            }
+        }
+    }
+
+    private void TriggerDestroyItem()
+    {
+        IsOnThrow = false;
+        StartCoroutine(nameof(DestroyAfterSeconds), 4f);
+    }
+
+    private IEnumerator DestroyAfterSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        Destroy(gameObject);
+    }
 }

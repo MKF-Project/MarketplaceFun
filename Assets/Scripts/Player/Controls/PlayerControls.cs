@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using MLAPI;
 
 public enum PlayerControlSchemes {
@@ -50,6 +52,7 @@ public abstract class PlayerControls : NetworkBehaviour
         }
     }
 
+    // Components
     protected Rigidbody _rigidBody;
     protected GameObject _cameraPosition;
     protected GameObject _currentLookingObject = null;
@@ -58,23 +61,44 @@ public abstract class PlayerControls : NetworkBehaviour
     protected Vector2 _currentDirection = Vector2.zero;
     protected Vector2 _nextRotation = Vector2.zero;
 
+    protected Vector3 _wallCollisionNormal = Vector3.zero;
+
     protected bool _isWalking = false;
     protected float _currentSpeed = 0;
 
+    // Collision related
+    public bool isCollidingWithWall { get; protected set ;} = false;
+    public bool isGrounded { get; protected set; } = false;
+
+    /** Inspector Variables **/
+    [Header("Ground Detection")]
+    [Range(0, 90)]
+    public float MaximumGroundSlope;
+    public LayerMask groundMask;
+
+    [Header("Movement")]
     public float MoveSpeed;
     public float WalkSpeed;
+
+    [Header("Camera")]
     public float Sensitivity;
+
+    [Header("Interaction")]
     public float InteractionDistance;
 
     protected virtual void Awake()
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
-        _rigidBody.maxAngularVelocity = MAX_ANGULAR_VELOCITY;
 
         _cameraPosition = gameObject.FindChildWithTag(CAMERA_TAG);
         _playerScript = gameObject.GetComponent<Player>();
 
         #if UNITY_EDITOR
+            if(_rigidBody == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Rigidbody not Found!");
+            }
+
             if(_cameraPosition == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera Position not Found!");
@@ -87,6 +111,9 @@ public abstract class PlayerControls : NetworkBehaviour
         #endif
 
         initializeControlScheme();
+
+        _rigidBody.maxAngularVelocity = MAX_ANGULAR_VELOCITY;
+        _rigidBody.sleepThreshold = 0; // Since this is the player object, we never sleep it's rigidbody
 
         _currentSpeed = MoveSpeed;
 
@@ -181,6 +208,78 @@ public abstract class PlayerControls : NetworkBehaviour
         }
     }
 
+    protected virtual void LateUpdate()
+    {
+        if(isGrounded)
+        {
+            // Start the clearGrounded coroutine,
+            // which attempts to reset the grounded state for the next frame
+            StartCoroutine(nameof(clearGrounded));
+        }
+
+        if(isCollidingWithWall)
+        {
+            StartCoroutine(nameof(clearWallCollision));
+        }
+    }
+
+    // Detect ground
+    protected virtual void OnCollisionStay(Collision other)
+    {
+        // Only check ground collisions with things
+        // in a layer considered to be ground
+        if((groundMask & (1 << other.gameObject.layer)) == 0)
+        {
+            return;
+        }
+
+        isCollidingWithWall = false;
+        for(int i = 0; i < other.contactCount; i++)
+        {
+            var contact = other.GetContact(i);
+            var angle = 0f;
+                if(isFloorCollision(contact, out angle))
+                {
+                    // Stop coroutine from previous frame from taking effect
+                    StopCoroutine(nameof(clearGrounded));
+
+                    isGrounded = true;
+
+                    // Jump away from current surface (NYI)
+                    // jumpNormal = contact.normal;
+                }
+                else if(angle > MaximumGroundSlope && angle <= 90)
+                {
+
+                    StopCoroutine(nameof(clearWallCollision));
+
+                    isCollidingWithWall = true;
+                    _wallCollisionNormal = contact.normal;
+                }
+        }
+    }
+
+    public bool isFloorCollision(ContactPoint contactPoint, out float angle)
+    {
+        angle = Vector3.Angle(transform.up, contactPoint.normal);
+
+        return contactPoint.normal != Vector3.zero && angle <= MaximumGroundSlope;
+
+    }
+
+    private IEnumerator clearGrounded()
+    {
+        yield return new WaitForFixedUpdate();
+        isGrounded = false;
+    }
+
+    private IEnumerator clearWallCollision()
+    {
+        yield return new WaitForFixedUpdate();
+        isCollidingWithWall = false;
+    }
+
+    /** Input Actions **/
     public virtual void Move(Vector2 direction)
     {
         if(!(isActiveAndEnabled && IsOwner))

@@ -234,6 +234,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 5
   WalkSpeed: 3
+  MaximumGroundSlope: 45
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 523265
   Sensitivity: 2.3
   InteractionDistance: 2
   FallSpeed: 5
@@ -253,6 +257,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   WalkSpeed: 1
+  MaximumGroundSlope: 0
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   Sensitivity: 1
   InteractionDistance: 2
   MovingTurnSpeed: 100

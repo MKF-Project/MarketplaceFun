@@ -1,18 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
+using MLAPI.Messaging;
 
-public class ShoppingCart : MonoBehaviour
+public class ShoppingCart : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+
+    }
+
+    private void Update()
+    {
+
+    }
+
+    private void OnCollisionEnter()
+    {
+
     }
 }

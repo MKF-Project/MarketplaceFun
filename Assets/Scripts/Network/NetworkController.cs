@@ -230,6 +230,12 @@ public class NetworkController : MonoBehaviour
         }
     }
 
+    public static ulong getSelfID() => _instance.getManagerSelfID();
+    private ulong getManagerSelfID()
+    {
+        return _netManager.IsServer? _netManager.ServerClientId : _netManager.LocalClientId;
+    }
+
     public static void switchNetworkScene(string sceneName) => _instance.switchManagerNetworkScene(sceneName);
     private void switchManagerNetworkScene(string sceneName)
     {

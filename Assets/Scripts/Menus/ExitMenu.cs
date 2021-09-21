@@ -13,13 +13,18 @@ public class ExitMenu : NetworkBehaviour
     public delegate void OnStayOnMatchDelegate();
     public static event OnStayOnMatchDelegate OnStayOnMatch;
 
+    public bool ShowPrompt;
+    
     private const string hostPrompt = "Stop";
     private const string clientPrompt = "Leave";
     [SerializeField] private Text _exitPrompt = null;
 
     private void Awake()
     {
-        _exitPrompt.text = $"{(IsHost? hostPrompt : clientPrompt)} Match?";
+        if (ShowPrompt)
+        {
+            _exitPrompt.text = $"{(IsHost ? hostPrompt : clientPrompt)} Match?";
+        }
 
         InputController.OnPause += handleMenuState;
         InputController.OnUnpause += handleMenuState;

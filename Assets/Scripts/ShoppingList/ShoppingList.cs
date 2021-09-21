@@ -29,6 +29,7 @@ public class ShoppingList : NetworkBehaviour
             ShoppingListUi = GameObject.FindGameObjectsWithTag("ShoppingListUI")[0].GetComponent<ShoppingListUI>();
             Debug.Log("Colocou Owner");    
             NetworkController.OnDisconnected += EraseListClient;
+            
         }
         
         if (IsServer)

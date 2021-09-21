@@ -97,7 +97,7 @@ public class FreeMovementControls : PlayerControls
 
         if(_shouldJump && isGrounded)
         {
-            _rigidBody.AddForce(transform.up * JumpHeight, ForceMode.VelocityChange);
+            _rigidBody.AddForce(transform.up * Mathf.Sqrt(2 * Physics.gravity.magnitude * JumpHeight), ForceMode.VelocityChange);
         }
         _shouldJump = false;
     }

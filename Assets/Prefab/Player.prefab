@@ -242,7 +242,7 @@ MonoBehaviour:
   Sensitivity: 2.3
   InteractionDistance: 2
   FallSpeed: 5
-  JumpHeight: 10
+  JumpHeight: 1.2
   MaximumViewAngle: 90
 --- !u!114 &7903483743102282125
 MonoBehaviour:

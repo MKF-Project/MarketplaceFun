@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/RodrigoScene.unity
     guid: 4a0e1b7e12928da4798a033cc44973da
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ItemListTestScene.unity
     guid: 46cad0ec727f904418e01ac3e2c45f7a
   - enabled: 0

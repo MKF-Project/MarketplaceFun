@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
@@ -25,20 +26,28 @@ public class ShoppingCart : NetworkBehaviour
         _occupiedPositions = new bool[_itemPositions.Count];
     }
 
-    private void Start()
-    {
-
-    }
-
-    private void Update()
-    {
-    }
-
     private void OnCollisionEnter(Collision other)
     {
-        if(IsServer && other.gameObject.tag == "Item") {
-            var itemScript = other.gameObject.GetComponent<Item>();
-            if(itemScript == null || !itemScript.IsOnThrow)
+        if(other.gameObject.tag == "Item")
+        {
+            if(IsClient && !IsServer)
+            {
+                additemToCart_ServerRpc(other.gameObject.GetComponent<NetworkObject>().NetworkObjectId);
+            }
+
+            if(IsServer)
+            {
+                addItemToCart(other.gameObject);
+            }
+        }
+    }
+
+    private void addItemToCart(GameObject item)
+    {
+        if(item != null && IsServer)
+        {
+            var itemScript = item.GetComponent<Item>();
+            if(itemScript == null)
             {
                 return;
             }
@@ -81,6 +90,31 @@ public class ShoppingCart : NetworkBehaviour
         }
 
         _nextIndex = (_nextIndex + 1) % _itemPositions.Count;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void additemToCart_ServerRpc(ulong itemNetworkID)
+    {
+        print("Reuqesto");
+        if(Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
+        {
+            addItemToCart(
+                GameObject.FindGameObjectsWithTag("Item")
+                    .Where(item =>
+                    {
+                        var netObject = item.GetComponent<NetworkObject>();
+                        if(netObject == null)
+                        {
+                            return false;
+                        }
+
+                        return netObject.NetworkObjectId == itemNetworkID;
+                    })
+                    .FirstOrDefault()
+            );
+        }
+
+
     }
 
     [ClientRpc]

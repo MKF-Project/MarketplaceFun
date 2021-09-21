@@ -12,6 +12,7 @@ TagManager:
   - ItemGenerator
   - Interactable
   - ShoppingListUI
+  - ShoppingCart
   layers:
   - Default
   - TransparentFX

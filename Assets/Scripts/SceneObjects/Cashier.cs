@@ -17,8 +17,7 @@ public class Cashier : MonoBehaviour
                 {
                     MatchMessages.Instance.EditMessage("You Win");
                     MatchMessages.Instance.ShowMessage();
-
-                    //InMatchCanvas.Instance.EndText
+                    ScoreController.Instance.IWin();
                 }
                 else
                 {

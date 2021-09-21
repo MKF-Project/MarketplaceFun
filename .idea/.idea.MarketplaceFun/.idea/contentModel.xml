@@ -53,6 +53,11 @@
             <e p="Shelf.cs" t="Include" />
             <e p="Target.cs" t="Include" />
           </e>
+          <e p="Score" t="Include">
+            <e p="ScoreCanvas.cs" t="Include" />
+            <e p="ScoreController.cs" t="Include" />
+            <e p="ScoreNetwork.cs" t="Include" />
+          </e>
           <e p="ShoppingList" t="Include">
             <e p="SerializedShoppingList.cs" t="Include" />
             <e p="ShoppingList.cs" t="Include" />

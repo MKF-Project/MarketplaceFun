@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6151520873637452252}
   - component: {fileID: 5973831116640019237}
   - component: {fileID: 7434802034726701439}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Item_Purple
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d929cf1db6a7414ebd93b8ee0de361f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemTypeCode: 7
+  ItemTypeCode: 6
 --- !u!114 &6151520873637452252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 5544503411121710247}
   - component: {fileID: 7571315962674056421}
   - component: {fileID: 4528536806480726839}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

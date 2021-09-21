@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 295486688743823212}
   - component: {fileID: 2448119998411570990}
   - component: {fileID: 8517247877245286652}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 2140714291663792663}
   - component: {fileID: 1877016251196739822}
   - component: {fileID: 3442569691938945716}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Item_LightBlue
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d929cf1db6a7414ebd93b8ee0de361f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemTypeCode: 4
+  ItemTypeCode: 9
 --- !u!114 &2140714291663792663
 MonoBehaviour:
   m_ObjectHideFlags: 0

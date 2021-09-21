@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8634383349940106209}
   - component: {fileID: 8100469344648382744}
   - component: {fileID: 5017101535088812866}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Item_Orange
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d929cf1db6a7414ebd93b8ee0de361f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemTypeCode: 5
+  ItemTypeCode: 4
 --- !u!114 &8634383349940106209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 7962331385319673498}
   - component: {fileID: 5449176932087965400}
   - component: {fileID: 2041663865412215050}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

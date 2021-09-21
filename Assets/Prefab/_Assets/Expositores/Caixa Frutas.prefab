@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 4327721493349849347}
   - component: {fileID: 7773771686907586749}
   - component: {fileID: 4539898998715104188}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Caixa de FRuta.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4327721493349849347
 Transform:
@@ -88,12 +88,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2443536928092839205}
-  m_Layer: 12
+  m_Layer: 27
   m_Name: Caixa Frutas
   m_TagString: ItemGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2443536928092839205
 Transform:

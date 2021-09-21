@@ -51,8 +51,8 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
-    m_EnableRealtimeLightmaps: 0
+    m_EnableBakedLightmaps: 0
+    m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
     serializedVersion: 12
     m_Resolution: 2
@@ -4678,6 +4678,7 @@ MonoBehaviour:
     - ItemListTestScene
     - _VerticalSlice
     - ScoreScene
+    - _VerticalSlice_maior
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
@@ -8046,7 +8047,7 @@ PrefabInstance:
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
       propertyPath: MatchScene
-      value: ItemListTestScene
+      value: _VerticalSlice_maior
       objectReference: {fileID: 0}
     - target: {fileID: 3806232346622104752, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}

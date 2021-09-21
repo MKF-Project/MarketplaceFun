@@ -14,12 +14,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/RodrigoScene.unity
     guid: 4a0e1b7e12928da4798a033cc44973da
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ItemListTestScene.unity
     guid: 46cad0ec727f904418e01ac3e2c45f7a
   - enabled: 0
     path: Assets/Scenes/_VerticalSlice.unity
     guid: 31a4e601211fa13488e605d828b53cd7
+  - enabled: 1
+    path: Assets/Scenes/_VerticalSlice_maior.unity
+    guid: 558ed31730fe1e040b118379726c22d3
   - enabled: 1
     path: Assets/Scenes/ScoreScene.unity
     guid: b98b88b2d20845a44aa5cd18631a2c5a

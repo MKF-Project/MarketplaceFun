@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
+using MLAPI.Messaging;
 using MLAPI.Serialization;
 using UnityEngine;
 
@@ -105,6 +106,18 @@ public class Item : NetworkBehaviour
     private IEnumerator DestroyAfterSeconds(float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        DestroyItem_ServerRpc();
+    }
+
+    [ServerRpc]
+    public void DestroyItem_ServerRpc()
+    {
+        DestroyItem_ClientRpc();
+    }
+
+    [ClientRpc]
+    public void DestroyItem_ClientRpc()
+    {
         Destroy(gameObject);
     }
 }

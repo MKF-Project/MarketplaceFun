@@ -24485,6 +24485,7 @@ Transform:
   - {fileID: 306364889}
   - {fileID: 749989260}
   - {fileID: 235698250}
+  - {fileID: 1325713135}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -53416,6 +53417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34928e05cc81300438367e20d4f4a646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowPrompt: 0
   _exitPrompt: {fileID: 949855629}
 --- !u!114 &2012523853
 MonoBehaviour:

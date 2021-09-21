@@ -19,20 +19,7 @@ public class TakeEffect : NetworkBehaviour
         //Lembrar de alterar aqui dps que o pedro mexer nos controles
         _playerControls = GetComponent<PlayerControls>();
         _animator = GetComponentInChildren<Animator>();
-        InputController.OnPut += OnTakeEffect;
     }
-
-    void OnDestroy()
-    {
-        InputController.OnPut -= OnTakeEffect;
-    }
-    
-
-    public void OnTakeEffect()
-    {
-        OnTakeEffect(0);
-    }
-    
 
     public void OnTakeEffect(int effectCode)
     {

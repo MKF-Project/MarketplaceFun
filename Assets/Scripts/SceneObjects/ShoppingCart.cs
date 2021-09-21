@@ -95,7 +95,6 @@ public class ShoppingCart : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void additemToCart_ServerRpc(ulong itemNetworkID)
     {
-        print("Reuqesto");
         if(Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
         {
             addItemToCart(

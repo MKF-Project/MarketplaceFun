@@ -11,6 +11,8 @@ public class TakeEffect : NetworkBehaviour
     private PlayerControls _playerControls;
     
     private static readonly int ReceiveHit = Animator.StringToHash("ReceiveHit");
+
+    private bool _isTakingEffect; 
     
 
     // Start is called before the first frame update
@@ -19,6 +21,7 @@ public class TakeEffect : NetworkBehaviour
         //Lembrar de alterar aqui dps que o pedro mexer nos controles
         _playerControls = GetComponent<PlayerControls>();
         _animator = GetComponentInChildren<Animator>();
+        _isTakingEffect = false;
     }
 
     public void OnTakeEffect(int effectCode)
@@ -35,7 +38,11 @@ public class TakeEffect : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void NormalEffect_ServerRpc()
     {
-        NormalEffect_ClientRpc();
+        if (!_isTakingEffect)
+        {
+            _isTakingEffect = true;
+            NormalEffect_ClientRpc();
+        }
     }
 
     [ClientRpc]
@@ -54,5 +61,12 @@ public class TakeEffect : NetworkBehaviour
     {
         yield return new WaitForSeconds(2.5f);
         _playerControls.enabled = true;
+        NoTakingEffect_ServerRpc();
+    }
+
+    [ServerRpc]
+    public void NoTakingEffect_ServerRpc()
+    {
+        _isTakingEffect = false;
     }
 }

@@ -21,6 +21,9 @@ public class SceneManager : MonoBehaviour
     public delegate void OnMatchLoadedDelegate(string sceneName);
     public static event OnMatchLoadedDelegate OnMatchLoaded;
     
+    public delegate void OnScoreLoadedDelegate();
+    public static event OnScoreLoadedDelegate OnScoreLoaded;
+    
     
     public delegate void OnSceneLoadedDelegate(string sceneName);
     public static event OnSceneLoadedDelegate OnSceneLoaded;
@@ -31,6 +34,8 @@ public class SceneManager : MonoBehaviour
     private const string _selfTag = "SceneManager";
 
     private const string _mainMenu = "MainMenu";
+
+    private const string _scoreScene = "ScoreScene";
     private bool _onMainMenu
     {
         get => UnityScene.SceneManager.GetActiveScene().name == _mainMenu;
@@ -107,13 +112,25 @@ public class SceneManager : MonoBehaviour
         NetworkController.switchNetworkScene(MatchScene);
     }
 
+    
+    public static void LoadScore()
+    {
+        NetworkController.switchNetworkScene(_scoreScene);
+
+    }
+    
+
     private void TriggerSceneLoadEvent(UnityScene.Scene scene, UnityScene.LoadSceneMode mode)
     {
         OnSceneLoaded?.Invoke(scene.name);
-
+        
         if (scene.name == _mainMenu)
         {
             OnMenuLoaded?.Invoke(scene.name);
+        }
+        else if (scene.name == _scoreScene)
+        {
+            OnScoreLoaded?.Invoke();
         }
         else
         {

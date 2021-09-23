@@ -35,30 +35,22 @@ public class ShoppingCart : NetworkBehaviour
                 additemToCart_ServerRpc(other.gameObject.GetComponent<NetworkObject>().NetworkObjectId);
             }
 
-            if(IsServer)
+            if(IsServer && Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
             {
-                addItemToCart(other.gameObject);
+                addItemToCart(other.gameObject.GetComponent<Item>());
             }
         }
     }
 
-    private void addItemToCart(GameObject item)
+    private void addItemToCart(Item item)
     {
         if(item != null && IsServer)
         {
-            var itemScript = item.GetComponent<Item>();
-            if(itemScript == null)
-            {
-                return;
-            }
+            item.DestroyItem_ClientRpc();
 
-            if(Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
-            {
-                print("Set type");
-                setNextItem_ClientRpc(itemScript.ItemTypeCode);
-                setNextItem(itemScript.ItemTypeCode);
-                _lastCollision = Time.unscaledTime;
-            }
+            setNextItem_ClientRpc(item.ItemTypeCode);
+            setNextItem(item.ItemTypeCode);
+            _lastCollision = Time.unscaledTime;
         }
     }
 
@@ -97,23 +89,9 @@ public class ShoppingCart : NetworkBehaviour
     {
         if(Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
         {
-            addItemToCart(
-                GameObject.FindGameObjectsWithTag("Item")
-                    .Where(item =>
-                    {
-                        var netObject = item.GetComponent<NetworkObject>();
-                        if(netObject == null)
-                        {
-                            return false;
-                        }
-
-                        return netObject.NetworkObjectId == itemNetworkID;
-                    })
-                    .FirstOrDefault()
-            );
+            var item = NetworkObjects.GetNetworkObjectComponent<Item>(itemNetworkID);
+            addItemToCart(item);
         }
-
-
     }
 
     [ClientRpc]

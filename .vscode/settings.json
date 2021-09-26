@@ -1,4 +1,4 @@
-﻿{
+{
     "files.exclude":
     {
         "**/.DS_Store":true,
@@ -17,5 +17,14 @@
         "Obj/":true,
         "temp/":true,
         "Temp/":true
+    },
+    "files.associations": {
+        "*.asset": "yaml",
+        "*.meta": "yaml",
+        "*.unity": "yaml",
+        "*.prefab": "yaml",
+        "*.mat": "yaml",
+        "*.physicmaterial": "yaml",
+        "*.inputactions": "json"
     }
 }

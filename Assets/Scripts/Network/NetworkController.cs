@@ -230,21 +230,19 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public static ulong getSelfID() => _instance.getManagerSelfID();
-    private ulong getManagerSelfID()
+    public static ulong getSelfID()
     {
-        return _netManager.IsServer? _netManager.ServerClientId : _netManager.LocalClientId;
+        return _instance._netManager.IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
     }
 
-    public static void switchNetworkScene(string sceneName) => _instance.switchManagerNetworkScene(sceneName);
-    private void switchManagerNetworkScene(string sceneName)
+    public static void switchNetworkScene(string sceneName)
     {
-        if(!_netManager.IsServer)
+        if(!_instance._netManager.IsServer)
         {
             return;
         }
 
-        if(!_netManager.NetworkConfig.EnableSceneManagement || !_netManager.NetworkConfig.RegisteredScenes.Contains(sceneName))
+        if(!_instance._netManager.NetworkConfig.EnableSceneManagement || !_instance._netManager.NetworkConfig.RegisteredScenes.Contains(sceneName))
         {
             return;
         }
@@ -252,35 +250,34 @@ public class NetworkController : MonoBehaviour
         NetworkSceneManager.SwitchScene(sceneName);
     }
 
-    private IEnumerator disconnectAfterDelay(float delaySeconds)
+    private static IEnumerator disconnectAfterDelay(float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
         disconnect();
     }
 
-    public static void disconnect() => _instance.managerDisconnect();
-    private void managerDisconnect()
+    public static void disconnect()
     {
         // Can't disconnect if you're neither a Server nor Client (Host is both)
-        if(!(_netManager.IsServer || _netManager.IsClient))
+        if(!(_instance._netManager.IsServer || _instance._netManager.IsClient))
         {
             return;
         }
 
-        if(_netManager.IsHost)
+        if(_instance._netManager.IsHost)
         {
-            _netManager.StopHost();
+            _instance._netManager.StopHost();
             OnDisconnected?.Invoke(true, false);
         }
         /* Not valid for this Game, as all Servers are also Hosts */
-        // else if(_netManager.IsServer)
+        // else if(_instance._netManager.IsServer)
         // {
-        //     _netManager.StopServer();
+        //     _instance._netManager.StopServer();
         //     OnDisconnected?.Invoke(true);
         // }
-        else if(_netManager.IsClient)
+        else if(_instance._netManager.IsClient)
         {
-            _netManager.StopClient();
+            _instance._netManager.StopClient();
             OnDisconnected?.Invoke(false, false);
         }
     }

@@ -179,7 +179,7 @@ public abstract class PlayerControls : NetworkBehaviour
         _nextRotation = Vector3.zero;
     }
 
-    protected virtual void FixedUpdate()
+    protected virtual void Update()
     {
         if(!IsOwner)
         {

@@ -16,17 +16,17 @@ public class FreeMovementControls : PlayerControls
 
     public float MaximumViewAngle = 90f;
 
-    protected void Update()
+    protected override void Update()
     {
+        base.Update();
         if(IsOwner)
         {
             updateCameraRotation();
         }
     }
 
-    protected override void FixedUpdate()
+    protected void FixedUpdate()
     {
-        base.FixedUpdate();
         if(IsOwner)
         {
             updatePlayerRotation();

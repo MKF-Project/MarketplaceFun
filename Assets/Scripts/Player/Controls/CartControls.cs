@@ -13,8 +13,9 @@ public class CartControls : PlayerControls
 
     public float MaximumViewAngle = 60f;
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if(IsOwner)
         {
             updateCamera();

@@ -15,8 +15,8 @@ public class ShoppingCart : NetworkBehaviour
     private const string ITEM_TAG = "Item";
     private const float COLLISION_COOLDOWN = 2;
 
-    private NetworkVariableULong _ownerPlayer = new NetworkVariableULong(0);
-    private NetworkVariableBool _hasOwner = new NetworkVariableBool(false);
+    private Player _owner = null;
+    private NetworkVariableULong _ownerID = new NetworkVariableULong(ulong.MaxValue);
 
     private int _nextIndex = 0;
 
@@ -31,6 +31,13 @@ public class ShoppingCart : NetworkBehaviour
         _itemPositions = gameObject.FindChildrenWithTag(ITEM_POSITIONS_TAG);
         _itemCodes = new int[_itemPositions.Count];
         _occupiedPositions = new bool[_itemPositions.Count];
+
+        _ownerID.OnValueChanged += onOwnershipChanged;
+    }
+
+    private void OnDestroy()
+    {
+        _ownerID.OnValueChanged -= onOwnershipChanged;
     }
 
     private void OnCollisionEnter(Collision other)
@@ -50,7 +57,7 @@ public class ShoppingCart : NetworkBehaviour
         }
 
         // Acquire cart when touching it, if it has no owner and already has items inside
-        else if(!_hasOwner.Value && other.gameObject.tag == PLAYER_TAG && _occupiedPositions.Any(pos => pos))
+        else if(_ownerID.Value == ulong.MaxValue && other.gameObject.tag == PLAYER_TAG && _occupiedPositions.Any(pos => pos))
         {
             var playerScript = other.gameObject.GetComponent<Player>();
             if(playerScript == null || !playerScript.IsOwner)
@@ -59,6 +66,35 @@ public class ShoppingCart : NetworkBehaviour
             }
 
             requestCartOwnership_ServerRpc();
+        }
+    }
+
+    private void onOwnershipChanged(ulong previousOwner, ulong currentOwner)
+    {
+        // We use ulong.MaxValue as placeholder for when the owner of this cart hasn't been set yet
+        if(currentOwner != ulong.MaxValue)
+        {
+            _owner = MatchManager.Instance.GetPlayerByClientID(_ownerID.Value);
+
+            if(_owner != MatchManager.Instance.MainPlayer.GetComponent<Player>())
+            {
+                return;
+            }
+
+            // Update player shopping list when acquiring ownership of a shopping cart
+            var shoppingList = _owner.GetComponent<ShoppingList>();
+            for(int i = 0; i < _occupiedPositions.Length; i++)
+            {
+                if(_occupiedPositions[i])
+                {
+                    shoppingList.CheckItem(_itemCodes[i]);
+                }
+            }
+
+            if(shoppingList.IsListChecked())
+            {
+                _owner.ListComplete();
+            }
         }
     }
 
@@ -85,10 +121,28 @@ public class ShoppingCart : NetworkBehaviour
             Destroy(child.gameObject);
         }
 
+        // Update item logic
+        if(_owner == MatchManager.Instance.MainPlayer.GetComponent<Player>() && IsClient)
+        {
+            var shoppingList = _owner.GetComponent<ShoppingList>();
+
+            // Uncheck player list if this was the only item of this type in the cart
+            if(_itemCodes.Unique(code => code == _itemCodes[_nextIndex]))
+            {
+                shoppingList.UncheckItem(_itemCodes[_nextIndex]);
+            }
+
+            // Add item to player list and check if finished
+            if(shoppingList.CheckItem(itemTypeCode) && shoppingList.IsListChecked())
+            {
+                _owner.ListComplete();
+            }
+        }
 
         _occupiedPositions[_nextIndex] = true;
         _itemCodes[_nextIndex] = itemTypeCode;
 
+        // Create new mesh
         var itemPrefab = ItemTypeList.ItemList[itemTypeCode].ItemPrefab;
         var meshObject = itemPrefab.transform.Find("Cube").gameObject;
 
@@ -106,16 +160,15 @@ public class ShoppingCart : NetworkBehaviour
 
     private void updateCartOwnership(ulong playerID)
     {
-        if(!_hasOwner.Value)
+        if(_ownerID.Value == ulong.MaxValue)
         {
             // Player can only own one cart, the first cart it added an item to that didn't already have an owner
-            if(GameObject.FindObjectsOfType<ShoppingCart>().Any(cart => cart._hasOwner.Value && cart._ownerPlayer.Value == playerID))
+            if(GameObject.FindObjectsOfType<ShoppingCart>().Any(cart => cart._ownerID.Value == playerID))
             {
                 return;
             }
 
-            _hasOwner.Value = true;
-            _ownerPlayer.Value = playerID;
+            _ownerID.Value = playerID;
         }
     }
 

@@ -28,6 +28,10 @@ public class MatchManager : MonoBehaviour
         if(_players.Count <= 4)
         {
             _players.Add(player.gameObject);
+            if(player.IsOwner)
+            {
+                MainPlayer = player.gameObject;
+            }
         }
     }
 
@@ -51,7 +55,7 @@ public class MatchManager : MonoBehaviour
         return MainPlayer.Equals(player);
     }
 
-    public Player GetPlayerByNetworkID(ulong ID)
+    public Player GetPlayerByClientID(ulong ID)
     {
         return Players.FirstOrDefault(player => player.OwnerClientId == ID);
     }

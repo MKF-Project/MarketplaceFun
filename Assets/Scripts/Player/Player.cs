@@ -18,15 +18,7 @@ public class Player : NetworkBehaviour
 
     public override void NetworkStart()
     {
-        if(IsOwner)
-        {
-            MatchManager.Instance.MainPlayer = gameObject;
-        }
-
-        if(IsServer)
-        {
-            MatchManager.Instance.RegisterPlayer(this);
-        }
+        MatchManager.Instance.RegisterPlayer(this);
     }
 
     private void Awake()

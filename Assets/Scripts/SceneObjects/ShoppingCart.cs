@@ -15,7 +15,7 @@ public class ShoppingCart : NetworkBehaviour
     private const string ITEM_TAG = "Item";
     private const float COLLISION_COOLDOWN = 2;
 
-    private Player _owner = null;
+    public Player Owner { get; private set; } = null;
     private NetworkVariableULong _ownerID = new NetworkVariableULong(ulong.MaxValue);
 
     private int _nextIndex = 0;
@@ -74,15 +74,15 @@ public class ShoppingCart : NetworkBehaviour
         // We use ulong.MaxValue as placeholder for when the owner of this cart hasn't been set yet
         if(currentOwner != ulong.MaxValue)
         {
-            _owner = MatchManager.Instance.GetPlayerByClientID(_ownerID.Value);
+            Owner = MatchManager.Instance.GetPlayerByClientID(_ownerID.Value);
 
-            if(_owner != MatchManager.Instance.MainPlayer.GetComponent<Player>())
+            if(Owner != MatchManager.Instance.MainPlayer.GetComponent<Player>())
             {
                 return;
             }
 
             // Update player shopping list when acquiring ownership of a shopping cart
-            var shoppingList = _owner.GetComponent<ShoppingList>();
+            var shoppingList = Owner.GetComponent<ShoppingList>();
             for(int i = 0; i < _occupiedPositions.Length; i++)
             {
                 if(_occupiedPositions[i])
@@ -93,7 +93,7 @@ public class ShoppingCart : NetworkBehaviour
 
             if(shoppingList.IsListChecked())
             {
-                _owner.ListComplete();
+                Owner.ListComplete();
             }
         }
     }
@@ -122,9 +122,9 @@ public class ShoppingCart : NetworkBehaviour
         }
 
         // Update item logic
-        if(_owner == MatchManager.Instance.MainPlayer.GetComponent<Player>() && IsClient)
+        if(Owner == MatchManager.Instance.MainPlayer.GetComponent<Player>() && IsClient)
         {
-            var shoppingList = _owner.GetComponent<ShoppingList>();
+            var shoppingList = Owner.GetComponent<ShoppingList>();
 
             // Uncheck player list if this was the only item of this type in the cart
             if(_itemCodes.Unique(code => code == _itemCodes[_nextIndex]))
@@ -135,7 +135,7 @@ public class ShoppingCart : NetworkBehaviour
             // Add item to player list and check if finished
             if(shoppingList.CheckItem(itemTypeCode) && shoppingList.IsListChecked())
             {
-                _owner.ListComplete();
+                Owner.ListComplete();
             }
         }
 

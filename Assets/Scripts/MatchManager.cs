@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MatchManager : MonoBehaviour
@@ -13,15 +14,27 @@ public class MatchManager : MonoBehaviour
         Instance = this;
     }
 
-    public GameObject Player1;
-    public GameObject Player2;
-    public GameObject Player3;
-    public GameObject Player4;
+    private List<GameObject> _players = new List<GameObject>(4);
+
+    public IEnumerable<Player> Players { get => _players.Select(player => player.GetComponent<Player>()); }
+
+    public GameObject Player1 { get => _players[0]; set => _players[0] = value; }
+    public GameObject Player2 { get => _players[1]; set => _players[1] = value; }
+    public GameObject Player3 { get => _players[2]; set => _players[2] = value; }
+    public GameObject Player4 { get => _players[3]; set => _players[3] = value; }
+
+    public void RegisterPlayer(Player player)
+    {
+        if(_players.Count <= 4)
+        {
+            _players.Add(player.gameObject);
+        }
+    }
 
     public void SpawnPlayers(Vector3 position1, Vector3 position2, Vector3 position3, Vector3 position4)
     {
-        Player1.SetActive(true);
         Player1.transform.position = position1;
+        Player1.SetActive(true);
 
         Player2.transform.position = position2;
         Player2.SetActive(true);
@@ -36,5 +49,10 @@ public class MatchManager : MonoBehaviour
     public bool IsMainPlayer(GameObject player)
     {
         return MainPlayer.Equals(player);
+    }
+
+    public Player GetPlayerByNetworkID(ulong ID)
+    {
+        return Players.FirstOrDefault(player => player.OwnerClientId == ID);
     }
 }

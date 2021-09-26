@@ -22,6 +22,11 @@ public class Player : NetworkBehaviour
         {
             MatchManager.Instance.MainPlayer = gameObject;
         }
+
+        if(IsServer)
+        {
+            MatchManager.Instance.RegisterPlayer(this);
+        }
     }
 
     private void Awake()

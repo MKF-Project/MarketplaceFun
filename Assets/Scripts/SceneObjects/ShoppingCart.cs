@@ -4,12 +4,19 @@ using System.Linq;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 
 [SelectionBase]
 public class ShoppingCart : NetworkBehaviour
 {
+    private const string SHOPPING_CART_TAG = "ShoppingCart";
+    private const string PLAYER_TAG = "Player";
     private const string ITEM_POSITIONS_TAG = "Item";
+    private const string ITEM_TAG = "Item";
     private const float COLLISION_COOLDOWN = 2;
+
+    private NetworkVariableULong _ownerPlayer = new NetworkVariableULong(0);
+    private NetworkVariableBool _hasOwner = new NetworkVariableBool(false);
 
     private int _nextIndex = 0;
 
@@ -28,7 +35,7 @@ public class ShoppingCart : NetworkBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.tag == "Item")
+        if(other.gameObject.tag == ITEM_TAG)
         {
             if(IsClient && !IsServer)
             {
@@ -37,8 +44,21 @@ public class ShoppingCart : NetworkBehaviour
 
             if(IsServer && Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
             {
+                updateCartOwnership(NetworkController.getSelfID());
                 addItemToCart(other.gameObject.GetComponent<Item>());
             }
+        }
+
+        // Acquire cart when touching it, if it has no owner and already has items inside
+        else if(!_hasOwner.Value && other.gameObject.tag == PLAYER_TAG && _occupiedPositions.Any(pos => pos))
+        {
+            var playerScript = other.gameObject.GetComponent<Player>();
+            if(playerScript == null || !playerScript.IsOwner)
+            {
+                return;
+            }
+
+            requestCartOwnership_ServerRpc();
         }
     }
 
@@ -84,11 +104,36 @@ public class ShoppingCart : NetworkBehaviour
         _nextIndex = (_nextIndex + 1) % _itemPositions.Count;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void additemToCart_ServerRpc(ulong itemNetworkID)
+    private void updateCartOwnership(ulong playerID)
     {
+        if(!_hasOwner.Value)
+        {
+            // Player can only own one cart, the first cart it added an item to that didn't already have an owner
+            if(GameObject.FindObjectsOfType<ShoppingCart>().Any(cart => cart._hasOwner.Value && cart._ownerPlayer.Value == playerID))
+            {
+                return;
+            }
+
+            _hasOwner.Value = true;
+            _ownerPlayer.Value = playerID;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void requestCartOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
+    {
+        updateCartOwnership(rpcReceiveParams.Receive.SenderClientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void additemToCart_ServerRpc(ulong itemNetworkID, ServerRpcParams rpcReceiveParams = default)
+    {
+
         if(Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
         {
+            // Aqcuire cart when adding the first item to it
+            updateCartOwnership(rpcReceiveParams.Receive.SenderClientId);
+
             var item = NetworkObjects.GetNetworkObjectComponent<Item>(itemNetworkID);
             addItemToCart(item);
         }

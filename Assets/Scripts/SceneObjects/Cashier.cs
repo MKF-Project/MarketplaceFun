@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class Cashier : MonoBehaviour
 {
+    private const string SHOPPING_CART_TAG = "ShoppingCart";
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.tag == SHOPPING_CART_TAG)
         {
-            Player player = other.GetComponent<Player>();
+            Player player = other.GetComponent<ShoppingCart>().Owner;
             if (MatchManager.Instance.IsMainPlayer(player.gameObject))
             {
                 if (player.IsListComplete)

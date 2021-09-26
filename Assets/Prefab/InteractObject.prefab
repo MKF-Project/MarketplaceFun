@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9180235976236313623}
   - component: {fileID: 9181598917055322278}
   - component: {fileID: 7737872577773820019}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: InteractCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 4419773584447227185}
   - component: {fileID: 4082533023593512223}
   - component: {fileID: 1389374939315227184}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: InteractButton
   m_TagString: PickItemButton
   m_Icon: {fileID: 0}

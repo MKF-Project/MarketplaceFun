@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8634383349940106209}
   - component: {fileID: 8100469344648382744}
   - component: {fileID: 5017101535088812866}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Item_Orange
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -108,12 +108,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d929cf1db6a7414ebd93b8ee0de361f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsOnThrow: 0
+  m_Name:
+  m_EditorClassIdentifier:
   ItemTypeCode: 4
-  EffectType: 0
-  takeEffect: {fileID: 0}
 --- !u!114 &8634383349940106209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,8 +121,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   NetworkInstanceId: 0
   PrefabHash: 4481393849427210377
   PrefabHashGenerator: Item_Orange
@@ -157,8 +154,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   FixedSendsPerSecond: 20
   AssumeSyncedSends: 1
   InterpolatePosition: 1
@@ -168,7 +165,7 @@ MonoBehaviour:
   MinDegrees: 1.5
   ExtrapolatePosition: 0
   MaxSendsToExtrapolate: 5
-  Channel: 
+  Channel:
   EnableRange: 0
   EnableNonProvokedResendChecks: 0
   DistanceSendrate:
@@ -207,7 +204,7 @@ GameObject:
   - component: {fileID: 7962331385319673498}
   - component: {fileID: 5449176932087965400}
   - component: {fileID: 2041663865412215050}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

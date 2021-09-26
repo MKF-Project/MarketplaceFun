@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5815850208801693395}
-  m_Layer: 17
+  m_Layer: 29
   m_Name: Carrinho 01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,12 +42,12 @@ GameObject:
   - component: {fileID: 3996453063728161326}
   - component: {fileID: 2503212633110373446}
   - component: {fileID: 6536307170283863502}
-  m_Layer: 17
+  m_Layer: 29
   m_Name: BezierCurve.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &3996453063728161326
 Transform:

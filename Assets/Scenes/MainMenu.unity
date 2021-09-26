@@ -51,8 +51,8 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
-    m_EnableRealtimeLightmaps: 0
+    m_EnableBakedLightmaps: 0
+    m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
     serializedVersion: 12
     m_Resolution: 2
@@ -3380,10 +3380,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainPlayer: {fileID: 0}
-  Player1: {fileID: 0}
-  Player2: {fileID: 0}
-  Player3: {fileID: 0}
-  Player4: {fileID: 0}
 --- !u!4 &985751347
 Transform:
   m_ObjectHideFlags: 0
@@ -4635,6 +4631,7 @@ MonoBehaviour:
     - ItemListTestScene
     - _VerticalSlice
     - ScoreScene
+    - _VerticalSlice_maior
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,

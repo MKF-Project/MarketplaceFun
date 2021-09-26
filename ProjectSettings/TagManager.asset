@@ -24,28 +24,28 @@ TagManager:
   - 
   - Interact
   - Player
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - NotJump
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - Itens
   - Teto
-  - Parede
-  - Expositor
-  - "Ch\xE3o"
-  - Prateleiras
+  - Estrutura Fisica
   - Luzes
-  - "Placa Setoriza\xE7\xE3o"
-  - Carrinho
-  - Caixa
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Expositores
+  - Conjunto de Itens
+  - Carrinho Super
+  - Caixa de Saida
+  - Placas
   m_SortingLayers:
   - name: Default
     uniqueID: 0

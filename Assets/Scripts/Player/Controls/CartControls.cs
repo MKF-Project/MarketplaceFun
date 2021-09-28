@@ -19,7 +19,14 @@ public class CartControls : PlayerControls
         if(IsOwner)
         {
             updateCamera();
-            updateMovementOLD();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(IsOwner)
+        {
+            updateMovement();
         }
     }
 
@@ -33,32 +40,49 @@ public class CartControls : PlayerControls
 
     }
 
-    private void updateMovementOLD()
+    private void updateMovement()
     {
-        // var currentVelocity = Vector3.zero;
-        // var rotationAngle = 0f;
+        // Forward/Backward Movement
+        var targetMove = _currentDirection.y;
+        var isMoving = Mathf.Abs(targetMove) > Deadzone;
 
-        // if(Mathf.Abs(_currentDirection.y) > Deadzone)
-        // {
-        //     currentVelocity = Vector3.forward * (_currentDirection.y > 0? 1 : -1) * _currentDirection.magnitude * _currentSpeed;
-        //     rotationAngle = _currentDirection.x * MovingTurnSpeed;
-        // }
-        // else if(_currentDirection.sqrMagnitude > 0)
-        // {
-        //     rotationAngle = _currentDirection.x * InPlaceTurnSpeed;
-        // }
+        var targetVelocity = Vector3.zero;
+        if(isMoving)
+        {
+            targetVelocity.Set(0, 0, targetMove);
+            targetVelocity = transform.TransformDirection(targetVelocity);
+            targetVelocity *= _currentSpeed;
+        }
 
-        // if(!_rigidBody.isGrounded)
-        // {
-        //     currentVelocity += Physics.gravity;
-        // }
+        targetVelocity = (targetVelocity - _rigidBody.velocity);
 
-        // _rigidBody.Move(transform.TransformDirection(currentVelocity) * Time.deltaTime);
-        // transform.Rotate(Vector3.up, rotationAngle * Time.deltaTime);
+        // Dampen movement
+        // ...
+
+        _rigidBody.AddForce(targetVelocity, ForceMode.VelocityChange);
+
+        // Rotation
+        var targetRotation = _currentDirection.x * Time.fixedDeltaTime;
+        var targetHorizontalRotation = Vector3.up * targetRotation * Sensitivity;
+
+        if(_currentDirection.sqrMagnitude > 0)
+        {
+            targetHorizontalRotation *= isMoving? MovingTurnSpeed : InPlaceTurnSpeed;
+        }
+
+        targetHorizontalRotation = (targetHorizontalRotation - _rigidBody.angularVelocity);
+
+        // Dampen rotation
+        // ...
+
+        _rigidBody.AddTorque(targetHorizontalRotation, ForceMode.VelocityChange);
     }
 
     private void updateCamera()
     {
+        // Unlike on freeMovementControls, in this script the camera can rotate
+        // side to side without applying Physics to the Player
+        // so this method can be run on Update.
         _currentLookAngle += _nextRotation;
         _currentLookAngle.Set(Mathf.Clamp(_currentLookAngle.x, -MaximumViewAngle, MaximumViewAngle), Mathf.Clamp(_currentLookAngle.y, -MaximumViewAngle, MaximumViewAngle));
 

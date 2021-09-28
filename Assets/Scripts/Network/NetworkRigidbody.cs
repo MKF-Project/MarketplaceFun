@@ -34,6 +34,11 @@ public class NetworkRigidbody : NetworkBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        if(!isActiveAndEnabled)
+        {
+            return;
+        }
+
         // Only run this if you are the player that collided with the object
         if(MatchManager.Instance.IsMainPlayer(other.gameObject) && !IsOwner)
         {

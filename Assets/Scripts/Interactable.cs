@@ -15,8 +15,6 @@ public class Interactable : NetworkBehaviour
         get => _layerMask;
     }
 
-
-    private Collider _interactionCollider = null;
     public GameObject InteractUI { get; private set; }
     private bool _configured = false;
 
@@ -37,8 +35,7 @@ public class Interactable : NetworkBehaviour
         }
 
         InteractUI = gameObject.transform.Find(UI_NAME)?.gameObject;
-        _interactionCollider = GetComponent<Collider>();
-        _configured = true;
+        _configured = InteractUI != null;
     }
 
     public delegate void OnLookEnterDelegate(GameObject player);

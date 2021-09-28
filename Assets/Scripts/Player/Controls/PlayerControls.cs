@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
@@ -193,7 +193,7 @@ public abstract class PlayerControls : NetworkBehaviour
         if(Physics.Raycast(_cameraPosition.transform.position, _cameraPosition.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
         {
             // Was looking at something different than current object
-            if(_currentLookingObject != hitInfo.transform.gameObject)
+            if(_currentLookingObject != hitInfo.collider.gameObject)
             {
                 // Was looking at one object, now looking at another
                 if(_currentLookingObject != null)
@@ -202,7 +202,7 @@ public abstract class PlayerControls : NetworkBehaviour
                 }
 
                 // Update current looking object
-                _currentLookingObject = hitInfo.transform.gameObject;
+                _currentLookingObject = hitInfo.collider.gameObject;
                 _currentLookingObject.GetComponent<Interactable>()?.TriggerLookEnter(gameObject);
             }
         }

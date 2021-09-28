@@ -15,6 +15,7 @@ public class ShoppingCart : NetworkBehaviour
     private const string ITEM_TAG = "Item";
     private const float COLLISION_COOLDOWN = 2;
 
+    // Adding Items
     public Player Owner { get; private set; } = null;
     private NetworkVariableULong _ownerID = new NetworkVariableULong(ulong.MaxValue);
 
@@ -26,20 +27,36 @@ public class ShoppingCart : NetworkBehaviour
 
     private float _lastCollision = 0;
 
+    // Interaction
+    private Interactable _interactScript = null;
+
     private void Awake()
     {
+        // Items
         _itemPositions = gameObject.FindChildrenWithTag(ITEM_POSITIONS_TAG);
         _itemCodes = new int[_itemPositions.Count];
         _occupiedPositions = new bool[_itemPositions.Count];
 
         _ownerID.OnValueChanged += onOwnershipChanged;
+
+        // Interaction
+        _interactScript = gameObject.GetComponentInChildren<Interactable>();
+
+        _interactScript.OnLookEnter += showButtonPrompt;
+        _interactScript.OnLookExit += hideButtonPrompt;
+        _interactScript.OnInteract += grabCart;
     }
 
     private void OnDestroy()
     {
         _ownerID.OnValueChanged -= onOwnershipChanged;
+
+        _interactScript.OnLookEnter -= showButtonPrompt;
+        _interactScript.OnLookExit -= hideButtonPrompt;
+        _interactScript.OnInteract -= grabCart;
     }
 
+    /** ---- Items ---- **/
     private void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.tag == ITEM_TAG)
@@ -172,6 +189,28 @@ public class ShoppingCart : NetworkBehaviour
         }
     }
 
+    /** ---- Interaction ---- **/
+    private void showButtonPrompt(GameObject player)
+    {
+        // Show UI if not holding item or driving a shopping cart
+        var playerScript = player.GetComponent<Player>();
+        if(playerScript != null && playerScript.CanInteract)
+        {
+            _interactScript.InteractUI.SetActive(true);
+        }
+    }
+
+    private void hideButtonPrompt(GameObject player)
+    {
+        _interactScript.InteractUI.SetActive(false);
+    }
+
+    private void grabCart(GameObject player)
+    {
+        print("TODO: Grab Cart!");
+    }
+
+    /** ---- RPCs ---- **/
     [ServerRpc(RequireOwnership = false)]
     private void requestCartOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {

@@ -11,10 +11,15 @@ public class Player : NetworkBehaviour
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
 
-    public Transform HeldPosition {get; private set;}
+    public Transform HeldPosition { get; private set; }
 
-    public GameObject HoldingItem {get; private set;}
-    public bool IsHoldingItem {get; private set;}
+    public GameObject HoldingItem { get; private set; }
+    public bool IsHoldingItem { get; private set; }
+
+    [HideInInspector]
+    public bool IsDrivingCart;
+
+    public bool CanInteract { get => !(IsHoldingItem || IsDrivingCart); }
 
     public override void NetworkStart()
     {
@@ -39,6 +44,7 @@ public class Player : NetworkBehaviour
         #endif
 
         IsHoldingItem = false;
+        IsDrivingCart = false;
         IsListComplete = false;
     }
 

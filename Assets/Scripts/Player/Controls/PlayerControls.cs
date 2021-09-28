@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
@@ -330,8 +330,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
     public virtual void Interact()
     {
-        // Can only Interact if not holding anything
-        if(!(isActiveAndEnabled && IsOwner) || _playerScript.IsHoldingItem)
+        // Can only Interact if not holding anything or driving a shopping cart
+        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.CanInteract)
         {
             return;
         }

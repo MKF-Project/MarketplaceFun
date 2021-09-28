@@ -51,9 +51,9 @@ public class ItemGenerator : NetworkBehaviour
             Debug.Log($"[{gameObject.name}]: Showing button prompt");
         #endif
 
-        // Show UI if not holding item
-        var objectScript = player.GetComponent<Player>();
-        if(objectScript != null && !objectScript.IsHoldingItem)
+        // Show UI if not holding item or driving a shopping cart
+        var playerScript = player.GetComponent<Player>();
+        if(playerScript != null && playerScript.CanInteract)
         {
             _interactScript.InteractUI.SetActive(true);
         }

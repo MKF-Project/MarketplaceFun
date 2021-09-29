@@ -18,6 +18,13 @@ public class LobbyMenu : NetworkBehaviour
 
     [SerializeField] private Text _playerList = null;
     [SerializeField] private Button _startGame = null;
+    
+    [SerializeField] public GameObject Nickname1;
+    [SerializeField] public GameObject Nickname2;
+    [SerializeField] public GameObject Nickname3;
+    [SerializeField] public GameObject Nickname4;
+
+    
 
     private void Awake()
     {
@@ -53,5 +60,7 @@ public class LobbyMenu : NetworkBehaviour
     }
 
     public void cancelMatch() => OnCancelMatch?.Invoke();
+
+    
 
 }

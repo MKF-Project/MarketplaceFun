@@ -12,6 +12,7 @@ TagManager:
   - ItemGenerator
   - Interactable
   - ShoppingListUI
+  - PlayerPositionController
   layers:
   - Default
   - TransparentFX

@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 7281358228695716433}
   - component: {fileID: 5223712149193893305}
   - component: {fileID: 1480573957511962058}
+  - component: {fileID: 446760062368117103}
   m_Layer: 0
   m_Name: ShoppingCart
   m_TagString: ShoppingCart
@@ -381,6 +382,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 689751a6f0043ed46b8a44d708a26787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &446760062368117103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4771570655203383561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c729dc785fc8cc4aab75c7b2b6f0e2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5466728700854901942

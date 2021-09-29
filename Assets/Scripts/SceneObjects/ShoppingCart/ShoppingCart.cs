@@ -27,8 +27,7 @@ public class ShoppingCart : NetworkBehaviour
 
     private float _lastCollision = 0;
 
-    // Interaction
-    private Interactable _interactScript = null;
+
 
     private void Awake()
     {
@@ -38,22 +37,11 @@ public class ShoppingCart : NetworkBehaviour
         _occupiedPositions = new bool[_itemPositions.Count];
 
         _ownerID.OnValueChanged += onOwnershipChanged;
-
-        // Interaction
-        _interactScript = gameObject.GetComponentInChildren<Interactable>();
-
-        _interactScript.OnLookEnter += showButtonPrompt;
-        _interactScript.OnLookExit += hideButtonPrompt;
-        _interactScript.OnInteract += grabCart;
     }
 
     private void OnDestroy()
     {
         _ownerID.OnValueChanged -= onOwnershipChanged;
-
-        _interactScript.OnLookEnter -= showButtonPrompt;
-        _interactScript.OnLookExit -= hideButtonPrompt;
-        _interactScript.OnInteract -= grabCart;
     }
 
     /** ---- Items ---- **/
@@ -187,27 +175,6 @@ public class ShoppingCart : NetworkBehaviour
 
             _ownerID.Value = playerID;
         }
-    }
-
-    /** ---- Interaction ---- **/
-    private void showButtonPrompt(GameObject player)
-    {
-        // Show UI if not holding item or driving a shopping cart
-        var playerScript = player.GetComponent<Player>();
-        if(playerScript != null && playerScript.CanInteract)
-        {
-            _interactScript.InteractUI.SetActive(true);
-        }
-    }
-
-    private void hideButtonPrompt(GameObject player)
-    {
-        _interactScript.InteractUI.SetActive(false);
-    }
-
-    private void grabCart(GameObject player)
-    {
-        print("TODO: Grab Cart!");
     }
 
     /** ---- RPCs ---- **/

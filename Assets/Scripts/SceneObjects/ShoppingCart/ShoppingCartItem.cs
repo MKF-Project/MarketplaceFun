@@ -7,7 +7,7 @@ using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 
 [SelectionBase]
-public class ShoppingCart : NetworkBehaviour
+public class ShoppingCartItem : NetworkBehaviour
 {
     private const string SHOPPING_CART_TAG = "ShoppingCart";
     private const string PLAYER_TAG = "Player";
@@ -26,8 +26,6 @@ public class ShoppingCart : NetworkBehaviour
     private List<GameObject> _itemPositions;
 
     private float _lastCollision = 0;
-
-
 
     private void Awake()
     {
@@ -168,7 +166,7 @@ public class ShoppingCart : NetworkBehaviour
         if(_ownerID.Value == ulong.MaxValue)
         {
             // Player can only own one cart, the first cart it added an item to that didn't already have an owner
-            if(GameObject.FindObjectsOfType<ShoppingCart>().Any(cart => cart._ownerID.Value == playerID))
+            if(GameObject.FindObjectsOfType<ShoppingCartItem>().Any(cart => cart._ownerID.Value == playerID))
             {
                 return;
             }

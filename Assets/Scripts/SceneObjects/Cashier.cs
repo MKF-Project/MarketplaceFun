@@ -12,7 +12,7 @@ public class Cashier : MonoBehaviour
         if (other.gameObject.tag == SHOPPING_CART_TAG)
         {
             Player player = other.GetComponent<ShoppingCartItem>().Owner;
-            if (MatchManager.Instance.IsMainPlayer(player.gameObject))
+            if (player != null && MatchManager.Instance.IsMainPlayer(player.gameObject))
             {
                 if (player.IsListComplete)
                 {

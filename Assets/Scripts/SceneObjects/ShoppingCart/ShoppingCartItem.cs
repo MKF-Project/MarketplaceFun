@@ -15,9 +15,11 @@ public class ShoppingCartItem : NetworkBehaviour
     private const string ITEM_TAG = "Item";
     private const float COLLISION_COOLDOWN = 2;
 
+    internal const ulong NO_OWNER_ID = ulong.MaxValue;
+
     // Adding Items
     public Player Owner { get; private set; } = null;
-    private NetworkVariableULong _ownerID = new NetworkVariableULong(ulong.MaxValue);
+    private NetworkVariableULong _ownerID = new NetworkVariableULong(NO_OWNER_ID);
 
     private int _nextIndex = 0;
 
@@ -60,7 +62,7 @@ public class ShoppingCartItem : NetworkBehaviour
         }
 
         // Acquire cart when touching it, if it has no owner and already has items inside
-        else if(_ownerID.Value == ulong.MaxValue && other.gameObject.tag == PLAYER_TAG && _occupiedPositions.Any(pos => pos))
+        else if(_ownerID.Value == NO_OWNER_ID && other.gameObject.tag == PLAYER_TAG && _occupiedPositions.Any(pos => pos))
         {
             var playerScript = other.gameObject.GetComponent<Player>();
             if(playerScript == null || !playerScript.IsOwner)
@@ -74,8 +76,8 @@ public class ShoppingCartItem : NetworkBehaviour
 
     private void onOwnershipChanged(ulong previousOwner, ulong currentOwner)
     {
-        // We use ulong.MaxValue as placeholder for when the owner of this cart hasn't been set yet
-        if(currentOwner != ulong.MaxValue)
+        // We use NO_OWNER_ID as placeholder for when the owner of this cart hasn't been set yet
+        if(currentOwner != NO_OWNER_ID)
         {
             Owner = MatchManager.Instance.GetPlayerByClientID(_ownerID.Value);
 
@@ -120,7 +122,7 @@ public class ShoppingCartItem : NetworkBehaviour
         {
             var child = _itemPositions[_nextIndex].transform.GetChild(0);
 
-            child.parent = child.root;
+            child.SetParent(null);
             Destroy(child.gameObject);
         }
 
@@ -163,7 +165,7 @@ public class ShoppingCartItem : NetworkBehaviour
 
     private void updateCartOwnership(ulong playerID)
     {
-        if(_ownerID.Value == ulong.MaxValue)
+        if(_ownerID.Value == NO_OWNER_ID)
         {
             // Player can only own one cart, the first cart it added an item to that didn't already have an owner
             if(GameObject.FindObjectsOfType<ShoppingCartItem>().Any(cart => cart._ownerID.Value == playerID))
@@ -177,18 +179,18 @@ public class ShoppingCartItem : NetworkBehaviour
 
     /** ---- RPCs ---- **/
     [ServerRpc(RequireOwnership = false)]
-    private void requestCartOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
+    public void requestCartOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         updateCartOwnership(rpcReceiveParams.Receive.SenderClientId);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void additemToCart_ServerRpc(ulong itemNetworkID, ServerRpcParams rpcReceiveParams = default)
+    public void additemToCart_ServerRpc(ulong itemNetworkID, ServerRpcParams rpcReceiveParams = default)
     {
 
         if(Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
         {
-            // Aqcuire cart when adding the first item to it
+            // Acquire cart when adding the first item to it
             updateCartOwnership(rpcReceiveParams.Receive.SenderClientId);
 
             var item = NetworkObjects.GetNetworkObjectComponent<Item>(itemNetworkID);

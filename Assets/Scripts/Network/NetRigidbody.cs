@@ -8,7 +8,6 @@ using MLAPI.Prototyping;
 
 public class NetRigidbody : NetworkBehaviour
 {
-
     private Rigidbody _rigidbody;
     private NetworkTransform _netTransform;
 
@@ -34,13 +33,8 @@ public class NetRigidbody : NetworkBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if(!isActiveAndEnabled)
-        {
-            return;
-        }
-
         // Only run this if you are the player that collided with the object
-        if(MatchManager.Instance.IsMainPlayer(other.gameObject) && !IsOwner)
+        if(isActiveAndEnabled && MatchManager.Instance.IsMainPlayer(other.gameObject) && !IsOwner)
         {
             // Disable Network transform while we wait for Onwership confirmation
             // so that the rigidbody reacts immediately
@@ -50,7 +44,7 @@ public class NetRigidbody : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestObjectOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
+    public void RequestObjectOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         print($"Onwership request, {rpcReceiveParams.Receive.SenderClientId}");
         var clientRpcParams = new ClientRpcParams

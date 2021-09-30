@@ -16,6 +16,7 @@ public class MatchManager : MonoBehaviour
 
     private List<GameObject> _players = new List<GameObject>(4);
 
+    // BUG: objects in list can are already destroyed? TODO Check this
     public IEnumerable<Player> Players { get => _players.Select(player => player.GetComponent<Player>()); }
 
     public GameObject Player1 { get => _players[0]; set => _players[0] = value; }

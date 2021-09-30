@@ -42,7 +42,7 @@ public class Interactable : NetworkBehaviour
     public event OnLookEnterDelegate OnLookEnter;
     public void TriggerLookEnter(GameObject player)
     {
-        if(_configured)
+        if(_configured && isActiveAndEnabled)
         {
             OnLookEnter?.Invoke(player);
         }
@@ -52,7 +52,7 @@ public class Interactable : NetworkBehaviour
     public event OnLookExitDelegate OnLookExit;
     public void TriggerLookExit(GameObject player)
     {
-        if(_configured)
+        if(_configured && isActiveAndEnabled)
         {
             OnLookExit?.Invoke(player);
         }
@@ -62,7 +62,7 @@ public class Interactable : NetworkBehaviour
     public event OnInteractDelegate OnInteract;
     public void TriggerInteract(GameObject player)
     {
-        if(_configured)
+        if(_configured && isActiveAndEnabled)
         {
             OnInteract?.Invoke(player);
         }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
@@ -55,6 +55,7 @@ public class CartControls : PlayerControls
         }
 
         targetVelocity = (targetVelocity - _rigidBody.velocity);
+        targetVelocity.y = 0; // Don't prevent Gravity
 
         // Dampen movement
         // ...

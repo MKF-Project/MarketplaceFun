@@ -1,17 +1,27 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
 
 public class CartControls : PlayerControls
 {
+    private const string SHOPPING_CART_POSITION_NAME = "ShoppingCartPosition";
+
     private Vector2 _currentLookAngle = Vector2.zero;
+
+    private GameObject _shoppingCartPosition;
 
     public float MovingTurnSpeed;
     public float InPlaceTurnSpeed;
     public float Deadzone;
 
     public float MaximumViewAngle = 60f;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _shoppingCartPosition = transform.Find(SHOPPING_CART_POSITION_NAME)?.gameObject;
+    }
 
     protected override void Update()
     {
@@ -37,7 +47,10 @@ public class CartControls : PlayerControls
 
     public override void Jump()
     {
-
+        if(IsOwner)
+        {
+           _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.detachCartFromPlayer(GetComponent<Player>());
+        }
     }
 
     private void updateMovement()

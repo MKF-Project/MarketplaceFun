@@ -59,8 +59,6 @@ public class ShoppingCartInteract : NetworkBehaviour
 
     private void grabCart(GameObject playerObject)
     {
-        print("TODO: Grab Cart!");
-
         var playerScript = playerObject.GetComponent<Player>();
 
         // Cannot grab cart if it is owned by a different player than the current player
@@ -82,9 +80,10 @@ public class ShoppingCartInteract : NetworkBehaviour
         }
 
         attachCartToPlayer(playerScript);
+        hideButtonPrompt(playerObject);
     }
 
-    private void attachCartToPlayer(Player player)
+    public void attachCartToPlayer(Player player)
     {
         var cartPosition = player.transform.Find(SHOPPING_CART_POSITION_NAME);
 
@@ -112,5 +111,10 @@ public class ShoppingCartInteract : NetworkBehaviour
 
         // Update player Controls
         player.GetComponent<PlayerControls>().switchControlScheme();
+    }
+
+    public void detachCartFromPlayer(Player player)
+    {
+        print("TODO: Detach from Player");
     }
 }

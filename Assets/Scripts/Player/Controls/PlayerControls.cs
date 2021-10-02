@@ -127,6 +127,20 @@ public abstract class PlayerControls : NetworkBehaviour
         InputController.OnDrop     += Drop;
     }
 
+    public void switchControlScheme()
+    {
+        switch(ControlScheme)
+        {
+            case PlayerControlSchemes.FreeMovementControls:
+                ControlScheme = PlayerControlSchemes.CartControls;
+                break;
+
+            case PlayerControlSchemes.CartControls:
+                ControlScheme = PlayerControlSchemes.FreeMovementControls;
+                break;
+        }
+    }
+
     private void initializeControlScheme()
     {
         _freeMovementControls = gameObject.GetComponent<FreeMovementControls>();

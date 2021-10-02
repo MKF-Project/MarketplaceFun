@@ -109,5 +109,8 @@ public class ShoppingCartInteract : NetworkBehaviour
         transform.rotation = Quaternion.identity;
 
         transform.SetParent(cartPosition, false);
+
+        // Update player Controls
+        player.GetComponent<PlayerControls>().switchControlScheme();
     }
 }

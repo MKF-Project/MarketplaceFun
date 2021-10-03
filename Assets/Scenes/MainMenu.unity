@@ -4717,18 +4717,6 @@ MonoBehaviour:
     - Prefab: {fileID: 3133438055858914724, guid: 2fb00fe7abbc180448c4db73f644b1e2,
         type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 1418102247371811481, guid: 9b8998fa28c915b42a22c88bf32fb111,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 2006318359958258604, guid: e1ccc0f6e58dc5e47920fdb17369ebc5,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 8137390273752814735, guid: 4610ebf4f8f55a34f831d44c50f2a8b0,
-        type: 3}
-      PlayerPrefab: 0
-    - Prefab: {fileID: 5980153035501391212, guid: 942a48e8eed051c4aa54ef0de558f77f,
-        type: 3}
-      PlayerPrefab: 0
     - Prefab: {fileID: 504874124064471015, guid: fa51d5816e3fb02499aaf563e4c91ab1,
         type: 3}
       PlayerPrefab: 0

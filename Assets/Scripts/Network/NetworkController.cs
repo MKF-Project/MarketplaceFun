@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Transports;
@@ -85,6 +86,10 @@ public class NetworkController : MonoBehaviour
             }
         }
     }
+
+    public static bool IsServer { get => _instance._netManager.IsServer; }
+    public static bool IsClient { get => _instance._netManager.IsClient; }
+    public static bool IsHost   { get => _instance._netManager.IsHost;   }
 
     private void Awake()
     {
@@ -232,7 +237,17 @@ public class NetworkController : MonoBehaviour
 
     public static ulong getSelfID()
     {
-        return _instance._netManager.IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+        return IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+    }
+
+    public static IEnumerable<ulong> getClientIDs()
+    {
+        if(!IsServer)
+        {
+            return Enumerable.Empty<ulong>();
+        }
+
+        return _instance._netManager.ConnectedClientsList.Select(client => client.ClientId);
     }
 
     public static void switchNetworkScene(string sceneName)
@@ -259,23 +274,23 @@ public class NetworkController : MonoBehaviour
     public static void disconnect()
     {
         // Can't disconnect if you're neither a Server nor Client (Host is both)
-        if(!(_instance._netManager.IsServer || _instance._netManager.IsClient))
+        if(!(IsServer || IsClient))
         {
             return;
         }
 
-        if(_instance._netManager.IsHost)
+        if(IsHost)
         {
             _instance._netManager.StopHost();
             OnDisconnected?.Invoke(true, false);
         }
         /* Not valid for this Game, as all Servers are also Hosts */
-        // else if(_instance._netManager.IsServer)
+        // else if(IsServer)
         // {
         //     _instance._netManager.StopServer();
         //     OnDisconnected?.Invoke(true);
         // }
-        else if(_instance._netManager.IsClient)
+        else if(IsClient)
         {
             _instance._netManager.StopClient();
             OnDisconnected?.Invoke(false, false);

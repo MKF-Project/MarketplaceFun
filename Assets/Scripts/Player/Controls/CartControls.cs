@@ -49,7 +49,7 @@ public class CartControls : PlayerControls
     {
         if(IsOwner)
         {
-           _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.detachCartFromPlayer(GetComponent<Player>());
+           _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
         }
     }
 

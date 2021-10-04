@@ -19,7 +19,7 @@ public class ShoppingCartItem : NetworkBehaviour
 
     // Adding Items
     public Player Owner { get; private set; } = null;
-    private NetworkVariableULong _ownerID = new NetworkVariableULong(NO_OWNER_ID);
+    internal NetworkVariableULong _ownerID = new NetworkVariableULong(NO_OWNER_ID);
 
     private int _nextIndex = 0;
 

@@ -39,6 +39,16 @@ public static class Utils
         return FindFromTag(root, tag, includeInactive).FirstOrDefault();
     }
 
+    public static List<GameObject> FindChildrenWithTag(this Transform root, string tag, bool includeInactive = true)
+    {
+        return new List<GameObject>(FindFromTag(root.gameObject, tag, includeInactive));
+    }
+
+    public static GameObject FindChildWithTag(this Transform root, string tag, bool includeInactive = true)
+    {
+        return FindFromTag(root.gameObject, tag, includeInactive).FirstOrDefault();
+    }
+
     // Menu
     public static void toggleMenu(this MonoBehaviour menuScript) => MenuManager.toggleMenu(menuScript.gameObject);
     public static void toggleMenuDelayed(this MonoBehaviour menuScript) => MenuManager.toggleMenuDelayed(menuScript.gameObject);
@@ -46,7 +56,12 @@ public static class Utils
     // Lists
     public static bool Unique<T>(this IEnumerable<T> list, Func<T, bool> predicate)
     {
-        return list.Count(predicate) == 1;
+        return !object.Equals(list.SingleOrDefault(predicate), default(T));
+    }
+
+    public static bool None<T>(this IEnumerable<T> list, Func<T, bool> predicate)
+    {
+        return !list.Any(predicate);
     }
 
     public static RigidbodyTemplate ExtractToTemplate(this Rigidbody rb)
@@ -72,7 +87,11 @@ public static class Utils
 
     public static Rigidbody ImportFromTemplate(this RigidbodyTemplate rigidbodyTemplate, GameObject target)
     {
-        var rb = target.GetComponent<Rigidbody>() ?? (target.AddComponent(typeof(Rigidbody)) as Rigidbody);
+        var rb = target.GetComponent<Rigidbody>();
+        if(rb == null)
+        {
+            rb = target.AddComponent<Rigidbody>();
+        }
 
         rb.mass                     = rigidbodyTemplate.mass;
         rb.drag                     = rigidbodyTemplate.drag;

@@ -11,7 +11,7 @@ public enum PlayerControlSchemes {
 
 public abstract class PlayerControls : NetworkBehaviour
 {
-    protected const string CAMERA_TAG = "MainCamera";
+    protected const string CAMERA_POSITION_NAME = "CameraPosition";
 
     // This is the maximum speed the player is allowed to turn,
     // regardless of other factors. Keep this at a high value to allow fast mouse movement
@@ -54,9 +54,11 @@ public abstract class PlayerControls : NetworkBehaviour
 
     // Components
     protected Rigidbody _rigidBody;
-    protected GameObject _cameraPosition;
     protected GameObject _currentLookingObject = null;
     protected Player _playerScript = null;
+
+    protected GameObject _cameraPosition;
+    protected Quaternion _initialCameraLocalRotation;
 
     protected Vector2 _currentDirection = Vector2.zero;
     protected Vector2 _nextRotation = Vector2.zero;
@@ -67,7 +69,7 @@ public abstract class PlayerControls : NetworkBehaviour
     protected float _currentSpeed = 0;
 
     // Collision related
-    public bool isCollidingWithWall { get; protected set ;} = false;
+    public bool isCollidingWithWall { get; protected set; } = false;
     public bool isGrounded { get; protected set; } = false;
 
     /** Inspector Variables **/
@@ -90,8 +92,10 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
 
-        _cameraPosition = gameObject.FindChildWithTag(CAMERA_TAG);
         _playerScript = gameObject.GetComponent<Player>();
+
+        _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
+        _initialCameraLocalRotation = _cameraPosition.transform.localRotation;
 
         #if UNITY_EDITOR
             if(_rigidBody == null)

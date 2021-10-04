@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 8816987188005979575}
   m_Layer: 0
   m_Name: CameraPosition
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -271,7 +271,7 @@ MonoBehaviour:
     m_Bits: 523265
   MoveSpeed: 5
   WalkSpeed: 3
-  Sensitivity: 2.3
+  Sensitivity: 2.4
   InteractionDistance: 2
   FallSpeed: 5
   JumpHeight: 1.2

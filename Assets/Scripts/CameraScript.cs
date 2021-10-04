@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    private const string CAMERA_TAG = "MainCamera";
+    private const string CAMERA_POSITION_NAME = "CameraPosition";
 
     private Vector3 _initalPosition = Vector3.zero;
     private Quaternion _initialRotation = Quaternion.identity;
@@ -29,8 +29,7 @@ public class CameraScript : MonoBehaviour
         if(PlayerManager.AllowPlayerControls && MatchManager.Instance.MainPlayer != null)
         {
             _currentPlayer = MatchManager.Instance.MainPlayer;
-            var playerCameraObject = _currentPlayer.FindChildWithTag(CAMERA_TAG, false);
-
+            var playerCameraObject = _currentPlayer.transform.Find(CAMERA_POSITION_NAME).gameObject;
             #if UNITY_EDITOR
                 if(playerCameraObject == null)
                 {

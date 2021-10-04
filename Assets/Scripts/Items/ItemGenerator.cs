@@ -90,15 +90,7 @@ public class ItemGenerator : NetworkBehaviour
         var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
         itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
 
-        var clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new ulong[] {rpcReceiveParams.Receive.SenderClientId}
-            }
-        };
-
-        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, clientRpcParams);
+        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, rpcReceiveParams.ReturnRpcToSender());
     }
 
 

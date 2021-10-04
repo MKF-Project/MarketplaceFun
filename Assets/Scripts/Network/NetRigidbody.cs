@@ -47,16 +47,9 @@ public class NetRigidbody : NetworkBehaviour
     public void RequestObjectOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         print($"Onwership request, {rpcReceiveParams.Receive.SenderClientId}");
-        var clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new ulong[] {rpcReceiveParams.Receive.SenderClientId}
-            }
-        };
 
         NetworkObject.ChangeOwnership(rpcReceiveParams.Receive.SenderClientId);
-        RespondObjectOwnership_ClientRpc(clientRpcParams);
+        RespondObjectOwnership_ClientRpc(rpcReceiveParams.ReturnRpcToSender());
     }
 
     [ClientRpc]

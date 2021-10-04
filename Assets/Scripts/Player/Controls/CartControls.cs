@@ -43,6 +43,9 @@ public class CartControls : PlayerControls
     private void OnEnable()
     {
         ControlScheme = PlayerControlSchemes.CartControls;
+
+        _cameraPosition.transform.localRotation = _initialCameraLocalRotation;
+        _currentLookAngle = Vector2.zero;
     }
 
     public override void Jump()

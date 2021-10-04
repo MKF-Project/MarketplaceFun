@@ -37,6 +37,9 @@ public class FreeMovementControls : PlayerControls
     private void OnEnable()
     {
         ControlScheme = PlayerControlSchemes.FreeMovementControls;
+
+        _cameraPosition.transform.localRotation = _initialCameraLocalRotation;
+        _targetVerticalRotation = 0;
     }
 
     protected override void OnDisable()

@@ -133,14 +133,20 @@ public abstract class PlayerControls : NetworkBehaviour
 
     public void switchControlScheme()
     {
+        // Store currentDirection from the current active control script
+        // so we can keep our momentum when we switch scripts
+        var transferDirection = _currentDirection;
+
         switch(ControlScheme)
         {
             case PlayerControlSchemes.FreeMovementControls:
                 ControlScheme = PlayerControlSchemes.CartControls;
+                _cartControls.Move(transferDirection);
                 break;
 
             case PlayerControlSchemes.CartControls:
                 ControlScheme = PlayerControlSchemes.FreeMovementControls;
+                _freeMovementControls.Move(transferDirection);
                 break;
         }
     }

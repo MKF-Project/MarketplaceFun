@@ -182,7 +182,14 @@ public class ShoppingCartInteract : NetworkBehaviour
         }
 
         // Update player controls
-        player.GetComponent<PlayerControls>().switchControlScheme();
+        foreach (var controlScript in player.GetComponents<PlayerControls>())
+        {
+            if(controlScript.isActiveAndEnabled)
+            {
+                controlScript.switchControlScheme();
+                break;
+            }
+        }
     }
 
     /** ---- RPCs ---- **/

@@ -152,6 +152,13 @@ public class ShoppingCartInteract : NetworkBehaviour
         _netTransform.enabled = true;
         _netRigidbody.enabled = true;
 
+        // Keep cart momentum from player
+        if(IsOwner)
+        {
+            var velocity = player.GetComponent<Rigidbody>().velocity;
+            _rigidbody.AddForce(velocity, ForceMode.VelocityChange);
+        }
+
         // Update player controls
         player.GetComponent<PlayerControls>().switchControlScheme();
     }

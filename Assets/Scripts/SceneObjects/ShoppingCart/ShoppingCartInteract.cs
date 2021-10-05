@@ -21,6 +21,12 @@ public class ShoppingCartInteract : NetworkBehaviour
     private Rigidbody _rigidbody = null;
     private RigidbodyTemplate _rigidBodyTemplate;
 
+    [SerializeField]
+    private PhysicMaterial _playerBodyMaterial;
+
+    private List<Collider> _cartColliders;
+    private List<PhysicMaterial> _cartMaterials;
+
     private void Awake()
     {
         _interactScript = GetComponentInChildren<Interactable>();
@@ -30,6 +36,13 @@ public class ShoppingCartInteract : NetworkBehaviour
         _netRigidbody = GetComponent<NetRigidbody>();
 
         _rigidbody = GetComponent<Rigidbody>();
+
+        // Store list of Physics materials
+        _cartColliders = new List<Collider>(7);
+        _rigidbody.GetComponentsInChildren<Collider>(false, _cartColliders);
+        _cartColliders.RemoveAll(collider => collider.isTrigger == true);
+
+        _cartMaterials = _cartColliders.Select(collider => collider.material).ToList();
 
         _interactScript.OnLookEnter += showButtonPrompt;
         _interactScript.OnLookExit += hideButtonPrompt;
@@ -133,6 +146,9 @@ public class ShoppingCartInteract : NetworkBehaviour
 
         transform.SetParent(cartPosition, false);
 
+        // Update cart Physics Materials
+        _cartColliders.ForEach(collider => collider.material = _playerBodyMaterial);
+
         // Update player Controls
         player.GetComponent<PlayerControls>().switchControlScheme();
     }
@@ -151,6 +167,12 @@ public class ShoppingCartInteract : NetworkBehaviour
         // Reenable network components
         _netTransform.enabled = true;
         _netRigidbody.enabled = true;
+
+        // Return Physics materials to default
+        for(int i = 0; i < _cartColliders.Count; i++)
+        {
+            _cartColliders[i].material = _cartMaterials[i];
+        }
 
         // Keep cart momentum from player
         if(IsOwner)

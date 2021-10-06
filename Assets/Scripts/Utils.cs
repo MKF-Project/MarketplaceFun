@@ -65,7 +65,9 @@ public static class Utils
     // Lists
     public static bool Unique<T>(this IEnumerable<T> list, Func<T, bool> predicate)
     {
-        return !object.Equals(list.SingleOrDefault(predicate), default(T));
+        // Evaluate Enumerator has no more than one element that satifies the predicate
+        // without iterating over the entire list if more than one exists
+        return list.Where(predicate).Take(2).Count() == 1;
     }
 
     public static bool None<T>(this IEnumerable<T> list, Func<T, bool> predicate)

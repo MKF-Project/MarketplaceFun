@@ -3,15 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
 using MLAPI.Messaging;
-using MLAPI.Serialization;
 using UnityEngine;
 
 public class Item : NetworkBehaviour
 {
     public const int NO_ITEMTYPE_CODE = int.MinValue;
 
-    private Transform _heldPosition;
-    private bool _isHeld;
     private NetworkObject _networkObject;
 
     [HideInInspector]
@@ -34,11 +31,6 @@ public class Item : NetworkBehaviour
         RegisterItem();
     }
 
-    private void Start()
-    {
-        _isHeld = false;
-    }
-
     private void OnDestroy()
     {
         UnregisterItem();
@@ -56,13 +48,6 @@ public class Item : NetworkBehaviour
 
     private void Update()
     {
-        if (_isHeld)
-        {
-            transform.position = _heldPosition.position;
-            transform.forward = _heldPosition.forward;
-            Debug.DrawRay(_heldPosition.position, _heldPosition.forward* 10, Color.red);
-        }
-
         if (IsOnThrow)
         {
             if (gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude <= 0.1)
@@ -70,18 +55,6 @@ public class Item : NetworkBehaviour
                 TriggerDestroyItem();
             }
         }
-    }
-
-    public void BeHeld(Transform holderPosition)
-    {
-        _heldPosition = holderPosition;
-        _isHeld = true;
-    }
-
-    public void BeDropped()
-    {
-        _heldPosition = null;
-        _isHeld = false;
     }
 
     public GameObject GetItemVisuals()

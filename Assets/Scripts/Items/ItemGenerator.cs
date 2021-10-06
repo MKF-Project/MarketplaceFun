@@ -13,8 +13,7 @@ public class ItemGenerator : NetworkBehaviour
     public int ItemTypeCode;
 
     private GameObject _itemPrefab;
-    private GameObject _player = null;
-    // private Action<GameObject> _onItemGenerated = null;
+    private Action<Item> _itemAction = null;
     private Interactable _interactScript = null;
 
     private void Awake()
@@ -29,8 +28,8 @@ public class ItemGenerator : NetworkBehaviour
         }
 
         _interactScript.OnLookEnter += showButtonPrompt;
-        _interactScript.OnLookExit += hideButtonPrompt;
-        _interactScript.OnInteract += generateItem;
+        _interactScript.OnLookExit  += hideButtonPrompt;
+        _interactScript.OnInteract  += giveItemToPlayer;
     }
 
     private void OnDestroy()
@@ -41,19 +40,15 @@ public class ItemGenerator : NetworkBehaviour
         }
 
         _interactScript.OnLookEnter -= showButtonPrompt;
-        _interactScript.OnLookExit -= hideButtonPrompt;
-        _interactScript.OnInteract -= generateItem;
+        _interactScript.OnLookExit  -= hideButtonPrompt;
+        _interactScript.OnInteract  -= giveItemToPlayer;
     }
 
     private void showButtonPrompt(GameObject player)
     {
-        #if UNITY_EDITOR
-            Debug.Log($"[{gameObject.name}]: Showing button prompt");
-        #endif
-
         // Show UI if not holding item or driving a shopping cart
         var playerScript = player.GetComponent<Player>();
-        if(playerScript != null && playerScript.CanInteract)
+        if(playerScript != null && !playerScript.IsHoldingItem)
         {
             _interactScript.InteractUI.SetActive(true);
         }
@@ -61,28 +56,35 @@ public class ItemGenerator : NetworkBehaviour
 
     private void hideButtonPrompt(GameObject player)
     {
-        #if UNITY_EDITOR
-            Debug.Log($"[{gameObject.name}]: Hiding button prompt");
-        #endif
-
         // Hide button prompt
         _interactScript.InteractUI.SetActive(false);
     }
 
-    private void generateItem(GameObject player)
+    private void giveItemToPlayer(GameObject player)
+    {
+        var playerScript = player.GetComponent<Player>();
+        if(!playerScript.IsHoldingItem)
+        {
+            playerScript.HeldItemType.Value = ItemTypeCode;
+            playerScript.HeldItemGenerator = this;
+        }
+    }
+
+
+    public void GenerateItem(Action<Item> itemAction = null)
     {
         #if UNITY_EDITOR
             Debug.Log($"[{gameObject.name}]: Trigger generate item");
         #endif
 
-        _player = player;
+        _itemAction = itemAction;
         GenerateItem_ServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void GenerateItem_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
-        GameObject generatedItem = Instantiate(_itemPrefab, Vector3.zero, Quaternion.identity);
+        var generatedItem = Instantiate(_itemPrefab, Vector3.zero, Quaternion.identity);
 
         var item = generatedItem.GetComponent<Item>();
         item.ItemTypeCode = ItemTypeCode;
@@ -99,12 +101,11 @@ public class ItemGenerator : NetworkBehaviour
     {
         GameObject itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
 
-        if (itemGenerated != null && _player != null)
+        if (itemGenerated != null)
         {
-            itemGenerated.GetComponent<Item>().ItemTypeCode = itemTypeCode;
-            _player.GetComponent<Player>().HoldItem(itemGenerated);
-
-            _interactScript.InteractUI.SetActive(false);
+            var itemScript = itemGenerated.GetComponent<Item>();
+            itemScript.ItemTypeCode = itemTypeCode;
+            _itemAction?.Invoke(itemScript);
         }
     }
 

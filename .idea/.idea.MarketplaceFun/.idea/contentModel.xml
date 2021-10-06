@@ -47,10 +47,13 @@
               <e p="FreeMovementControls.cs" t="Include" />
               <e p="PlayerControls.cs" t="Include" />
             </e>
-            <e p="Managers" t="Include">
-              <e p="LobbyInfo.cs" t="Include" />
-              <e p="LobbyInfoController.cs" t="Include" />
+            <e p="Menagers" t="Include">
+              <e p="PlayerInfoController.cs" t="Include" />
+            </e>
+            <e p="MetaData" t="Include">
               <e p="LobbyPosition.cs" t="Include" />
+              <e p="PlayerData.cs" t="Include" />
+              <e p="PlayerInfo.cs" t="Include" />
             </e>
             <e p="Player.cs" t="Include" />
             <e p="PlayerController.cs" t="Include" />

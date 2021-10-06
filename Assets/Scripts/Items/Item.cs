@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class Item : NetworkBehaviour
 {
+    public const int NO_ITEMTYPE_CODE = int.MinValue;
+
     private Transform _heldPosition;
     private bool _isHeld;
     private NetworkObject _networkObject;
@@ -32,7 +34,7 @@ public class Item : NetworkBehaviour
         RegisterItem();
     }
 
-    void Start()
+    private void Start()
     {
         _isHeld = false;
     }
@@ -52,7 +54,7 @@ public class Item : NetworkBehaviour
         NetworkItemManager.UnregisterItem(_networkObject.PrefabHash, _networkObject.NetworkObjectId);
     }
 
-    void Update()
+    private void Update()
     {
         if (_isHeld)
         {
@@ -82,6 +84,11 @@ public class Item : NetworkBehaviour
         _isHeld = false;
     }
 
+    public GameObject GetItemVisuals()
+    {
+        // TODO update this function when we have better structured visuals
+        return transform.Find("Cube")?.gameObject;
+    }
 
     public void OnCollisionEnter(Collision other)
     {

@@ -72,6 +72,9 @@ public abstract class PlayerControls : NetworkBehaviour
     public bool isCollidingWithWall { get; protected set; } = false;
     public bool isGrounded { get; protected set; } = false;
 
+    // Interaction related
+    public bool HasInteractedThisFrame { get; protected set; } = false;
+
     /** Inspector Variables **/
     [Header("Ground Detection")]
     [Range(0, 90)]
@@ -300,14 +303,20 @@ public abstract class PlayerControls : NetworkBehaviour
 
     private IEnumerator clearGrounded()
     {
-        yield return new WaitForFixedUpdate();
+        yield return Utils.FixedUpdateWait;
         isGrounded = false;
     }
 
     private IEnumerator clearWallCollision()
     {
-        yield return new WaitForFixedUpdate();
+        yield return Utils.FixedUpdateWait;
         isCollidingWithWall = false;
+    }
+
+    private IEnumerator clearInteractFlag()
+    {
+        yield return Utils.EndOfFrameWait;
+        HasInteractedThisFrame = false;
     }
 
     /** Input Actions **/
@@ -347,27 +356,28 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-
         _isWalking = !_isWalking;
         _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
     }
 
     public virtual void Interact()
     {
-        // Can only Interact if not holding anything or driving a shopping cart
-        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.CanInteract)
+        // Can only Interact once per frame, and only if
+        // not holding anything or driving a shopping cart
+        if(HasInteractedThisFrame || !(isActiveAndEnabled && IsOwner && _playerScript.CanInteract))
         {
             return;
         }
 
         _currentLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
-
+        HasInteractedThisFrame = true;
+        StartCoroutine(nameof(clearInteractFlag));
     }
 
     public virtual void Throw()
     {
         // Can only Throw if holding something
-        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.IsHoldingItem)
+        if(HasInteractedThisFrame || !(isActiveAndEnabled && IsOwner && _playerScript.IsHoldingItem))
         {
             return;
         }
@@ -378,12 +388,11 @@ public abstract class PlayerControls : NetworkBehaviour
     public virtual void Drop()
     {
         // Can only Drop if holding something
-        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.IsHoldingItem)
+        if(HasInteractedThisFrame || !(isActiveAndEnabled && IsOwner && _playerScript.IsHoldingItem))
         {
             return;
         }
 
         _playerScript.DropItem();
     }
-
 }

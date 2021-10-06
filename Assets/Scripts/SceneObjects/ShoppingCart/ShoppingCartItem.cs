@@ -15,7 +15,7 @@ public class ShoppingCartItem : NetworkBehaviour
     private const string ITEM_TAG = "Item";
     private const float COLLISION_COOLDOWN = 2;
 
-    internal const ulong NO_OWNER_ID = ulong.MaxValue;
+    internal const ulong NO_OWNER_ID = NetworkController.NO_CLIENT_ID;
 
     // Adding Items
     public Player Owner { get; private set; } = null;
@@ -118,13 +118,7 @@ public class ShoppingCartItem : NetworkBehaviour
     private void setNextItem(int itemTypeCode)
     {
         // Destroy previous model
-        while(_itemPositions[_nextIndex].transform.childCount > 0)
-        {
-            var child = _itemPositions[_nextIndex].transform.GetChild(0);
-
-            child.SetParent(null);
-            Destroy(child.gameObject);
-        }
+        _itemPositions[_nextIndex].transform.DestroyAllChildren();
 
         // Update item logic
         if(Owner == MatchManager.Instance.MainPlayer.GetComponent<Player>() && IsClient)
@@ -149,7 +143,7 @@ public class ShoppingCartItem : NetworkBehaviour
 
         // Create new mesh
         var itemPrefab = ItemTypeList.ItemList[itemTypeCode].ItemPrefab;
-        var meshObject = itemPrefab.transform.Find("Cube").gameObject;
+        var meshObject = itemPrefab?.GetComponent<Item>()?.GetItemVisuals();
 
         if(meshObject != null)
         {

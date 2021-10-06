@@ -60,7 +60,7 @@ public class MenuManager : MonoBehaviour
 
     private static IEnumerator menuToggleCoroutine(GameObject activeMenu)
     {
-        yield return new WaitForEndOfFrame();
+        yield return Utils.EndOfFrameWait;
         toggleMenu(activeMenu);
     }
 }

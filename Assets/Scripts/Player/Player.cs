@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using MLAPI;
 using UnityEngine;
+using MLAPI;
+using MLAPI.NetworkVariable;
 
 [SelectionBase]
 public class Player : NetworkBehaviour
@@ -11,15 +13,29 @@ public class Player : NetworkBehaviour
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
 
-    public Transform HeldPosition { get; private set; }
+    // Held Item Vars
+    private Transform _heldItemPosition;
 
-    public GameObject HoldingItem { get; private set; }
-    public bool IsHoldingItem { get; private set; }
+    [HideInInspector]
+    public NetworkVariableInt HeldItemType = new NetworkVariableInt(
+        new NetworkVariableSettings
+        {
+            ReadPermission = NetworkVariablePermission.Everyone,
+            WritePermission = NetworkVariablePermission.OwnerOnly
+        },
+        Item.NO_ITEMTYPE_CODE
+    );
+
+    [HideInInspector]
+    public ItemGenerator HeldItemGenerator = null;
+
+    public GameObject HeldItem { get; private set; } = null;
+    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE;
 
     [HideInInspector]
     public bool IsDrivingCart;
 
-    public bool CanInteract { get => !(IsHoldingItem || IsDrivingCart); }
+    public bool CanInteract => !(IsDrivingCart || IsHoldingItem);
 
     public override void NetworkStart()
     {
@@ -29,7 +45,7 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         _throwScript = GetComponent<Throw>();
-        HeldPosition = gameObject.transform.Find(HELD_POSITION_NAME);
+        _heldItemPosition = gameObject.transform.Find(HELD_POSITION_NAME);
 
         #if UNITY_EDITOR
             if(_throwScript == null)
@@ -37,41 +53,95 @@ public class Player : NetworkBehaviour
                 Debug.LogError($"[{gameObject.name}]: Could not find Throw Script");
             }
 
-            if(HeldPosition == null)
+            if(_heldItemPosition == null)
             {
-                Debug.LogError($"[{gameObject.name}]: Could not find Held Position");
+                Debug.LogError($"[{gameObject.name}]: Could not find Held Item Position");
             }
         #endif
 
-        IsHoldingItem = false;
         IsDrivingCart = false;
         IsListComplete = false;
+
+        HeldItemType.OnValueChanged = onHeldItemChange;
     }
 
-    public void HoldItem(GameObject item)
+
+    private void onHeldItemChange(int previousItemType, int newItemType)
     {
-        HoldingItem = item;
-        item.GetComponent<Item>().BeHeld(HeldPosition);
-        IsHoldingItem = true;
-        AimCanvas.Instance.ActivateAim();
+        if(previousItemType != Item.NO_ITEMTYPE_CODE)
+        {
+            // Clear previously held item
+            _heldItemPosition.DestroyAllChildren();
+        }
+
+        if(newItemType != Item.NO_ITEMTYPE_CODE)
+        {
+            var itemPrefab = ItemTypeList.ItemList[newItemType].ItemPrefab;
+            var meshObject = itemPrefab?.GetComponent<Item>()?.GetItemVisuals();
+
+            if(meshObject != null)
+            {
+                // Place visual item on player's hand
+                var generatedItem = Instantiate(meshObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
+
+                generatedItem.transform.localPosition = Vector3.zero;
+                generatedItem.transform.localRotation = Quaternion.identity;
+                generatedItem.transform.localScale = meshObject.transform.localScale;
+
+                HeldItem = generatedItem;
+
+                if(IsOwner)
+                {
+                    AimCanvas.Instance.ActivateAim();
+                }
+            }
+
+            // Was unable to acquire a valid object visual,
+            // should therefore update others that it is holding no item
+            else if(IsOwner)
+            {
+                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+            }
+        }
+        else
+        {
+            HeldItem = null;
+            HeldItemGenerator = null;
+        }
     }
 
     public void ThrowItem()
     {
-        _throwScript.OnThrow();
+        print($"[{gameObject.name}]: ThrowItem NYI");
+        DropItem(_throwScript.ThrowItem);
     }
 
-    public void DropItem()
+    public void DropItem(Action<Item> itemAction = null)
     {
-        HoldingItem.GetComponent<Item>().BeDropped();
-        HoldingItem = null;
-        IsHoldingItem = false;
-        AimCanvas.Instance.DisableAim();
-    }
+        if(IsHoldingItem)
+        {
+            // New: Spawn item - Delete model - Disable aim
+            print($"[{gameObject.name}]: DropItem NYI");
 
-    public Item GetItemComponent()
-    {
-        return HoldingItem.GetComponent<Item>();
+            void positionItem(Item generatedItem)
+            {
+                if(!generatedItem.IsOwner)
+                {
+                    return;
+                }
+
+                generatedItem.transform.position = _heldItemPosition.position;
+                generatedItem.transform.rotation = _heldItemPosition.rotation;
+
+                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+
+                AimCanvas.Instance.DisableAim();
+
+                itemAction?.Invoke(generatedItem);
+            }
+
+            HeldItemGenerator.GenerateItem(positionItem);
+        }
     }
 
     public void ListComplete()

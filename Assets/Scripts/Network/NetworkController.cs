@@ -33,6 +33,7 @@ public class NetworkController : MonoBehaviour
     // Static
     private static NetworkController _instance = null;
 
+    internal const ulong NO_CLIENT_ID = ulong.MaxValue;
     private const ushort _port = 53658;
 
     private NetworkManager _netManager;
@@ -87,9 +88,9 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public static bool IsServer { get => _instance._netManager.IsServer; }
-    public static bool IsClient { get => _instance._netManager.IsClient; }
-    public static bool IsHost   { get => _instance._netManager.IsHost;   }
+    public static bool IsServer => _instance._netManager.IsServer;
+    public static bool IsClient => _instance._netManager.IsClient;
+    public static bool IsHost   => _instance._netManager.IsHost;
 
     private void Awake()
     {

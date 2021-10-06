@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
@@ -15,6 +16,8 @@ public class ShoppingList : NetworkBehaviour
 
     private int _quantityChecked;
 
+    private int _randomSeed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,16 +29,19 @@ public class ShoppingList : NetworkBehaviour
             ShoppingListUi = GameObject.FindGameObjectsWithTag("ShoppingListUI")[0].GetComponent<ShoppingListUI>();
             Debug.Log("Colocou Owner");    
             NetworkController.OnDisconnected += EraseListClient;
+            
         }
         
         if (IsServer)
         {
-            Debug.Log("Colocou Server");    
-
+            Debug.Log("Colocou Server");
+            _randomSeed = (int) Time.time;
             SceneManager.OnMatchLoaded += GenerateList_OnMatchLoaded;
             NetworkController.OnOtherClientDisconnected += EraseListServer;
         }
     }
+    
+    
     
     private void OnDestroy()
     {
@@ -54,12 +60,17 @@ public class ShoppingList : NetworkBehaviour
     //Only on server
     public void GenerateList(int numberOfItems, List<ItemType> allItemsList)
     {
-        Random random = new Random();
+        Random random = new Random(_randomSeed);
+        
         while (numberOfItems > 0)
         {
+            
             int randomIndex = random.Next(0, allItemsList.Count);
-            Debug.Log(randomIndex);
+            
             ShoppingListItem shoppingListItem = new ShoppingListItem(allItemsList[randomIndex].Code);
+
+            //Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
+                
             ItemDictionary.Add(allItemsList[randomIndex].Code, shoppingListItem);
             allItemsList.RemoveAt(randomIndex);
             numberOfItems--;
@@ -74,6 +85,7 @@ public class ShoppingList : NetworkBehaviour
     //Populate List on Client RPC
     public void ReceiveList_ClientRpc(SerializedShoppingList serializedShoppingList)
     {
+        
         List<ShoppingListItem> itemList = serializedShoppingList.Array.ToList();
         if (!IsServer)
         {
@@ -85,6 +97,7 @@ public class ShoppingList : NetworkBehaviour
 
         if (IsOwner)
         {
+            Debug.Log("Im owner: " + GetComponent<NetworkObject>().OwnerClientId);
             ShoppingListUi.FillUIItems(itemList);
         }
     }
@@ -149,6 +162,16 @@ public class ShoppingList : NetworkBehaviour
         return false;
     }
 
-
+    public void PrintList()
+    {
+        
+        String msg = "";
+        foreach (ShoppingListItem item in ItemDictionary.Values)
+        {
+            msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
+        }
+        MatchMessages.Instance.EditMessage(msg, 10f);
+        MatchMessages.Instance.ShowMessage();
+    }
 
 }

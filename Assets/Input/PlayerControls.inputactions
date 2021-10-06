@@ -30,9 +30,25 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Interact/Throw",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "f9700b92-1bd1-4877-ae0a-6fa50fb7d09f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Throw",
+                    "type": "Button",
+                    "id": "655c9057-8e12-4793-92fb-649aae65cf5f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Drop",
+                    "type": "Button",
+                    "id": "2fc78b76-c82f-4444-8af1-07895b0d7f3c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -57,6 +73,14 @@
                     "name": "Put",
                     "type": "Button",
                     "id": "e680561f-e173-4a43-9c38-98af095f4532",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Drop",
+                    "type": "Button",
+                    "id": "d8b24887-ea3c-4861-b753-2b085c07976d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -88,11 +112,11 @@
                 {
                     "name": "",
                     "id": "45769728-5902-4534-935b-667a6cbd6d62",
-                    "path": "<Keyboard>/e",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard and Mouse",
-                    "action": "Interact/Throw",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -103,7 +127,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Interact/Throw",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -258,6 +282,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "Put",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a29f0af-5961-4223-b102-496c226ab8e5",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7feeabb-a2e8-4c72-95b2-22b53473b683",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "556a929b-f5aa-4fbc-8624-6d6d460f8f3a",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Drop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e2743299-c4b9-4e57-8dd0-254ac1c31f7c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Drop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

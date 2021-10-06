@@ -9,10 +9,10 @@ public class MatchMessages : MonoBehaviour
 
     public static MatchMessages Instance;
     public GameObject MessageText;
-    //Mensagens de 25 caracteres
-    private Text _messageText;
-    private bool _messageOnDisplay;
     
+    private Text _messageText;  //Mensagens de 25 caracteres
+    private bool _messageOnDisplay;
+    private float _waitToDisappear;
 
 
     public void Awake()
@@ -21,6 +21,7 @@ public class MatchMessages : MonoBehaviour
         Instance = this;
         _messageText = MessageText.GetComponent<Text>();
         _messageOnDisplay = false;
+        _waitToDisappear = .3f;
     }
 
     public void ShowMessage()
@@ -38,6 +39,11 @@ public class MatchMessages : MonoBehaviour
     {
         _messageText.text = text;
     }
+    public void EditMessage(String text, float waitToDisappear)
+    {
+        _messageText.text = text;
+        _waitToDisappear = waitToDisappear;
+    }
 
 
     public void HideMessage()
@@ -48,7 +54,7 @@ public class MatchMessages : MonoBehaviour
 
     private IEnumerator Fade() 
     {
-        yield return new WaitForSeconds(.3f);
+        yield return new WaitForSeconds(_waitToDisappear);
         for (float ft = 1f; ft >= 0; ft -= 0.1f) 
         {
             Color c = _messageText.color;

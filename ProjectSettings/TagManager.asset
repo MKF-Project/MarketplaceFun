@@ -10,6 +10,7 @@ TagManager:
   - Item
   - PickItemButton
   - ItemGenerator
+  - Interactable
   - ShoppingListUI
   layers:
   - Default
@@ -20,30 +21,30 @@ TagManager:
   - UI
   - 
   - 
+  - Interact
   - 
   - 
   - 
   - 
   - 
   - 
+  - Player
+  - NotJump
   - 
   - 
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Itens
+  - Teto
+  - Estrutura Fisica
+  - Luzes
+  - Expositores
+  - Conjunto de Itens
+  - Carrinho Super
+  - Caixa de Saida
+  - Placas
   m_SortingLayers:
   - name: Default
     uniqueID: 0

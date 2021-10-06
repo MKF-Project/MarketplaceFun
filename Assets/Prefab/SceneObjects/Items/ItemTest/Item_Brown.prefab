@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3652541119246213679}
   - component: {fileID: 1680072952099031661}
   - component: {fileID: 4655313030301912511}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b03af806a5b34e6429ee2dd0b775e456, type: 2}
+  - {fileID: 2100000, guid: d07dc9a550022a74792d211f343e0b16, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 3106622920885788500}
   - component: {fileID: 3217022647866271149}
   - component: {fileID: 1832929576620707831}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Item_Brown
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d929cf1db6a7414ebd93b8ee0de361f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemTypeCode: 0
+  ItemTypeCode: 8
 --- !u!114 &3106622920885788500
 MonoBehaviour:
   m_ObjectHideFlags: 0

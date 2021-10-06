@@ -14,7 +14,7 @@ public class MenuManager : MonoBehaviour
     private void Awake()
     {
         _instance = _instance ?? this;
-        _menus = _menus ?? new List<GameObject>(gameObject.FindChildrenWithTag(menuTag));
+        _menus = _menus ?? gameObject.FindChildrenWithTag(menuTag);
         initializeMenus();
     }
 

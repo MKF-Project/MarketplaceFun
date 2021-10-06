@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Transports;
@@ -85,6 +86,10 @@ public class NetworkController : MonoBehaviour
             }
         }
     }
+
+    public static bool IsServer { get => _instance._netManager.IsServer; }
+    public static bool IsClient { get => _instance._netManager.IsClient; }
+    public static bool IsHost   { get => _instance._netManager.IsHost;   }
 
     private void Awake()
     {
@@ -230,15 +235,29 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public static void switchNetworkScene(string sceneName) => _instance.switchManagerNetworkScene(sceneName);
-    private void switchManagerNetworkScene(string sceneName)
+    public static ulong getSelfID()
     {
-        if(!_netManager.IsServer)
+        return IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+    }
+
+    public static IEnumerable<ulong> getClientIDs()
+    {
+        if(!IsServer)
+        {
+            return Enumerable.Empty<ulong>();
+        }
+
+        return _instance._netManager.ConnectedClientsList.Select(client => client.ClientId);
+    }
+
+    public static void switchNetworkScene(string sceneName)
+    {
+        if(!_instance._netManager.IsServer)
         {
             return;
         }
 
-        if(!_netManager.NetworkConfig.EnableSceneManagement || !_netManager.NetworkConfig.RegisteredScenes.Contains(sceneName))
+        if(!_instance._netManager.NetworkConfig.EnableSceneManagement || !_instance._netManager.NetworkConfig.RegisteredScenes.Contains(sceneName))
         {
             return;
         }
@@ -246,35 +265,34 @@ public class NetworkController : MonoBehaviour
         NetworkSceneManager.SwitchScene(sceneName);
     }
 
-    private IEnumerator disconnectAfterDelay(float delaySeconds)
+    private static IEnumerator disconnectAfterDelay(float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
         disconnect();
     }
 
-    public static void disconnect() => _instance.managerDisconnect();
-    private void managerDisconnect()
+    public static void disconnect()
     {
         // Can't disconnect if you're neither a Server nor Client (Host is both)
-        if(!(_netManager.IsServer || _netManager.IsClient))
+        if(!(IsServer || IsClient))
         {
             return;
         }
 
-        if(_netManager.IsHost)
+        if(IsHost)
         {
-            _netManager.StopHost();
+            _instance._netManager.StopHost();
             OnDisconnected?.Invoke(true, false);
         }
         /* Not valid for this Game, as all Servers are also Hosts */
-        // else if(_netManager.IsServer)
+        // else if(IsServer)
         // {
-        //     _netManager.StopServer();
+        //     _instance._netManager.StopServer();
         //     OnDisconnected?.Invoke(true);
         // }
-        else if(_netManager.IsClient)
+        else if(IsClient)
         {
-            _netManager.StopClient();
+            _instance._netManager.StopClient();
             OnDisconnected?.Invoke(false, false);
         }
     }

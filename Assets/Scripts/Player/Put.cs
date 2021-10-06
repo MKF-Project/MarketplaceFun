@@ -13,7 +13,7 @@ public class Put : NetworkBehaviour
     {
         _player = GetComponent<Player>();
         _shoppingList = GetComponent<ShoppingList>();
-        InputController.OnPut += OnPut;
+        // InputController.OnPut += OnPut;
     }
 
 

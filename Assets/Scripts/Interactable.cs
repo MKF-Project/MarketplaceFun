@@ -15,8 +15,6 @@ public class Interactable : NetworkBehaviour
         get => _layerMask;
     }
 
-
-    private Collider _interactionCollider = null;
     public GameObject InteractUI { get; private set; }
     private bool _configured = false;
 
@@ -37,15 +35,14 @@ public class Interactable : NetworkBehaviour
         }
 
         InteractUI = gameObject.transform.Find(UI_NAME)?.gameObject;
-        _interactionCollider = GetComponent<Collider>();
-        _configured = true;
+        _configured = InteractUI != null;
     }
 
     public delegate void OnLookEnterDelegate(GameObject player);
     public event OnLookEnterDelegate OnLookEnter;
     public void TriggerLookEnter(GameObject player)
     {
-        if(_configured)
+        if(_configured && isActiveAndEnabled)
         {
             OnLookEnter?.Invoke(player);
         }
@@ -55,7 +52,7 @@ public class Interactable : NetworkBehaviour
     public event OnLookExitDelegate OnLookExit;
     public void TriggerLookExit(GameObject player)
     {
-        if(_configured)
+        if(_configured && isActiveAndEnabled)
         {
             OnLookExit?.Invoke(player);
         }
@@ -65,7 +62,7 @@ public class Interactable : NetworkBehaviour
     public event OnInteractDelegate OnInteract;
     public void TriggerInteract(GameObject player)
     {
-        if(_configured)
+        if(_configured && isActiveAndEnabled)
         {
             OnInteract?.Invoke(player);
         }

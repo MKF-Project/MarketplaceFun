@@ -12,6 +12,7 @@ TagManager:
   - ItemGenerator
   - Interactable
   - ShoppingListUI
+  - ShoppingCart
   layers:
   - Default
   - TransparentFX
@@ -22,13 +23,13 @@ TagManager:
   - 
   - 
   - Interact
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
   - Player
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - NotJump
   - 
   - 

@@ -11,10 +11,10 @@ public class Item : NetworkBehaviour
     private Transform _heldPosition;
     private bool _isHeld;
     private NetworkObject _networkObject;
-    
+
     [HideInInspector]
     public bool IsOnThrow;
-    
+
     [HideInInspector]
     public int ItemTypeCode;
 

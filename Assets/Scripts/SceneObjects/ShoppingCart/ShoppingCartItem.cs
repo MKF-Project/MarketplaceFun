@@ -15,7 +15,7 @@ public class ShoppingCartItem : NetworkBehaviour
     private const string ITEM_TAG = "Item";
     private const float COLLISION_COOLDOWN = 2;
 
-    internal const ulong NO_OWNER_ID = ulong.MaxValue;
+    internal const ulong NO_OWNER_ID = NetworkController.NO_CLIENT_ID;
 
     // Adding Items
     public Player Owner { get; private set; } = null;

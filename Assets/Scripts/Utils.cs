@@ -22,6 +22,15 @@ public struct RigidbodyTemplate
 
 public static class Utils
 {
+    // Coroutines Cache
+    internal const float SHORT_WAIT_SECONDS = 1;
+    internal const float LONG_WAIT_SECONDS = 5;
+
+    internal static readonly WaitForEndOfFrame EndOfFrameWait = new WaitForEndOfFrame();
+    internal static readonly WaitForFixedUpdate FixedUpdateWait = new WaitForFixedUpdate();
+    internal static readonly WaitForSeconds ShortWait = new WaitForSeconds(SHORT_WAIT_SECONDS);
+    internal static readonly WaitForSeconds LongWait = new WaitForSeconds(LONG_WAIT_SECONDS);
+
     /** --- EXTENSIONS --- **/
     // TAGs
     private static IEnumerable<GameObject> FindFromTag(GameObject root, string tag, bool includeInactive)
@@ -64,6 +73,26 @@ public static class Utils
         return !list.Any(predicate);
     }
 
+    // Destroy
+    public static void DestroyAllChildren(this Transform root)
+    {
+        if(root == root.root)
+        {
+            Debug.LogError($"[{root.name}]: Attempted to delete all objects in scene.");
+            return;
+        }
+
+        while(root.childCount > 0)
+        {
+            var child = root.GetChild(0);
+            child.SetParent(null);
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+
+    public static void DestroyAllChildren(this GameObject root) => root.transform.DestroyAllChildren();
+
+    // Rigidbody
     public static RigidbodyTemplate ExtractToTemplate(this Rigidbody rb)
     {
         RigidbodyTemplate res;

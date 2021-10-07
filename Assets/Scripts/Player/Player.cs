@@ -112,7 +112,6 @@ public class Player : NetworkBehaviour
 
     public void ThrowItem()
     {
-        print($"[{gameObject.name}]: ThrowItem NYI");
         DropItem(_throwScript.ThrowItem);
     }
 
@@ -120,9 +119,6 @@ public class Player : NetworkBehaviour
     {
         if(IsHoldingItem)
         {
-            // New: Spawn item - Delete model - Disable aim
-            print($"[{gameObject.name}]: DropItem NYI");
-
             void positionItem(Item generatedItem)
             {
                 if(!generatedItem.IsOwner)

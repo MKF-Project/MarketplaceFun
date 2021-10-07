@@ -10,7 +10,7 @@ public class CameraScript : MonoBehaviour
     private Quaternion _initialRotation = Quaternion.identity;
 
     /* Player related variables */
-    private GameObject _currentPlayer = null;
+    private Player _currentPlayer = null;
 
     private void Awake()
     {
@@ -20,15 +20,15 @@ public class CameraScript : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(MatchManager.Instance.MainPlayer == _currentPlayer)
+        if(_currentPlayer == NetworkController.SelfPlayer)
         {
             return;
         }
 
         // Current player is not the same as Local player
-        if(PlayerManager.AllowPlayerControls && MatchManager.Instance.MainPlayer != null)
+        if(PlayerManager.AllowPlayerControls && NetworkController.SelfPlayer != null)
         {
-            _currentPlayer = MatchManager.Instance.MainPlayer;
+            _currentPlayer = NetworkController.SelfPlayer;
             var playerCameraObject = _currentPlayer.transform.Find(CAMERA_POSITION_NAME).gameObject;
             #if UNITY_EDITOR
                 if(playerCameraObject == null)

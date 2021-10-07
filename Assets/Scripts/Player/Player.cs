@@ -39,7 +39,7 @@ public class Player : NetworkBehaviour
 
     public override void NetworkStart()
     {
-        MatchManager.Instance.RegisterPlayer(this);
+        NetworkController.RegisterPlayer(this);
     }
 
     private void Awake()

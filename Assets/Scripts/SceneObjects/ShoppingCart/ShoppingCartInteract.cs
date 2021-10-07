@@ -116,6 +116,11 @@ public class ShoppingCartInteract : NetworkBehaviour
 
     private void clientAttachCart(Player player)
     {
+        if(player == null)
+        {
+            return;
+        }
+
         var cartPosition = player.transform.Find(SHOPPING_CART_POSITION_NAME);
 
         // Do not allow interaction if the player is already holding another cart
@@ -197,16 +202,15 @@ public class ShoppingCartInteract : NetworkBehaviour
     private void attachCart_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         // Echo attach cart request back to other players
-        var returnClients = rpcReceiveParams.ReturnRpcToOthers();
-        attachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, returnClients);
+        attachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, rpcReceiveParams.ReturnRpcToOthers());
     }
 
     [ClientRpc]
     private void attachCart_ClientRpc(ulong playerID, ClientRpcParams clientRpcParams = default)
     {
-        if(playerID != NetworkController.getSelfID())
+        if(playerID != NetworkController.SelfID)
         {
-            clientAttachCart(MatchManager.Instance.GetPlayerByClientID(playerID));
+            clientAttachCart(NetworkController.GetPlayerByID(playerID));
         }
     }
 
@@ -214,16 +218,15 @@ public class ShoppingCartInteract : NetworkBehaviour
     private void detachCart_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         // Echo detach cart request back to other players
-        var returnClients = rpcReceiveParams.ReturnRpcToOthers();
-        detachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, returnClients);
+        detachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, rpcReceiveParams.ReturnRpcToOthers());
     }
 
     [ClientRpc]
     private void detachCart_ClientRpc(ulong playerID, ClientRpcParams clientRpcParams = default)
     {
-        if(playerID != NetworkController.getSelfID())
+        if(playerID != NetworkController.SelfID)
         {
-            clientDetachCart(MatchManager.Instance.GetPlayerByClientID(playerID));
+            clientDetachCart(NetworkController.GetPlayerByID(playerID));
         }
     }
 }

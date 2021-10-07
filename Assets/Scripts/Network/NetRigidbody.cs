@@ -34,7 +34,7 @@ public class NetRigidbody : NetworkBehaviour
     private void OnCollisionEnter(Collision other)
     {
         // Only run this if you are the player that collided with the object
-        if(isActiveAndEnabled && MatchManager.Instance.IsMainPlayer(other.gameObject) && !IsOwner)
+        if(isActiveAndEnabled && !IsOwner && other.gameObject == NetworkController.SelfPlayer.gameObject)
         {
             // Disable Network transform while we wait for Onwership confirmation
             // so that the rigidbody reacts immediately
@@ -46,7 +46,7 @@ public class NetRigidbody : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestObjectOwnership_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
-        print($"Onwership request, {rpcReceiveParams.Receive.SenderClientId}");
+        // print($"Onwership request, {rpcReceiveParams.Receive.SenderClientId}");
 
         NetworkObject.ChangeOwnership(rpcReceiveParams.Receive.SenderClientId);
         RespondObjectOwnership_ClientRpc(rpcReceiveParams.ReturnRpcToSender());

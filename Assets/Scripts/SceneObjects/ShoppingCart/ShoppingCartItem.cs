@@ -56,7 +56,7 @@ public class ShoppingCartItem : NetworkBehaviour
 
             if(IsServer && Time.unscaledTime - _lastCollision > COLLISION_COOLDOWN)
             {
-                updateCartOwnership(NetworkController.getSelfID());
+                updateCartOwnership(NetworkController.SelfID);
                 addItemToCart(other.gameObject.GetComponent<Item>());
             }
         }
@@ -79,14 +79,15 @@ public class ShoppingCartItem : NetworkBehaviour
         // We use NO_OWNER_ID as placeholder for when the owner of this cart hasn't been set yet
         if(currentOwner != NO_OWNER_ID)
         {
-            Owner = MatchManager.Instance.GetPlayerByClientID(_ownerID.Value);
+            Owner = NetworkController.GetPlayerByID(_ownerID.Value);
 
-            if(Owner != MatchManager.Instance.MainPlayer.GetComponent<Player>())
+            if(Owner != NetworkController.SelfPlayer)
             {
                 return;
             }
 
             // Update player shopping list when acquiring ownership of a shopping cart
+            // for this client's player
             var shoppingList = Owner.GetComponent<ShoppingList>();
             for(int i = 0; i < _occupiedPositions.Length; i++)
             {
@@ -121,7 +122,7 @@ public class ShoppingCartItem : NetworkBehaviour
         _itemPositions[_nextIndex].transform.DestroyAllChildren();
 
         // Update item logic
-        if(Owner == MatchManager.Instance.MainPlayer.GetComponent<Player>() && IsClient)
+        if(Owner != NetworkController.SelfPlayer && IsClient)
         {
             var shoppingList = Owner.GetComponent<ShoppingList>();
 

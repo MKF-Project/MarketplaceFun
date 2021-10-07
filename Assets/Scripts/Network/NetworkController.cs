@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Connection;
 using MLAPI.Transports;
 using MLAPI.Transports.UNET;
 using MLAPI.Transports.PhotonRealtime;
@@ -87,6 +88,8 @@ public class NetworkController : MonoBehaviour
             }
         }
     }
+
+    private Dictionary<ulong, Player> _localPlayers = new Dictionary<ulong, Player>();
 
     public static bool IsServer => _instance._netManager.IsServer;
     public static bool IsClient => _instance._netManager.IsClient;
@@ -236,9 +239,24 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public static ulong getSelfID()
+    public static ulong SelfID => IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+    public static Player SelfPlayer => GetPlayerByID(SelfID);
+
+    public static Player GetPlayerByID(ulong playerID)
     {
-        return IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+
+        // Try finding it in players dictionary
+        if(_instance._localPlayers.ContainsKey(playerID))
+        {
+            var res = _instance._localPlayers[playerID];
+            if(res.gameObject != null)
+            {
+                return res;
+            }
+        }
+
+        // Second attempt, try looking for playerObject in NetworkClientList
+        return _instance._netManager.ConnectedClients[playerID]?.PlayerObject?.GetComponent<Player>();
     }
 
     public static IEnumerable<ulong> getClientIDs()
@@ -249,6 +267,16 @@ public class NetworkController : MonoBehaviour
         }
 
         return _instance._netManager.ConnectedClientsList.Select(client => client.ClientId);
+    }
+
+    public static void RegisterPlayer(Player player)
+    {
+        if(_instance._localPlayers.ContainsKey(player.OwnerClientId))
+        {
+            return;
+        }
+
+        _instance._localPlayers.Add(player.OwnerClientId, player);
     }
 
     public static void switchNetworkScene(string sceneName)

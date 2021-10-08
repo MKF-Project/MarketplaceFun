@@ -115,7 +115,7 @@ public abstract class PlayerControls : NetworkBehaviour
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Script not Found!");
             }
-
+        #endif
 
         initializeControlScheme();
 

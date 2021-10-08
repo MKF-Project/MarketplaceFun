@@ -10,7 +10,7 @@ public class CameraScript : MonoBehaviour
     private Quaternion _initialRotation = Quaternion.identity;
 
     /* Player related variables */
-    private GameObject _currentPlayer = null;
+    private Player _currentPlayer = null;
 
     private void Awake()
     {

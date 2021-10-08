@@ -39,7 +39,7 @@ public class MatchManager : MonoBehaviour
             _players.Add(player.gameObject);
             if(player.IsOwner)
             {
-                MainPlayer = player.gameObject;
+                MainPlayer = player;
             }
         }
     }
@@ -61,7 +61,7 @@ public class MatchManager : MonoBehaviour
 
     public bool IsMainPlayer(GameObject player)
     {
-        return MainPlayer.Equals(player);
+        return MainPlayer.gameObject.Equals(player);
     }
 
     public Player GetPlayerByClientID(ulong ID)

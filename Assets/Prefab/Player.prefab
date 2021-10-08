@@ -1,50 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &991543143324047857
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7820739668446295431}
-  - component: {fileID: 3173310747424586268}
-  m_Layer: 8
-  m_Name: InteractHitbox
-  m_TagString: Interactable
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7820739668446295431
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 991543143324047857}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8816987188999332808}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &3173310747424586268
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 991543143324047857}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.3746245
-  m_Height: 1.5586779
-  m_Direction: 1
-  m_Center: {x: -0.0050150156, y: -0.22066104, z: 0}
 --- !u!1 &1635976864924891976
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +140,7 @@ RectTransform:
   m_Children:
   - {fileID: 7377681847071914740}
   m_Father: {fileID: 8816987188999332808}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -274,7 +229,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7215314228995007171}
+  m_GameObject: {fileID: 5453423395155249626}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -336,6 +291,7 @@ GameObject:
   - component: {fileID: 2533615510006663239}
   - component: {fileID: 3936554009223666934}
   - component: {fileID: 5644185216240505816}
+  - component: {fileID: -2014535450862663308}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -480,6 +436,7 @@ MonoBehaviour:
   IsListComplete: 0
   HeldItemType:
     m_InternalValue: -2147483648
+  HeldItemGenerator: {fileID: 0}
   IsDrivingCart: 0
 --- !u!114 &3284909891683801097
 MonoBehaviour:
@@ -516,7 +473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ac7f4f806ca604ea5849cdf721d8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaximumGroundSlope: 0
+  MaximumGroundSlope: 45
   groundMask:
     serializedVersion: 2
     m_Bits: 65537
@@ -554,19 +511,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Strength: 15
   Distance: 20
---- !u!114 &6060007277188276103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8816987188999332804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0399195b6e53abe449313461fad5aabb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsListComplete: 0
 --- !u!114 &-4058306511684965661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -580,18 +524,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShoppingListUi: {fileID: 0}
---- !u!114 &-2014535450862663308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8816987188999332804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b33f4b253133d0a43b933842762427bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &162437846829725900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,6 +581,18 @@ MonoBehaviour:
   Position3: {x: 0.85, y: 1.11, z: -5}
   Position4: {x: 2.5, y: 1.11, z: -5}
   OwnerPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &-2014535450862663308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816987188999332804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b33f4b253133d0a43b933842762427bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4386959448261034583
 PrefabInstance:
   m_ObjectHideFlags: 0

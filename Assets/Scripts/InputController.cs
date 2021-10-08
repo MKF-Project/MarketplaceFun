@@ -153,9 +153,9 @@ public class InputController : MonoBehaviour
 
         if(action == null)
         {
-            #if UNITY_EDITOR
+            
                 Debug.LogError($"[InputController]: Action \"{actionMap.name}/{actionName}\" not found!");
-            #endif
+            
 
             return;
         }

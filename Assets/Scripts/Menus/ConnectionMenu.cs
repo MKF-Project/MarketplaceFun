@@ -85,7 +85,7 @@ public class ConnectionMenu : MonoBehaviour
         if(OnGoToLobby == null) {
             return;
         }
-
+        
         // Gather Info
         var transport = _transportDropdown.value == 0? NetworkTransportTypes.Direct : NetworkTransportTypes.Relayed;
         var address = _addressInput.text;

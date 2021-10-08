@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 
 [SelectionBase]
@@ -40,6 +41,11 @@ public class Player : NetworkBehaviour
     public override void NetworkStart()
     {
         MatchManager.Instance.RegisterPlayer(this);
+
+        if(IsOwner)
+        {
+            transform.Rotate(Vector3.up, 180);
+        }
     }
 
     private void Awake()
@@ -47,7 +53,7 @@ public class Player : NetworkBehaviour
         _throwScript = GetComponent<Throw>();
         _heldItemPosition = gameObject.transform.Find(HELD_POSITION_NAME);
 
-        #if UNITY_EDITOR
+
             if(_throwScript == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Throw Script");
@@ -57,13 +63,15 @@ public class Player : NetworkBehaviour
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Held Item Position");
             }
-        #endif
+
 
         IsDrivingCart = false;
         IsListComplete = false;
 
         HeldItemType.OnValueChanged = onHeldItemChange;
     }
+
+
 
 
     private void onHeldItemChange(int previousItemType, int newItemType)
@@ -150,4 +158,5 @@ public class Player : NetworkBehaviour
         MatchMessages.Instance.ShowMessage();
         IsListComplete = true;
     }
+
 }

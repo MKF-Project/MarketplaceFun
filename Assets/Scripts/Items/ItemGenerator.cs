@@ -73,9 +73,9 @@ public class ItemGenerator : NetworkBehaviour
 
     public void GenerateItem(Action<Item> itemAction = null)
     {
-        #if UNITY_EDITOR
+
             Debug.Log($"[{gameObject.name}]: Trigger generate item");
-        #endif
+
 
         _itemAction = itemAction;
         GenerateItem_ServerRpc();

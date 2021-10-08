@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,12 +8,9 @@ public class MatchManager : MonoBehaviour
 {
     public static MatchManager Instance { get; private set; }
 
-    public GameObject MainPlayer;
+    public Player MainPlayer;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    public String Nickname;
 
     private List<GameObject> _players = new List<GameObject>(4);
 
@@ -24,6 +22,16 @@ public class MatchManager : MonoBehaviour
     public GameObject Player3 { get => _players[2]; set => _players[2] = value; }
     public GameObject Player4 { get => _players[3]; set => _players[3] = value; }
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    public void SetNickname(String newNickname)
+    {
+        Nickname = newNickname;
+    }
+
     public void RegisterPlayer(Player player)
     {
         if(_players.Count <= 4)
@@ -31,7 +39,7 @@ public class MatchManager : MonoBehaviour
             _players.Add(player.gameObject);
             if(player.IsOwner)
             {
-                MainPlayer = player.gameObject;
+                MainPlayer = player;
             }
         }
     }
@@ -53,7 +61,7 @@ public class MatchManager : MonoBehaviour
 
     public bool IsMainPlayer(GameObject player)
     {
-        return MainPlayer.Equals(player);
+        return MainPlayer.gameObject.Equals(player);
     }
 
     public Player GetPlayerByClientID(ulong ID)

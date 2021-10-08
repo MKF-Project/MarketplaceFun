@@ -163,9 +163,9 @@ public class NetworkController : MonoBehaviour
             {
                 _netManager.OnServerStarted -= hostIsConnected;
 
-                #if UNITY_EDITOR
+                
                     Debug.Log("Host Connected.");
-                #endif
+                
 
                 OnConnected?.Invoke(true);
             }
@@ -181,9 +181,9 @@ public class NetworkController : MonoBehaviour
                 {
                     _netManager.OnClientConnectedCallback -= clientIsConnected;
 
-                    #if UNITY_EDITOR
+                    
                         Debug.Log($"Client Connected. ID: {clientID}");
-                    #endif
+                    
 
                     OnConnected?.Invoke(false);
                 }
@@ -208,9 +208,9 @@ public class NetworkController : MonoBehaviour
 
     private void handleClientEvent(ulong clientID, bool isDisconnect)
     {
-        #if UNITY_EDITOR
+        
             Debug.Log($"{(clientID == _netManager.LocalClientId? "Local" : "Other")} Client {(isDisconnect? "disconnected" : "connected")}. ID: {clientID}, Local: {_netManager.LocalClientId}");
-        #endif
+        
         if(clientID != _netManager.LocalClientId) // Other Client Event
         {
             if(isDisconnect)

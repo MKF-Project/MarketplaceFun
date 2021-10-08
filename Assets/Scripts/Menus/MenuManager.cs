@@ -12,11 +12,11 @@ public class MenuManager : MonoBehaviour
     public GameObject startingMenu = null;
 
     public LobbyMenu LobbyMenu;
-    
+
     private void Awake()
     {
         instance = instance ?? this;
-        _menus = _menus ?? new List<GameObject>(gameObject.FindChildrenWithTag(menuTag));
+        _menus = _menus ?? gameObject.FindChildrenWithTag(menuTag);
         initializeMenus();
     }
 
@@ -62,7 +62,7 @@ public class MenuManager : MonoBehaviour
 
     private static IEnumerator menuToggleCoroutine(GameObject activeMenu)
     {
-        yield return new WaitForEndOfFrame();
+        yield return Utils.EndOfFrameWait;
         toggleMenu(activeMenu);
     }
 }

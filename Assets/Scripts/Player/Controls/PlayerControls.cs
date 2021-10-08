@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using MLAPI;
 
 public enum PlayerControlSchemes {
@@ -9,38 +11,116 @@ public enum PlayerControlSchemes {
 
 public abstract class PlayerControls : NetworkBehaviour
 {
-    protected CharacterController _controller;
-    protected Transform _camera;
+    protected const string CAMERA_POSITION_NAME = "CameraPosition";
+
+    // This is the maximum speed the player is allowed to turn,
+    // regardless of other factors. Keep this at a high value to allow fast mouse movement
+    private const float MAX_ANGULAR_VELOCITY = 25;
+
+    private PlayerControlSchemes _currentControlScheme;
+    private FreeMovementControls _freeMovementControls = null;
+    private CartControls _cartControls = null;
+
+    public PlayerControlSchemes ControlScheme
+    {
+        get => _currentControlScheme;
+        set
+        {
+            if(_currentControlScheme == value)
+            {
+                return;
+            }
+
+            _currentControlScheme = value;
+            switch(value)
+            {
+                case PlayerControlSchemes.None:
+                    _freeMovementControls.enabled = false;
+                    _cartControls.enabled = false;
+                    break;
+
+                case PlayerControlSchemes.FreeMovementControls:
+                    _freeMovementControls.enabled = true;
+                    _cartControls.enabled = false;
+                    break;
+
+                case PlayerControlSchemes.CartControls:
+                    _freeMovementControls.enabled = false;
+                    _cartControls.enabled = true;
+                    break;
+            }
+        }
+    }
+
+    // Components
+    protected Rigidbody _rigidBody;
     protected GameObject _currentLookingObject = null;
     protected Player _playerScript = null;
+
+    protected GameObject _cameraPosition;
+    protected Quaternion _initialCameraLocalRotation;
 
     protected Vector2 _currentDirection = Vector2.zero;
     protected Vector2 _nextRotation = Vector2.zero;
 
+    protected Vector3 _wallCollisionNormal = Vector3.zero;
+
     protected bool _isWalking = false;
     protected float _currentSpeed = 0;
 
+    // Collision related
+    public bool isCollidingWithWall { get; protected set; } = false;
+    public bool isGrounded { get; protected set; } = false;
+
+    // Interaction related
+    public bool HasInteractedThisFrame { get; protected set; } = false;
+
+    /** Inspector Variables **/
+    [Header("Ground Detection")]
+    [Range(0, 90)]
+    public float MaximumGroundSlope;
+    public LayerMask groundMask;
+
+    [Header("Movement")]
     public float MoveSpeed;
     public float WalkSpeed;
+
+    [Header("Camera")]
     public float Sensitivity;
+
+    [Header("Interaction")]
     public float InteractionDistance;
 
     protected virtual void Awake()
     {
-        _controller = gameObject.GetComponent<CharacterController>();
+        _rigidBody = gameObject.GetComponent<Rigidbody>();
 
-        _camera = gameObject.GetComponentInChildren<Camera>()?.transform;
         _playerScript = gameObject.GetComponent<Player>();
-        
-            if(_camera == null)
+
+        _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
+        _initialCameraLocalRotation = _cameraPosition.transform.localRotation;
+
+        #if UNITY_EDITOR
+            if(_rigidBody == null)
             {
-                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera not Found!");
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Rigidbody not Found!");
             }
+
+            if(_cameraPosition == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera Position not Found!");
+            }
+
             if(_playerScript == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Script not Found!");
             }
-        
+
+
+        initializeControlScheme();
+
+        _rigidBody.maxAngularVelocity = MAX_ANGULAR_VELOCITY;
+        _rigidBody.sleepThreshold = 0; // Since this is the player object, we never sleep it's rigidbody
 
         _currentSpeed = MoveSpeed;
 
@@ -54,8 +134,61 @@ public abstract class PlayerControls : NetworkBehaviour
         InputController.OnDrop     += Drop;
     }
 
+    public void switchControlScheme()
+    {
+        // Store currentDirection from the current active control script
+        // so we can keep our momentum when we switch scripts
+        var transferDirection = _currentDirection;
+
+        switch(ControlScheme)
+        {
+            case PlayerControlSchemes.FreeMovementControls:
+                ControlScheme = PlayerControlSchemes.CartControls;
+                _cartControls.Move(transferDirection);
+                break;
+
+            case PlayerControlSchemes.CartControls:
+                ControlScheme = PlayerControlSchemes.FreeMovementControls;
+                _freeMovementControls.Move(transferDirection);
+                break;
+        }
+    }
+
+    private void initializeControlScheme()
+    {
+        _freeMovementControls = gameObject.GetComponent<FreeMovementControls>();
+        _cartControls = gameObject.GetComponent<CartControls>();
+
+        #if UNITY_EDITOR
+            if(_freeMovementControls == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Free Movement Controls not Found!");
+            }
+
+            if(_cartControls == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Cart Controls not Found!");
+            }
+        #endif
+
+        if(_freeMovementControls.enabled && !_cartControls.enabled)
+        {
+            ControlScheme = PlayerControlSchemes.FreeMovementControls;
+        }
+        else if(!_freeMovementControls.enabled && _cartControls.enabled)
+        {
+            ControlScheme = PlayerControlSchemes.CartControls;
+        }
+        else
+        {
+            ControlScheme = PlayerControlSchemes.None;
+        }
+    }
+
     protected virtual void OnDestroy()
     {
+        ControlScheme = PlayerControlSchemes.None;
+
         // Control Events
         InputController.OnLook     -= Look;
         InputController.OnMove     -= Move;
@@ -66,21 +199,28 @@ public abstract class PlayerControls : NetworkBehaviour
         InputController.OnDrop     -= Drop;
     }
 
-    protected virtual void FixedUpdate()
+    protected virtual void OnDisable()
+    {
+        // Send final rotation and direction deltas when disabling
+        _currentDirection = Vector3.zero;
+        _nextRotation = Vector3.zero;
+    }
+
+    protected virtual void Update()
     {
         if(!IsOwner)
         {
             return;
         }
 
-        
-            Debug.DrawRay(_camera.transform.position, _camera.transform.forward * InteractionDistance, Color.red);
-        
+        #if UNITY_EDITOR
+            Debug.DrawRay(_cameraPosition.transform.position, _cameraPosition.transform.forward * InteractionDistance, Color.red);
+        #endif
 
-        if(Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
+        if(Physics.Raycast(_cameraPosition.transform.position, _cameraPosition.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
         {
             // Was looking at something different than current object
-            if(_currentLookingObject != hitInfo.transform.gameObject)
+            if(_currentLookingObject != hitInfo.collider.gameObject)
             {
                 // Was looking at one object, now looking at another
                 if(_currentLookingObject != null)
@@ -89,7 +229,7 @@ public abstract class PlayerControls : NetworkBehaviour
                 }
 
                 // Update current looking object
-                _currentLookingObject = hitInfo.transform.gameObject;
+                _currentLookingObject = hitInfo.collider.gameObject;
                 _currentLookingObject.GetComponent<Interactable>()?.TriggerLookEnter(gameObject);
             }
         }
@@ -102,6 +242,84 @@ public abstract class PlayerControls : NetworkBehaviour
         }
     }
 
+    protected virtual void LateUpdate()
+    {
+        if(isGrounded)
+        {
+            // Start the clearGrounded coroutine,
+            // which attempts to reset the grounded state for the next frame
+            StartCoroutine(nameof(clearGrounded));
+        }
+
+        if(isCollidingWithWall)
+        {
+            StartCoroutine(nameof(clearWallCollision));
+        }
+    }
+
+    // Detect ground
+    protected virtual void OnCollisionStay(Collision other)
+    {
+        // Only check ground collisions with things
+        // in a layer considered to be ground
+        if((groundMask & (1 << other.gameObject.layer)) == 0)
+        {
+            return;
+        }
+
+        isCollidingWithWall = false;
+        for(int i = 0; i < other.contactCount; i++)
+        {
+            var contact = other.GetContact(i);
+            var angle = 0f;
+                if(isFloorCollision(contact, out angle))
+                {
+                    // Stop coroutine from previous frame from taking effect
+                    StopCoroutine(nameof(clearGrounded));
+
+                    isGrounded = true;
+
+                    // Jump away from current surface (NYI)
+                    // jumpNormal = contact.normal;
+                }
+                else if(angle > MaximumGroundSlope && angle <= 90)
+                {
+
+                    StopCoroutine(nameof(clearWallCollision));
+
+                    isCollidingWithWall = true;
+                    _wallCollisionNormal = contact.normal;
+                }
+        }
+    }
+
+    public bool isFloorCollision(ContactPoint contactPoint, out float angle)
+    {
+        angle = Vector3.Angle(transform.up, contactPoint.normal);
+
+        return contactPoint.normal != Vector3.zero && angle <= MaximumGroundSlope;
+
+    }
+
+    private IEnumerator clearGrounded()
+    {
+        yield return Utils.FixedUpdateWait;
+        isGrounded = false;
+    }
+
+    private IEnumerator clearWallCollision()
+    {
+        yield return Utils.FixedUpdateWait;
+        isCollidingWithWall = false;
+    }
+
+    private IEnumerator clearInteractFlag()
+    {
+        yield return Utils.EndOfFrameWait;
+        HasInteractedThisFrame = false;
+    }
+
+    /** Input Actions **/
     public virtual void Move(Vector2 direction)
     {
         if(!(isActiveAndEnabled && IsOwner))
@@ -138,27 +356,28 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-
         _isWalking = !_isWalking;
         _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
     }
 
     public virtual void Interact()
     {
-        // Can only Interact if not holding anything
-        if(!(isActiveAndEnabled && IsOwner) || _playerScript.IsHoldingItem)
+        // Can only Interact once per frame, and only if
+        // not holding anything or driving a shopping cart
+        if(HasInteractedThisFrame || !(isActiveAndEnabled && IsOwner && _playerScript.CanInteract))
         {
             return;
         }
 
         _currentLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
-
+        HasInteractedThisFrame = true;
+        StartCoroutine(nameof(clearInteractFlag));
     }
 
     public virtual void Throw()
     {
         // Can only Throw if holding something
-        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.IsHoldingItem)
+        if(HasInteractedThisFrame || !(isActiveAndEnabled && IsOwner && _playerScript.IsHoldingItem))
         {
             return;
         }
@@ -169,12 +388,11 @@ public abstract class PlayerControls : NetworkBehaviour
     public virtual void Drop()
     {
         // Can only Drop if holding something
-        if(!(isActiveAndEnabled && IsOwner) || !_playerScript.IsHoldingItem)
+        if(HasInteractedThisFrame || !(isActiveAndEnabled && IsOwner && _playerScript.IsHoldingItem))
         {
             return;
         }
 
         _playerScript.DropItem();
     }
-
 }

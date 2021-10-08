@@ -6,17 +6,17 @@ using UnityEngine.UI;
 
 public class ShoppingListUI : MonoBehaviour
 {
-    
+
     //public List<Image> UIItemsList;
     public Dictionary<int, GameObject> UIItemsDictionary;
 
-    
-    void Awake()
+
+    private void Awake()
     {
         DontDestroyOnLoad(gameObject);
     }
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
         UIItemsDictionary = new Dictionary<int, GameObject>();
         //FillUIItems();
@@ -30,7 +30,7 @@ public class ShoppingListUI : MonoBehaviour
         }
 
         int i = 0;
-        
+
         foreach (ShoppingListItem shoppingListItem in itemList)
         {
             GameObject itemUI = transform.GetChild(i).gameObject;

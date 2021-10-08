@@ -7,30 +7,30 @@ using UnityScene = UnityEngine.SceneManagement;
 
 public class SceneManager : MonoBehaviour
 {
-    
-    
+
+
     // Events
     public delegate void OnMainMenuLostConnectionDelegate();
     public static event OnMainMenuLostConnectionDelegate OnMainMenuLostConnection;
 
-    
+
     public delegate void OnMenuLoadedDelegate(string sceneName);
     public static event OnMenuLoadedDelegate OnMenuLoaded;
 
 
     public delegate void OnMatchLoadedDelegate(string sceneName);
     public static event OnMatchLoadedDelegate OnMatchLoaded;
-    
+
     public delegate void OnScoreLoadedDelegate();
     public static event OnScoreLoadedDelegate OnScoreLoaded;
-    
-    
+
+
     public delegate void OnSceneLoadedDelegate(string sceneName);
     public static event OnSceneLoadedDelegate OnSceneLoaded;
 
 
     public String MatchScene;
-    
+
     private const string _selfTag = "SceneManager";
 
     private const string _mainMenu = "MainMenu";
@@ -46,7 +46,7 @@ public class SceneManager : MonoBehaviour
         Object.DontDestroyOnLoad(gameObject);
 
         LobbyMenu.OnStartMatch += loadMatch;
-        
+
         NetworkController.OnDisconnected += returnToMainMenu;
 
         UnityScene.SceneManager.sceneLoaded += TriggerSceneLoadEvent;
@@ -91,7 +91,7 @@ public class SceneManager : MonoBehaviour
                 IEnumerator triggerConnectionLost()
                 {
                     // Defer event trigger until after Awakes and Starts
-                    yield return new WaitForEndOfFrame();
+                    yield return Utils.EndOfFrameWait;
                     OnMainMenuLostConnection?.Invoke();
                 }
 
@@ -112,18 +112,18 @@ public class SceneManager : MonoBehaviour
         NetworkController.switchNetworkScene(MatchScene);
     }
 
-    
+
     public static void LoadScore()
     {
         NetworkController.switchNetworkScene(_scoreScene);
 
     }
-    
+
 
     private void TriggerSceneLoadEvent(UnityScene.Scene scene, UnityScene.LoadSceneMode mode)
     {
         OnSceneLoaded?.Invoke(scene.name);
-        
+
         if (scene.name == _mainMenu)
         {
             OnMenuLoaded?.Invoke(scene.name);

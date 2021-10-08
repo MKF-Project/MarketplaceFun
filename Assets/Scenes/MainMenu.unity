@@ -5144,6 +5144,7 @@ MonoBehaviour:
     - MainMenu
     - ItemListTestScene
     - _VerticalSlice_maior
+    - ScoreScene
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,

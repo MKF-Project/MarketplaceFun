@@ -66,9 +66,9 @@ public class Throw : NetworkBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenMiddle);
 
         Vector3 target;
-        #if UNITY_EDITOR
+        
             Debug.DrawRay(ray.origin, ray.direction * Distance, Color.green);
-        #endif
+        
         
         bool raycastHit = Physics.Raycast(ray.origin, ray.direction, out var hitInfo, Distance);
         if (raycastHit)

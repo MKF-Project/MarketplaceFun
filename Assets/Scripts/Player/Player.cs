@@ -32,7 +32,7 @@ public class Player : NetworkBehaviour
         _throwScript = GetComponent<Throw>();
         HeldPosition = gameObject.transform.Find(HELD_POSITION_NAME);
 
-        #if UNITY_EDITOR
+        
             if(_throwScript == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Throw Script");
@@ -42,7 +42,7 @@ public class Player : NetworkBehaviour
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Held Position");
             }
-        #endif
+        
 
         IsHoldingItem = false;
         IsListComplete = false;

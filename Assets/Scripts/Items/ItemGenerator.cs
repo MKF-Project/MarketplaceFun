@@ -47,9 +47,9 @@ public class ItemGenerator : NetworkBehaviour
 
     private void showButtonPrompt(GameObject player)
     {
-        #if UNITY_EDITOR
+        
             Debug.Log($"[{gameObject.name}]: Showing button prompt");
-        #endif
+        
 
         // Show UI if not holding item
         var objectScript = player.GetComponent<Player>();
@@ -61,9 +61,9 @@ public class ItemGenerator : NetworkBehaviour
 
     private void hideButtonPrompt(GameObject player)
     {
-        #if UNITY_EDITOR
+        
             Debug.Log($"[{gameObject.name}]: Hiding button prompt");
-        #endif
+        
 
         // Hide button prompt
         _interactScript.InteractUI.SetActive(false);
@@ -71,9 +71,9 @@ public class ItemGenerator : NetworkBehaviour
 
     private void generateItem(GameObject player)
     {
-        #if UNITY_EDITOR
+        
             Debug.Log($"[{gameObject.name}]: Trigger generate item");
-        #endif
+        
 
         _player = player;
         GenerateItem_ServerRpc();

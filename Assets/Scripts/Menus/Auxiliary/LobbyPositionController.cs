@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
 
-public class MenuPlayerPositionController : NetworkBehaviour
+public class LobbyPositionController : NetworkBehaviour
 {
 
     public Vector3 Position1;
@@ -29,6 +27,11 @@ public class MenuPlayerPositionController : NetworkBehaviour
             LobbyPosition player = NetworkManager.ConnectedClients[OwnerClientId].PlayerObject.GetComponent<LobbyPosition>();
             
             player.PositionPlayer(Position1,1);
+        }
+
+        if (!IsOwnedByServer)
+        {
+            Destroy(this);
         }
     }
 

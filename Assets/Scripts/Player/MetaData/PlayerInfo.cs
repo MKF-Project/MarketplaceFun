@@ -12,14 +12,14 @@ public class PlayerInfo : NetworkBehaviour
     
     public PlayerData PlayerData;
 
-    public Text NicknameText;
+    public PlayerDisplay PlayerDisplay;
     // Start is called before the first frame update
     public override void NetworkStart()
     {
         if (IsOwner)
         {
             String nickname = MatchManager.Instance.Nickname;
-            NicknameText.text = nickname;
+            PlayerDisplay.DisplayNickname(nickname);
             SendInfo_ServerRpc(nickname);
         }
         else if(!IsServer)
@@ -55,14 +55,10 @@ public class PlayerInfo : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void GetPlayerInfo_ServerRpc(ulong ownerId, ulong clientId )
     {
-        ClientRpcParams clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new ulong[]{clientId}
-            }
-        };
-        GetPlayerInfo_ClientRpc(PlayerInfoController.Instance.PlayerInfos[ownerId], clientRpcParams);       
+        IEnumerator coroutine = WaitToGetPlayerInfo(ownerId, clientId);
+        StartCoroutine(coroutine);
+
+        //GetPlayerInfo_ClientRpc(PlayerInfoController.Instance.PlayerInfos[ownerId], clientRpcParams);       
     }
     
     [ClientRpc]
@@ -72,12 +68,25 @@ public class PlayerInfo : NetworkBehaviour
         DisplayMyInfo();
     }
 
+    IEnumerator WaitToGetPlayerInfo(ulong ownerId, ulong clientId)
+    {
+        yield return new WaitUntil(() => PlayerInfoController.Instance.PlayerInfos.ContainsKey(ownerId));
+        ClientRpcParams clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[]{clientId}
+            }
+        };
+        GetPlayerInfo_ClientRpc(PlayerInfoController.Instance.PlayerInfos[ownerId], clientRpcParams);
+    }
 
 
     private void DisplayMyInfo()
     {
-        NicknameText.text = PlayerData.Nickname;
-        //Do Color Stuff
+        PlayerDisplay.DisplayNickname(PlayerData.Nickname);
+
+        PlayerDisplay.SetColor(PlayerData.Color);
         
     }
 

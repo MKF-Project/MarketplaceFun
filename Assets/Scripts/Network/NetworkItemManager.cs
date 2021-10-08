@@ -29,12 +29,12 @@ public class NetworkItemManager : NetworkBehaviour
         {
             SpawnedItemList.Add(stringifiedKey, item);
         }
-#if UNITY_EDITOR
+
         else
         {
             Debug.LogError($"Add same Item {prefabHash} - {id}" );
         }
-#endif
+
     }
 
 
@@ -43,9 +43,9 @@ public class NetworkItemManager : NetworkBehaviour
         string stringifiedKey = StringifyKey(prefabHash, id);
         if (!SpawnedItemList.Remove(stringifiedKey))
         {
-#if UNITY_EDITOR
+
             Debug.LogError($"Item is not registered {prefabHash} - {id}" );
-#endif
+
         }
 
     }

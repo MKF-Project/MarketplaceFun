@@ -31,7 +31,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _camera = gameObject.GetComponentInChildren<Camera>()?.transform;
         _playerScript = gameObject.GetComponent<Player>();
-        #if UNITY_EDITOR
+        
             if(_camera == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Camera not Found!");
@@ -40,7 +40,7 @@ public abstract class PlayerControls : NetworkBehaviour
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Script not Found!");
             }
-        #endif
+        
 
         _currentSpeed = MoveSpeed;
 
@@ -73,9 +73,9 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        #if UNITY_EDITOR
+        
             Debug.DrawRay(_camera.transform.position, _camera.transform.forward * InteractionDistance, Color.red);
-        #endif
+        
 
         if(Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
         {

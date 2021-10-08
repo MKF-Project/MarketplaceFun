@@ -22,10 +22,10 @@ public class PlayerInfoController : MonoBehaviour
     private void InitializeColors()
     {
         colors = new Stack<int>();
-        colors.Push(1);
-        colors.Push(2);
-        colors.Push(3);
         colors.Push(4);
+        colors.Push(3);
+        colors.Push(2);
+        colors.Push(1);
         
     }
 
@@ -33,9 +33,9 @@ public class PlayerInfoController : MonoBehaviour
     {
         PlayerData playerData = new PlayerData(nickname, colors.Pop());
         PlayerInfos.Add(playerId, playerData);
-#if UNITY_EDITOR
+
         Debug.Log("Player " + playerId + " add  to PlayerInfoController as " + playerData.Nickname + " with color " + playerData.Color);
-#endif
+
         return playerData;
     }
 

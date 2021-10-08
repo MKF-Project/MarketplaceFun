@@ -454,8 +454,8 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 523265
-  MoveSpeed: 3.3
-  WalkSpeed: 1.5
+  MoveSpeed: 4
+  WalkSpeed: 2
   Sensitivity: 2.4
   InteractionDistance: 1.2
   FallSpeed: 2.75
@@ -477,8 +477,8 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 65537
-  MoveSpeed: 10
-  WalkSpeed: 1
+  MoveSpeed: 3.5
+  WalkSpeed: 2
   Sensitivity: 1
   InteractionDistance: 2
   MovingTurnSpeed: 100

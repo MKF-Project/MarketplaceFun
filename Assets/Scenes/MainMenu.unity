@@ -4493,7 +4493,7 @@ Transform:
   - {fileID: 1108419791}
   - {fileID: 228245796}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1200192085
 GameObject:
@@ -5142,11 +5142,8 @@ MonoBehaviour:
     NetworkTransport: {fileID: 1278010175}
     RegisteredScenes:
     - MainMenu
-    - SampleScene
-    - RodrigoScene
-    - PedroScene
     - ItemListTestScene
-    - ScoreScene
+    - _VerticalSlice_maior
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
@@ -8605,7 +8602,7 @@ PrefabInstance:
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
       propertyPath: MatchScene
-      value: ItemListTestScene
+      value: _VerticalSlice_maior
       objectReference: {fileID: 0}
     - target: {fileID: 3806232346622104752, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}

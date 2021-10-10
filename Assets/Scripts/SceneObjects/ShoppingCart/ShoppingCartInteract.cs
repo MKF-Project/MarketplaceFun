@@ -21,6 +21,8 @@ public class ShoppingCartInteract : NetworkBehaviour
     private Rigidbody _rigidbody = null;
     private RigidbodyTemplate _rigidBodyTemplate;
 
+    private Transform _cartPlayerPosition;
+
     [SerializeField]
     private PhysicMaterial _playerBodyMaterial;
 
@@ -121,10 +123,10 @@ public class ShoppingCartInteract : NetworkBehaviour
             return;
         }
 
-        var cartPosition = player.transform.Find(SHOPPING_CART_POSITION_NAME);
+        _cartPlayerPosition = player.transform.Find(SHOPPING_CART_POSITION_NAME);
 
         // Do not allow interaction if the player is already holding another cart
-        if(cartPosition.FindChildWithTag(SHOPPING_CART_TAG) != null)
+        if(_cartPlayerPosition.FindChildWithTag(SHOPPING_CART_TAG) != null)
         {
             return;
         }
@@ -149,7 +151,7 @@ public class ShoppingCartInteract : NetworkBehaviour
         transform.position = Vector3.zero;
         transform.rotation = Quaternion.identity;
 
-        transform.SetParent(cartPosition, false);
+        transform.SetParent(_cartPlayerPosition, false);
 
         // Update cart Physics Materials
         _cartColliders.ForEach(collider => collider.material = _playerBodyMaterial);
@@ -178,6 +180,9 @@ public class ShoppingCartInteract : NetworkBehaviour
         {
             _cartColliders[i].material = _cartMaterials[i];
         }
+
+        // Make sure the cart position is synced between clients
+        _netTransform.Teleport(_cartPlayerPosition.position, _cartPlayerPosition.rotation);
 
         // Keep cart momentum from player
         if(IsOwner)

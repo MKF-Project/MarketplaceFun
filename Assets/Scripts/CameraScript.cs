@@ -52,6 +52,4 @@ public class CameraScript : MonoBehaviour
         transform.position = _initalPosition;
         transform.rotation = _initialRotation;
     }
-
-
 }

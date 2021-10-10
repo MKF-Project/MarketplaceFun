@@ -8,18 +8,14 @@ public class TakeEffect : NetworkBehaviour
 {
     private Animator _animator;
 
-    private PlayerControls _playerControls;
-    
     private static readonly int ReceiveHit = Animator.StringToHash("ReceiveHit");
 
-    private bool _isTakingEffect; 
-    
+    private bool _isTakingEffect;
+
 
     // Start is called before the first frame update
     void Awake()
     {
-        //Lembrar de alterar aqui dps que o pedro mexer nos controles
-        _playerControls = GetComponent<PlayerControls>();
         _animator = GetComponentInChildren<Animator>();
         _isTakingEffect = false;
     }
@@ -28,13 +24,13 @@ public class TakeEffect : NetworkBehaviour
     {
         switch (effectCode)
         {
-            case  0: 
+            case  0:
                 NormalEffect_ServerRpc();
                 break;
-                
+
         }
     }
-    
+
     [ServerRpc(RequireOwnership = false)]
     public void NormalEffect_ServerRpc()
     {
@@ -47,11 +43,11 @@ public class TakeEffect : NetworkBehaviour
 
     [ClientRpc]
     public void NormalEffect_ClientRpc()
-    { 
+    {
         _animator.SetTrigger(ReceiveHit);
         if (IsOwner)
         {
-            _playerControls.enabled = false;
+            InputController.FreezePlayerControls();
 
             StartCoroutine(nameof(ActivateMoves));
         }
@@ -60,7 +56,7 @@ public class TakeEffect : NetworkBehaviour
     private IEnumerator ActivateMoves()
     {
         yield return new WaitForSeconds(2.5f);
-        _playerControls.enabled = true;
+        InputController.UnfreezePlayerControls();
         NoTakingEffect_ServerRpc();
     }
 

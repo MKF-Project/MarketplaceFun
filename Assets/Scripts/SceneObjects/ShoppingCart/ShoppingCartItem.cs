@@ -122,7 +122,7 @@ public class ShoppingCartItem : NetworkBehaviour
         _itemPositions[_nextIndex].transform.DestroyAllChildren();
 
         // Update item logic
-        if(Owner != NetworkController.SelfPlayer && IsClient)
+        if(Owner == NetworkController.SelfPlayer && IsClient)
         {
             var shoppingList = Owner.GetComponent<ShoppingList>();
 

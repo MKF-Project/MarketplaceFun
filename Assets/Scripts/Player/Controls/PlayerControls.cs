@@ -12,6 +12,7 @@ public enum PlayerControlSchemes {
 public abstract class PlayerControls : NetworkBehaviour
 {
     protected const string CAMERA_POSITION_NAME = "CameraPosition";
+    public const float MINIMUM_INTERACTION_COOLDOWN = 0.1f;
 
     // This is the maximum speed the player is allowed to turn,
     // regardless of other factors. Keep this at a high value to allow fast mouse movement
@@ -74,6 +75,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
     // Interaction related
     public bool HasInteractedThisFrame { get; protected set; } = false;
+    private bool _updateLastInteraction = false;
+    protected float _lastInteractionTime;
 
     /** Inspector Variables **/
     [Header("Ground Detection")]
@@ -91,8 +94,13 @@ public abstract class PlayerControls : NetworkBehaviour
     [Header("Interaction")]
     public float InteractionDistance;
 
+    [Min(MINIMUM_INTERACTION_COOLDOWN)]
+    public float InteractCooldown = MINIMUM_INTERACTION_COOLDOWN;
+
     protected virtual void Awake()
     {
+        _lastInteractionTime = -InteractCooldown;
+
         _rigidBody = gameObject.GetComponent<Rigidbody>();
 
         _playerScript = gameObject.GetComponent<Player>();
@@ -213,6 +221,20 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
+        // Wait before interaction
+        if(Time.time - _lastInteractionTime < InteractCooldown)
+        {
+            if(_updateLastInteraction)
+            {
+                // Ensure we hide the interaction prompt when first stop interacting
+                _updateLastInteraction = false;
+                _currentLookingObject?.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
+                _currentLookingObject = null;
+            }
+            return;
+        }
+        _updateLastInteraction = true;
+
         #if UNITY_EDITOR
             Debug.DrawRay(_cameraPosition.transform.position, _cameraPosition.transform.forward * InteractionDistance, Color.red);
         #endif
@@ -255,6 +277,8 @@ public abstract class PlayerControls : NetworkBehaviour
         {
             StartCoroutine(nameof(clearWallCollision));
         }
+
+        HasInteractedThisFrame = false;
     }
 
     // Detect ground
@@ -313,12 +337,6 @@ public abstract class PlayerControls : NetworkBehaviour
         isCollidingWithWall = false;
     }
 
-    private IEnumerator clearInteractFlag()
-    {
-        yield return Utils.EndOfFrameWait;
-        HasInteractedThisFrame = false;
-    }
-
     /** Input Actions **/
     public virtual void Move(Vector2 direction)
     {
@@ -362,16 +380,17 @@ public abstract class PlayerControls : NetworkBehaviour
 
     public virtual void Interact()
     {
-        // Can only Interact once per frame, and only if
+        // Must wait for cooldown before interacting, and only if
         // not holding anything or driving a shopping cart
-        if(HasInteractedThisFrame || !(isActiveAndEnabled && IsOwner && _playerScript.CanInteract))
+        if(HasInteractedThisFrame || Time.time - _lastInteractionTime < InteractCooldown || !(isActiveAndEnabled && IsOwner && _playerScript.CanInteract))
         {
             return;
         }
 
+        _lastInteractionTime = Time.time;
+
         _currentLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
         HasInteractedThisFrame = true;
-        StartCoroutine(nameof(clearInteractFlag));
     }
 
     public virtual void Throw()

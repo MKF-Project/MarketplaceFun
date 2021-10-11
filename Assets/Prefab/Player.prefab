@@ -253,6 +253,7 @@ MonoBehaviour:
   IsListComplete: 0
   HeldItemType:
     m_InternalValue: -2147483648
+  HeldItemGenerator: {fileID: 0}
   IsDrivingCart: 0
 --- !u!114 &3284909891683801097
 MonoBehaviour:
@@ -274,6 +275,7 @@ MonoBehaviour:
   WalkSpeed: 3
   Sensitivity: 2.4
   InteractionDistance: 2
+  InteractCooldown: 0.5
   FallSpeed: 5
   JumpHeight: 1.2
   MaximumViewAngle: 90
@@ -297,6 +299,7 @@ MonoBehaviour:
   WalkSpeed: 1
   Sensitivity: 1
   InteractionDistance: 2
+  InteractCooldown: 0.5
   MovingTurnSpeed: 100
   InPlaceTurnSpeed: 40
   Deadzone: 0.5

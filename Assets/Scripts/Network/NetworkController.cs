@@ -97,7 +97,13 @@ public class NetworkController : MonoBehaviour
 
     private void Awake()
     {
-        _instance = _instance ?? this;
+        if(_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
 
         _netManager = GetComponent<NetworkManager>();
         _ipTransport = GetComponent<UNetTransport>();
@@ -123,15 +129,23 @@ public class NetworkController : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Disconnect from Events
-        _netManager.OnClientConnectedCallback -= clientConnectEvent;
-        _netManager.OnClientDisconnectCallback -= clientDisconnectEvent;
+        // Clear instance
+        if(_instance == this)
+        {
+            _localPlayers.Clear();
 
-        ConnectionMenu.OnGoToLobby -= startLobbyConnection;
+            // Disconnect from Events
+            _netManager.OnClientConnectedCallback -= clientConnectEvent;
+            _netManager.OnClientDisconnectCallback -= clientDisconnectEvent;
 
-        LoadingMenu.OnCancel -= disconnect;
-        LobbyMenu.OnCancelMatch -= disconnect;
-        ExitMenu.OnLeaveMatch -= disconnect;
+            ConnectionMenu.OnGoToLobby -= startLobbyConnection;
+
+            LoadingMenu.OnCancel -= disconnect;
+            LobbyMenu.OnCancelMatch -= disconnect;
+            ExitMenu.OnLeaveMatch -= disconnect;
+
+            _instance = null;
+        }
     }
 
     private void startLobbyConnection(bool isHost, NetworkTransportTypes transportType, string address)
@@ -302,6 +316,9 @@ public class NetworkController : MonoBehaviour
 
     public static void disconnect()
     {
+        // Make sure list of local players is clear
+        _instance._localPlayers.Clear();
+
         // Can't disconnect if you're neither a Server nor Client (Host is both)
         if(!(IsServer || IsClient))
         {

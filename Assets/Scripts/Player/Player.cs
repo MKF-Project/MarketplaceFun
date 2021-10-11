@@ -110,9 +110,12 @@ public class Player : NetworkBehaviour
         }
     }
 
-    public void ThrowItem()
+    public void ThrowItem(Action<Item> itemAction = null)
     {
-        DropItem(_throwScript.ThrowItem);
+        DropItem((item) => {
+            _throwScript.ThrowItem(item);
+            itemAction?.Invoke(item);
+        });
     }
 
     public void DropItem(Action<Item> itemAction = null)

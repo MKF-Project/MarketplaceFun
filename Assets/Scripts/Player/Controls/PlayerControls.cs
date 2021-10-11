@@ -401,7 +401,10 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        _playerScript.ThrowItem();
+        // On callback, unset currentLookingObject so that we
+        // update it again in the frame after
+        _playerScript.ThrowItem((item) => _currentLookingObject = null);
+
     }
 
     public virtual void Drop()
@@ -412,6 +415,8 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        _playerScript.DropItem();
+        // On callback, unset currentLookingObject so that we
+        // update it again in the frame after
+        _playerScript.DropItem((item) => _currentLookingObject = null);
     }
 }

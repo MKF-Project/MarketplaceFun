@@ -9,13 +9,13 @@ public class PlayerInfoController : MonoBehaviour
     public Dictionary<ulong, PlayerData> PlayerInfos;
 
     public Stack<int> colors;
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
         PlayerInfos = new Dictionary<ulong, PlayerData>();
-        
+
         InitializeColors();
     }
 
@@ -26,7 +26,7 @@ public class PlayerInfoController : MonoBehaviour
         colors.Push(3);
         colors.Push(2);
         colors.Push(1);
-        
+
     }
 
     public PlayerData Add(ulong playerId, String nickname)

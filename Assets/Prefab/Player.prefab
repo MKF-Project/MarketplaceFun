@@ -458,6 +458,7 @@ MonoBehaviour:
   WalkSpeed: 2
   Sensitivity: 2.4
   InteractionDistance: 1.2
+  InteractCooldown: 0.5
   FallSpeed: 2.75
   JumpHeight: 1.2
   MaximumViewAngle: 90
@@ -481,6 +482,7 @@ MonoBehaviour:
   WalkSpeed: 2
   Sensitivity: 1
   InteractionDistance: 2
+  InteractCooldown: 0.5
   MovingTurnSpeed: 100
   InPlaceTurnSpeed: 40
   Deadzone: 0.5

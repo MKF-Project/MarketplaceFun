@@ -27,9 +27,9 @@ public class Interactable : NetworkBehaviour
 
         if(gameObject.tag != TAG_NAME || 1 << gameObject.layer != LAYER_MASK)
         {
-            
+            #if UNITY_EDITOR
                 Debug.LogError($"[{gameObject.name}::Interactable]: Could not find suitable interactable gameobject. Tag: {gameObject.tag}, Layer: {LayerMask.LayerToName(gameObject.layer)}");
-            
+            #endif
 
             return;
         }

@@ -2754,29 +2754,7 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 985751346}
-        m_MethodName: SetNickname
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
@@ -3264,6 +3242,7 @@ MonoBehaviour:
   _addressInput: {fileID: 30564033}
   _addressPlaceholder: {fileID: 1017345577}
   _transportDropdown: {fileID: 1200192087}
+  _nicknameText: {fileID: 676956064}
 --- !u!1 &858336996
 GameObject:
   m_ObjectHideFlags: 0
@@ -3819,8 +3798,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394a65276531a784a93b52df0e3692aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainPlayer: {fileID: 0}
-  Nickname: 
 --- !u!4 &985751347
 Transform:
   m_ObjectHideFlags: 0
@@ -4981,7 +4958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingMenu: {fileID: 1378781893}
-  LobbyMenu: {fileID: 1639980619}
+  LobbyMenu: {fileID: 0}
 --- !u!1 &1276246161
 GameObject:
   m_ObjectHideFlags: 0
@@ -6040,10 +6017,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerList: {fileID: 0}
   _startGame: {fileID: 691198543}
-  Nickname1: {fileID: 244537098}
-  Nickname2: {fileID: 339199866}
-  Nickname3: {fileID: 800528010}
-  Nickname4: {fileID: 1662267328}
+  Nickname1: {fileID: 0}
+  Nickname2: {fileID: 0}
+  Nickname3: {fileID: 0}
+  Nickname4: {fileID: 0}
 --- !u!114 &1639980620
 MonoBehaviour:
   m_ObjectHideFlags: 0

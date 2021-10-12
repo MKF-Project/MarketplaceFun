@@ -40,7 +40,7 @@ public class Player : NetworkBehaviour
 
     public override void NetworkStart()
     {
-        MatchManager.Instance.RegisterPlayer(this);
+        NetworkController.RegisterPlayer(this);
 
         if(IsOwner)
         {
@@ -71,6 +71,17 @@ public class Player : NetworkBehaviour
         HeldItemType.OnValueChanged = onHeldItemChange;
     }
 
+    public delegate void OnBeforeDestroyDelegate(Player player);
+    public event OnBeforeDestroyDelegate OnBeforeDestroy;
+    private void OnDestroy()
+    {
+        OnBeforeDestroy?.Invoke(this);
+
+        if(IsServer && HeldItemType.Value != Item.NO_ITEMTYPE_CODE)
+        {
+            HeldItemGenerator?.GenerateOwnerlessItem(_heldItemPosition.position, _heldItemPosition.rotation);
+        }
+    }
 
 
 
@@ -118,19 +129,18 @@ public class Player : NetworkBehaviour
         }
     }
 
-    public void ThrowItem()
+    public void ThrowItem(Action<Item> itemAction = null)
     {
-        print($"[{gameObject.name}]: ThrowItem NYI");
-        DropItem(_throwScript.ThrowItem);
+        DropItem((item) => {
+            _throwScript.ThrowItem(item);
+            itemAction?.Invoke(item);
+        });
     }
 
     public void DropItem(Action<Item> itemAction = null)
     {
         if(IsHoldingItem)
         {
-            // New: Spawn item - Delete model - Disable aim
-            print($"[{gameObject.name}]: DropItem NYI");
-
             void positionItem(Item generatedItem)
             {
                 if(!generatedItem.IsOwner)

@@ -21,6 +21,8 @@ public class ShoppingCartInteract : NetworkBehaviour
     private Rigidbody _rigidbody = null;
     private RigidbodyTemplate _rigidBodyTemplate;
 
+    private Transform _cartPlayerPosition;
+
     [SerializeField]
     private PhysicMaterial _playerBodyMaterial;
 
@@ -116,16 +118,21 @@ public class ShoppingCartInteract : NetworkBehaviour
 
     private void clientAttachCart(Player player)
     {
-        var cartPosition = player.transform.Find(SHOPPING_CART_POSITION_NAME);
+        if(player == null)
+        {
+            return;
+        }
+
+        _cartPlayerPosition = player.transform.Find(SHOPPING_CART_POSITION_NAME);
 
         // Do not allow interaction if the player is already holding another cart
-        if(cartPosition.FindChildWithTag(SHOPPING_CART_TAG) != null)
+        if(_cartPlayerPosition.FindChildWithTag(SHOPPING_CART_TAG) != null)
         {
             return;
         }
 
         // We disable this cart's Network Transform and Rigidbody
-        // beacause while the cart is contained in the player object
+        // because while the cart is contained in the player object
         // we let the player prefab handle network Positioning and Physics
         _netTransform.enabled = false;
         _netRigidbody.enabled = false;
@@ -144,18 +151,23 @@ public class ShoppingCartInteract : NetworkBehaviour
         transform.position = Vector3.zero;
         transform.rotation = Quaternion.identity;
 
-        transform.SetParent(cartPosition, false);
+        transform.SetParent(_cartPlayerPosition, false);
 
         // Update cart Physics Materials
         _cartColliders.ForEach(collider => collider.material = _playerBodyMaterial);
 
         // Update player Controls
         player.GetComponent<PlayerControls>().switchControlScheme();
+
+        // Make sure we detach the cart from this player if they disconnect
+        player.OnBeforeDestroy += clientDetachCart;
     }
 
     private void clientDetachCart(Player player)
     {
+        // Decoupple cart from player
         transform.SetParent(null);
+        player.OnBeforeDestroy -= clientDetachCart;
 
         // Reacquire a rigidbody component with the same
         // configurations as the one that was previously removed
@@ -173,6 +185,9 @@ public class ShoppingCartInteract : NetworkBehaviour
         {
             _cartColliders[i].material = _cartMaterials[i];
         }
+
+        // Make sure the cart position is synced between clients
+        _netTransform.Teleport(_cartPlayerPosition.position, _cartPlayerPosition.rotation);
 
         // Keep cart momentum from player
         if(IsOwner)
@@ -197,16 +212,15 @@ public class ShoppingCartInteract : NetworkBehaviour
     private void attachCart_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         // Echo attach cart request back to other players
-        var returnClients = rpcReceiveParams.ReturnRpcToOthers();
-        attachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, returnClients);
+        attachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, rpcReceiveParams.ReturnRpcToOthers());
     }
 
     [ClientRpc]
     private void attachCart_ClientRpc(ulong playerID, ClientRpcParams clientRpcParams = default)
     {
-        if(playerID != NetworkController.getSelfID())
+        if(playerID != NetworkController.SelfID)
         {
-            clientAttachCart(MatchManager.Instance.GetPlayerByClientID(playerID));
+            clientAttachCart(NetworkController.GetPlayerByID(playerID));
         }
     }
 
@@ -214,16 +228,15 @@ public class ShoppingCartInteract : NetworkBehaviour
     private void detachCart_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         // Echo detach cart request back to other players
-        var returnClients = rpcReceiveParams.ReturnRpcToOthers();
-        detachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, returnClients);
+        detachCart_ClientRpc(rpcReceiveParams.Receive.SenderClientId, rpcReceiveParams.ReturnRpcToOthers());
     }
 
     [ClientRpc]
     private void detachCart_ClientRpc(ulong playerID, ClientRpcParams clientRpcParams = default)
     {
-        if(playerID != NetworkController.getSelfID())
+        if(playerID != NetworkController.SelfID)
         {
-            clientDetachCart(MatchManager.Instance.GetPlayerByClientID(playerID));
+            clientDetachCart(NetworkController.GetPlayerByID(playerID));
         }
     }
 }

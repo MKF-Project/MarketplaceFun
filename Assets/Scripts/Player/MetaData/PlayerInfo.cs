@@ -9,16 +9,14 @@ using UnityEngine.UI;
 
 public class PlayerInfo : NetworkBehaviour
 {
-    
     public PlayerData PlayerData;
-
     public PlayerDisplay PlayerDisplay;
-    // Start is called before the first frame update
+
     public override void NetworkStart()
     {
         if (IsOwner)
         {
-            String nickname = MatchManager.Instance.Nickname;
+            String nickname = ConnectionMenu.Nickname;
             PlayerDisplay.DisplayNickname(nickname);
             SendInfo_ServerRpc(nickname);
         }
@@ -33,7 +31,7 @@ public class PlayerInfo : NetworkBehaviour
     {
         PlayerData = PlayerInfoController.Instance.Add(OwnerClientId, nickname);
         DisplayMyInfo();
-        
+
         ClientRpcParams clientRpcParams = new ClientRpcParams
         {
             Send = new ClientRpcSendParams
@@ -41,10 +39,10 @@ public class PlayerInfo : NetworkBehaviour
                 TargetClientIds = new ulong[]{OwnerClientId}
             }
         };
-        
+
         SetInfoOnOwner_ClientRpc(PlayerData, clientRpcParams);
     }
-    
+
     [ClientRpc]
     public void SetInfoOnOwner_ClientRpc(PlayerData playerData, ClientRpcParams clientRpcParams = default)
     {
@@ -58,9 +56,9 @@ public class PlayerInfo : NetworkBehaviour
         IEnumerator coroutine = WaitToGetPlayerInfo(ownerId, clientId);
         StartCoroutine(coroutine);
 
-        //GetPlayerInfo_ClientRpc(PlayerInfoController.Instance.PlayerInfos[ownerId], clientRpcParams);       
+        //GetPlayerInfo_ClientRpc(PlayerInfoController.Instance.PlayerInfos[ownerId], clientRpcParams);
     }
-    
+
     [ClientRpc]
     public void GetPlayerInfo_ClientRpc(PlayerData playerData, ClientRpcParams clientRpcParams = default)
     {
@@ -87,7 +85,7 @@ public class PlayerInfo : NetworkBehaviour
         PlayerDisplay.DisplayNickname(PlayerData.Nickname);
 
         PlayerDisplay.SetColor(PlayerData.Color);
-        
+
     }
 
 

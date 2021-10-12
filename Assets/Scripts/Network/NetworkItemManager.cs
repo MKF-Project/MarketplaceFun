@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class NetworkItemManager : NetworkBehaviour
 {
-    
+
     private static Dictionary<string, GameObject> SpawnedItemList = null;
     // Start is called before the first frame update
     void Awake()
@@ -20,7 +20,7 @@ public class NetworkItemManager : NetworkBehaviour
         SpawnedItemList = null;
     }
 
-    
+
     public static void RegisterItem(ulong prefabHash, ulong id, GameObject item)
     {
 
@@ -29,12 +29,12 @@ public class NetworkItemManager : NetworkBehaviour
         {
             SpawnedItemList.Add(stringifiedKey, item);
         }
-
-        else
-        {
-            Debug.LogError($"Add same Item {prefabHash} - {id}" );
-        }
-
+        #if UNITY_EDITOR
+            else
+            {
+                Debug.LogError($"Add same Item {prefabHash} - {id}" );
+            }
+        #endif
     }
 
 
@@ -43,9 +43,9 @@ public class NetworkItemManager : NetworkBehaviour
         string stringifiedKey = StringifyKey(prefabHash, id);
         if (!SpawnedItemList.Remove(stringifiedKey))
         {
-
-            Debug.LogError($"Item is not registered {prefabHash} - {id}" );
-
+            #if UNITY_EDITOR
+                Debug.LogError($"Item is not registered {prefabHash} - {id}" );
+            #endif
         }
 
     }

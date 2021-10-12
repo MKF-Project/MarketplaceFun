@@ -67,34 +67,65 @@ public class ItemGenerator : NetworkBehaviour
         {
             playerScript.HeldItemType.Value = ItemTypeCode;
             playerScript.HeldItemGenerator = this;
+            AssignPlayerItemGenerator_ServerRpc();
         }
     }
 
 
     public void GenerateItem(Action<Item> itemAction = null)
     {
-
+        #if UNITY_EDITOR
             Debug.Log($"[{gameObject.name}]: Trigger generate item");
-
+        #endif
 
         _itemAction = itemAction;
         GenerateItem_ServerRpc();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void GenerateItem_ServerRpc(ServerRpcParams rpcReceiveParams = default)
+    // This one is intended to be used when a player disconnects while holding an item
+    // The item should be created server-side after the player disconnects
+    public void GenerateOwnerlessItem(Vector3 location, Quaternion rotation)
     {
-        var generatedItem = Instantiate(_itemPrefab, Vector3.zero, Quaternion.identity);
+        if(!IsServer)
+        {
+            return;
+        }
 
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject.name}]: Trigger generate NO OWNER item");
+        #endif
+
+        SpawnItemWithOwnership(NetworkController.ServerID, location, rotation);
+    }
+
+    private NetworkObject SpawnItemWithOwnership(ulong ownerID, Vector3 location, Quaternion rotation)
+    {
+        var generatedItem = Instantiate(_itemPrefab, location, rotation);
         var item = generatedItem.GetComponent<Item>();
         item.ItemTypeCode = ItemTypeCode;
 
         var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
-        itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
+        itemNetworkObject.SpawnWithOwnership(ownerID, destroyWithScene: true);
 
-        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, rpcReceiveParams.ReturnRpcToSender());
+        return itemNetworkObject;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void AssignPlayerItemGenerator_ServerRpc(ServerRpcParams rpcReceiveParams = default)
+    {
+        var player = NetworkController.GetPlayerByID(rpcReceiveParams.Receive.SenderClientId);
+        if(player != null)
+        {
+            player.HeldItemGenerator = this;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void GenerateItem_ServerRpc(ServerRpcParams rpcReceiveParams = default)
+    {
+        var itemNetworkObject = SpawnItemWithOwnership(rpcReceiveParams.Receive.SenderClientId, Vector3.zero, Quaternion.identity);
+        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, rpcReceiveParams.ReturnRpcToSender());
+    }
 
     [ClientRpc]
     private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, int itemTypeCode, ClientRpcParams clientRpcParams = default)
@@ -106,6 +137,7 @@ public class ItemGenerator : NetworkBehaviour
             var itemScript = itemGenerated.GetComponent<Item>();
             itemScript.ItemTypeCode = itemTypeCode;
             _itemAction?.Invoke(itemScript);
+            _itemAction = null;
         }
     }
 

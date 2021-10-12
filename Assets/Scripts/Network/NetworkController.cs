@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Connection;
 using MLAPI.Transports;
 using MLAPI.Transports.UNET;
 using MLAPI.Transports.PhotonRealtime;
@@ -88,13 +89,21 @@ public class NetworkController : MonoBehaviour
         }
     }
 
+    private Dictionary<ulong, Player> _localPlayers = new Dictionary<ulong, Player>();
+
     public static bool IsServer => _instance._netManager.IsServer;
     public static bool IsClient => _instance._netManager.IsClient;
     public static bool IsHost   => _instance._netManager.IsHost;
 
     private void Awake()
     {
-        _instance = _instance ?? this;
+        if(_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
 
         _netManager = GetComponent<NetworkManager>();
         _ipTransport = GetComponent<UNetTransport>();
@@ -120,15 +129,23 @@ public class NetworkController : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Disconnect from Events
-        _netManager.OnClientConnectedCallback -= clientConnectEvent;
-        _netManager.OnClientDisconnectCallback -= clientDisconnectEvent;
+        // Clear instance
+        if(_instance == this)
+        {
+            _localPlayers.Clear();
 
-        ConnectionMenu.OnGoToLobby -= startLobbyConnection;
+            // Disconnect from Events
+            _netManager.OnClientConnectedCallback -= clientConnectEvent;
+            _netManager.OnClientDisconnectCallback -= clientDisconnectEvent;
 
-        LoadingMenu.OnCancel -= disconnect;
-        LobbyMenu.OnCancelMatch -= disconnect;
-        ExitMenu.OnLeaveMatch -= disconnect;
+            ConnectionMenu.OnGoToLobby -= startLobbyConnection;
+
+            LoadingMenu.OnCancel -= disconnect;
+            LobbyMenu.OnCancelMatch -= disconnect;
+            ExitMenu.OnLeaveMatch -= disconnect;
+
+            _instance = null;
+        }
     }
 
     private void startLobbyConnection(bool isHost, NetworkTransportTypes transportType, string address)
@@ -163,9 +180,9 @@ public class NetworkController : MonoBehaviour
             {
                 _netManager.OnServerStarted -= hostIsConnected;
 
-                
+                #if UNITY_EDITOR
                     Debug.Log("Host Connected.");
-                
+                #endif
 
                 OnConnected?.Invoke(true);
             }
@@ -181,9 +198,9 @@ public class NetworkController : MonoBehaviour
                 {
                     _netManager.OnClientConnectedCallback -= clientIsConnected;
 
-                    
+                    #if UNITY_EDITOR
                         Debug.Log($"Client Connected. ID: {clientID}");
-                    
+                    #endif
 
                     OnConnected?.Invoke(false);
                 }
@@ -208,9 +225,9 @@ public class NetworkController : MonoBehaviour
 
     private void handleClientEvent(ulong clientID, bool isDisconnect)
     {
-        
+        #if UNITY_EDITOR
             Debug.Log($"{(clientID == _netManager.LocalClientId? "Local" : "Other")} Client {(isDisconnect? "disconnected" : "connected")}. ID: {clientID}, Local: {_netManager.LocalClientId}");
-        
+        #endif
         if(clientID != _netManager.LocalClientId) // Other Client Event
         {
             if(isDisconnect)
@@ -236,9 +253,25 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public static ulong getSelfID()
+    public static ulong ServerID => _instance._netManager.ServerClientId;
+    public static ulong SelfID => IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+    public static Player SelfPlayer => GetPlayerByID(SelfID);
+
+    public static Player GetPlayerByID(ulong playerID)
     {
-        return IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+
+        // Try finding it in players dictionary
+        if(_instance._localPlayers.ContainsKey(playerID))
+        {
+            var res = _instance._localPlayers[playerID];
+            if(res.gameObject != null)
+            {
+                return res;
+            }
+        }
+
+        // Second attempt, try looking for playerObject in NetworkClientList
+        return _instance._netManager.ConnectedClients[playerID]?.PlayerObject?.GetComponent<Player>();
     }
 
     public static IEnumerable<ulong> getClientIDs()
@@ -249,6 +282,16 @@ public class NetworkController : MonoBehaviour
         }
 
         return _instance._netManager.ConnectedClientsList.Select(client => client.ClientId);
+    }
+
+    public static void RegisterPlayer(Player player)
+    {
+        if(_instance._localPlayers.ContainsKey(player.OwnerClientId))
+        {
+            return;
+        }
+
+        _instance._localPlayers.Add(player.OwnerClientId, player);
     }
 
     public static void switchNetworkScene(string sceneName)
@@ -274,6 +317,9 @@ public class NetworkController : MonoBehaviour
 
     public static void disconnect()
     {
+        // Make sure list of local players is clear
+        _instance._localPlayers.Clear();
+
         // Can't disconnect if you're neither a Server nor Client (Host is both)
         if(!(IsServer || IsClient))
         {

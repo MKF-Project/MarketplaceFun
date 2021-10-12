@@ -70,6 +70,11 @@ public class Player : NetworkBehaviour
     private void OnDestroy()
     {
         OnBeforeDestroy?.Invoke(this);
+
+        if(IsServer && HeldItemType.Value != Item.NO_ITEMTYPE_CODE)
+        {
+            HeldItemGenerator?.GenerateOwnerlessItem(_heldItemPosition.position, _heldItemPosition.rotation);
+        }
     }
 
     private void onHeldItemChange(int previousItemType, int newItemType)

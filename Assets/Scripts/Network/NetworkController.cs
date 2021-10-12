@@ -253,6 +253,7 @@ public class NetworkController : MonoBehaviour
         }
     }
 
+    public static ulong ServerID => _instance._netManager.ServerClientId;
     public static ulong SelfID => IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
     public static Player SelfPlayer => GetPlayerByID(SelfID);
 

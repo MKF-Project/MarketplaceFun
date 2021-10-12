@@ -65,6 +65,12 @@ public class Player : NetworkBehaviour
         HeldItemType.OnValueChanged = onHeldItemChange;
     }
 
+    public delegate void OnBeforeDestroyDelegate(Player player);
+    public event OnBeforeDestroyDelegate OnBeforeDestroy;
+    private void OnDestroy()
+    {
+        OnBeforeDestroy?.Invoke(this);
+    }
 
     private void onHeldItemChange(int previousItemType, int newItemType)
     {

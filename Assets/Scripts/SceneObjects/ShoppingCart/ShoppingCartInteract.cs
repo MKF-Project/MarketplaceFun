@@ -132,7 +132,7 @@ public class ShoppingCartInteract : NetworkBehaviour
         }
 
         // We disable this cart's Network Transform and Rigidbody
-        // beacause while the cart is contained in the player object
+        // because while the cart is contained in the player object
         // we let the player prefab handle network Positioning and Physics
         _netTransform.enabled = false;
         _netRigidbody.enabled = false;
@@ -158,11 +158,16 @@ public class ShoppingCartInteract : NetworkBehaviour
 
         // Update player Controls
         player.GetComponent<PlayerControls>().switchControlScheme();
+
+        // Make sure we detach the cart from this player if they disconnect
+        player.OnBeforeDestroy += clientDetachCart;
     }
 
     private void clientDetachCart(Player player)
     {
+        // Decoupple cart from player
         transform.SetParent(null);
+        player.OnBeforeDestroy -= clientDetachCart;
 
         // Reacquire a rigidbody component with the same
         // configurations as the one that was previously removed

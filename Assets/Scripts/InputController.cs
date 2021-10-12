@@ -182,7 +182,7 @@ public class InputController : MonoBehaviour
     private static bool _playerControlsFrozen = false;
     public static bool PlayerControlsFrozen
     {
-        get => _menuControlsFrozen;
+        get => _playerControlsFrozen;
         private set
         {
             if(value)
@@ -194,15 +194,13 @@ public class InputController : MonoBehaviour
                 // Stop Look prior to freezing
                 OnLook?.Invoke(Vector2.zero);
                 OnLookStop?.Invoke();
+
+                // Stop walk action
+                OnWalkReleased?.Invoke();
             }
-            _menuControlsFrozen = value;
+            _playerControlsFrozen = value;
         }
     }
-
-    public static void FreezeMenuControls() => MenuControlsFrozen = true;
-    public static void UnfreezemenuControls() => MenuControlsFrozen = false;
-    private static bool _menuControlsFrozen;
-    public static bool MenuControlsFrozen { get; private set; } = false;
 
     // Mode Switch Events
     public delegate void OnMenuControlsDelegate();
@@ -211,7 +209,7 @@ public class InputController : MonoBehaviour
     public static EventBlocker OnAllowMenuControlsSwitch = new EventBlocker(SwitchToMenuControls);
 
     // Can only switch to menu controls if MenuControls aren't frozen
-    public static bool RequestMenuControlsSwitch() => MenuControlsFrozen || OnAllowMenuControlsSwitch.DispatchEvent();
+    public static bool RequestMenuControlsSwitch() => OnAllowMenuControlsSwitch.DispatchEvent();
     private static void SwitchToMenuControls() => _instance?.instanceSwitchToMenuControls();
     private void instanceSwitchToMenuControls()
     {
@@ -227,7 +225,7 @@ public class InputController : MonoBehaviour
     public static EventBlocker OnAllowPlayerControlsSwitch = new EventBlocker(SwitchToPlayerControls);
 
     // Can only switch to player controls if PlayerControls aren't frozen
-    public static bool RequestPlayerControlsSwitch() => PlayerControlsFrozen || OnAllowPlayerControlsSwitch.DispatchEvent();
+    public static bool RequestPlayerControlsSwitch() => OnAllowPlayerControlsSwitch.DispatchEvent();
     private static void SwitchToPlayerControls() => _instance?.instanceSwitchToPlayerControls();
     private void instanceSwitchToPlayerControls()
     {
@@ -417,11 +415,6 @@ public class InputController : MonoBehaviour
 
     private void OnPauseAction(InputAction.CallbackContext context)
     {
-        if(PlayerControlsFrozen)
-        {
-            return;
-        }
-
         if(context.performed)
         {
             OnPause?.Invoke();
@@ -436,11 +429,6 @@ public class InputController : MonoBehaviour
 
     private void OnUnpauseAction(InputAction.CallbackContext context)
     {
-        if(MenuControlsFrozen)
-        {
-            return;
-        }
-
         if(context.performed)
         {
             OnUnpause?.Invoke();

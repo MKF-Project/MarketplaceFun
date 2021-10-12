@@ -31,6 +31,10 @@ public class ConnectionMenu : MonoBehaviour
     // Transport Dropdown
     [SerializeField] private Dropdown _transportDropdown = null;
 
+    // Nickname
+    public static string Nickname { get; private set; }
+    [SerializeField] private Text _nicknameText = null;
+
     private void Awake()
     {
         GameMenu.OnJoinGame += initializeJoinMenu;
@@ -93,6 +97,9 @@ public class ConnectionMenu : MonoBehaviour
         if(address == "" && (!_isHost || transport != NetworkTransportTypes.Direct)) {
             return;
         }
+
+        // Store chosen nickname
+        Nickname = _nicknameText.text;
 
         // Call Event
         OnGoToLobby(_isHost, transport, address);

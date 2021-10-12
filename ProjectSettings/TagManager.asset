@@ -12,6 +12,7 @@ TagManager:
   - ItemGenerator
   - Interactable
   - ShoppingListUI
+  - PlayerPositionController
   - ShoppingCart
   layers:
   - Default

@@ -139,7 +139,7 @@ public class Player : NetworkBehaviour
 
     public void DropItem(Action<Item> itemAction = null)
     {
-        if(IsHoldingItem)
+        if(IsHoldingItem && HeldItemGenerator != null)
         {
             void positionItem(Item generatedItem)
             {

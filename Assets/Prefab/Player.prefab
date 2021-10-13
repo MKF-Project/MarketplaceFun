@@ -422,7 +422,7 @@ MonoBehaviour:
   WalkSpeed: 1.7
   Sensitivity: 1
   InteractionDistance: 1.2
-  FallSpeed: 2.75
+  FallSpeed: 3
   JumpHeight: 1.55
   MaximumViewAngle: 73
 --- !u!114 &7903483743102282125
@@ -457,7 +457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c897505851021e439498b7e0f594bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Strength: 60
+  Strength: 30
   Distance: 50
 --- !u!114 &6060007277188276103
 MonoBehaviour:

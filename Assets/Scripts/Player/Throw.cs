@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class Throw : NetworkBehaviour
 {
     private Player _player;
-    private bool _shouldThrow = false;
+    private Item _itemToThrow = null;
 
     public float Strength;
     public float Distance;
@@ -17,71 +17,52 @@ public class Throw : NetworkBehaviour
     private void Awake()
     {
         _player = GetComponent<Player>();
-
     }
 
     private void FixedUpdate()
     {
-        if(_shouldThrow && IsOwner && _player.IsHoldingItem)
+        if(IsOwner && _itemToThrow != null)
         {
-            var initialPosition = _player.HoldingItem.transform.position;
-            var target = CalculateTargetPosition();
-
-            ThrowItem(target, initialPosition);
+            OnThrowItem();
         }
 
-        _shouldThrow = false;
+        _itemToThrow = null;
     }
 
-    public void OnThrow()
+    public void ThrowItem(Item item)
     {
-        if(IsOwner && _player.IsHoldingItem)
+        if(IsOwner)
         {
-            _shouldThrow = true;
+            _itemToThrow = item;
         }
     }
 
-    private void ThrowItem(Vector3 target, Vector3 initialPosition)
+    private void OnThrowItem()
     {
-        GameObject holdingItem = _player.HoldingItem;
-        var itemRigidbody = holdingItem.GetComponent<Rigidbody>();
+        var target = CalculateTargetPosition();
+
+        var itemRigidbody = _itemToThrow.GetComponent<Rigidbody>();
         itemRigidbody.velocity = Vector3.zero;
-        
-        holdingItem.transform.position = initialPosition;
-        holdingItem.transform.LookAt(target);
-        holdingItem.SetActive(true);
-        holdingItem.GetComponent<Item>().IsOnThrow = true;    
-        _player.DropItem();
 
-        Vector3 direction = target - initialPosition;
+        _itemToThrow.transform.LookAt(target);
+        _itemToThrow.gameObject.SetActive(true);
+        _itemToThrow.IsOnThrow = true;
+
+        var direction = target - _itemToThrow.transform.position;
         itemRigidbody.velocity = direction.normalized * Strength;
-
     }
 
     private Vector3 CalculateTargetPosition()
     {
-        Vector3 screenMiddle = new Vector3();
-        screenMiddle.x = Screen.width / 2f;
-        screenMiddle.y = Screen.height / 2f;
-        Ray ray = Camera.main.ScreenPointToRay(screenMiddle);
+        var screenMiddle = new Vector3(Screen.width / 2.0f, Screen.height / 2.0f, 0);
+        var ray = Camera.main.ScreenPointToRay(screenMiddle);
 
-        Vector3 target;
         #if UNITY_EDITOR
             Debug.DrawRay(ray.origin, ray.direction * Distance, Color.green);
         #endif
-        
-        bool raycastHit = Physics.Raycast(ray.origin, ray.direction, out var hitInfo, Distance);
-        if (raycastHit)
-        {
-            
-            target = hitInfo.point;
-        }
-        else
-        {
-            target = ray.origin + ray.direction * Distance;    
-        }
-        
-        return target;
+
+        var raycastHit = Physics.Raycast(ray.origin, ray.direction, out var hitInfo, Distance);
+        return raycastHit? hitInfo.point : ray.origin + ray.direction * Distance;
     }
 
 }

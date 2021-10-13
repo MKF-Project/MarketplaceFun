@@ -24485,7 +24485,6 @@ Transform:
   - {fileID: 306364889}
   - {fileID: 749989260}
   - {fileID: 235698250}
-  - {fileID: 1325713135}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -41928,7 +41927,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1568498207}
-  - component: {fileID: 1568498206}
   - component: {fileID: 1568498205}
   m_Layer: 0
   m_Name: Managers
@@ -41949,21 +41947,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebad06f3b3f3b234792bc7e7e5705d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enablePlayerBehaviour: 1
-  allowControlSwitching: 1
---- !u!114 &1568498206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568498204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5f49dc29e6040145b209d2a4230e5d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _overviewCamera: {fileID: 235698247}
+  _allowPlayerControls: 1
+  _allowControlSwitching: 1
 --- !u!4 &1568498207
 Transform:
   m_ObjectHideFlags: 0

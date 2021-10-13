@@ -1,74 +1,165 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using MLAPI;
 using UnityEngine;
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 
+[SelectionBase]
 public class Player : NetworkBehaviour
 {
     public bool IsListComplete;
 
-    private const string HELP_POSITION_NAME = "HeldPosition";
+    private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
 
-    public Transform HeldPosition {get; private set;}
+    // Held Item Vars
+    private Transform _heldItemPosition;
 
-    public GameObject HoldingItem {get; private set;}
-    public bool IsHoldingItem {get; private set;}
+    [HideInInspector]
+    public NetworkVariableInt HeldItemType = new NetworkVariableInt(
+        new NetworkVariableSettings
+        {
+            ReadPermission = NetworkVariablePermission.Everyone,
+            WritePermission = NetworkVariablePermission.OwnerOnly
+        },
+        Item.NO_ITEMTYPE_CODE
+    );
 
+    [HideInInspector]
+    public ItemGenerator HeldItemGenerator = null;
+
+    public GameObject HeldItem { get; private set; } = null;
+    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE;
+
+    [HideInInspector]
+    public bool IsDrivingCart;
+
+    public bool CanInteract => !(IsDrivingCart || IsHoldingItem);
 
     public override void NetworkStart()
     {
+        NetworkController.RegisterPlayer(this);
+
         if(IsOwner)
         {
-            MatchManager.Instance.MainPlayer = this;
+            transform.Rotate(Vector3.up, 180);
         }
     }
 
     private void Awake()
     {
         _throwScript = GetComponent<Throw>();
-        HeldPosition = gameObject.transform.Find(HELP_POSITION_NAME);
+        _heldItemPosition = gameObject.transform.Find(HELD_POSITION_NAME);
 
-        #if UNITY_EDITOR
+
             if(_throwScript == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Throw Script");
             }
 
-            if(HeldPosition == null)
+            if(_heldItemPosition == null)
             {
-                Debug.LogError($"[{gameObject.name}]: Could not find Held Position");
+                Debug.LogError($"[{gameObject.name}]: Could not find Held Item Position");
             }
-        #endif
 
-        IsHoldingItem = false;
+
+        IsDrivingCart = false;
         IsListComplete = false;
+
+        HeldItemType.OnValueChanged = onHeldItemChange;
     }
 
-    public void HoldItem(GameObject item)
+    public delegate void OnBeforeDestroyDelegate(Player player);
+    public event OnBeforeDestroyDelegate OnBeforeDestroy;
+    private void OnDestroy()
     {
-        HoldingItem = item;
-        item.GetComponent<Item>().BeHeld(HeldPosition);
-        IsHoldingItem = true;
-        AimCanvas.Instance.ActivateAim();
+        OnBeforeDestroy?.Invoke(this);
+
+        if(IsServer && HeldItemType.Value != Item.NO_ITEMTYPE_CODE)
+        {
+            HeldItemGenerator?.GenerateOwnerlessItem(_heldItemPosition.position, _heldItemPosition.rotation);
+        }
     }
 
-    public void ThrowItem()
+
+
+    private void onHeldItemChange(int previousItemType, int newItemType)
     {
-        _throwScript.OnThrow();
+        if(previousItemType != Item.NO_ITEMTYPE_CODE)
+        {
+            // Clear previously held item
+            _heldItemPosition.DestroyAllChildren();
+        }
+
+        if(newItemType != Item.NO_ITEMTYPE_CODE)
+        {
+            var itemPrefab = ItemTypeList.ItemList[newItemType].ItemPrefab;
+            var meshObject = itemPrefab?.GetComponent<Item>()?.GetItemVisuals();
+
+            if(meshObject != null)
+            {
+                // Place visual item on player's hand
+                var generatedItem = Instantiate(meshObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
+
+                generatedItem.transform.localPosition = Vector3.zero;
+                generatedItem.transform.localRotation = Quaternion.identity;
+                generatedItem.transform.localScale = meshObject.transform.localScale;
+
+                HeldItem = generatedItem;
+
+                if(IsOwner)
+                {
+                    AimCanvas.Instance.ActivateAim();
+                }
+            }
+
+            // Was unable to acquire a valid object visual,
+            // should therefore update others that it is holding no item
+            else if(IsOwner)
+            {
+                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+            }
+        }
+        else
+        {
+            HeldItem = null;
+            HeldItemGenerator = null;
+        }
     }
 
-    public void DropItem()
+    public void ThrowItem(Action<Item> itemAction = null)
     {
-        HoldingItem.GetComponent<Item>().BeDropped();
-        HoldingItem = null;
-        IsHoldingItem = false;
-        AimCanvas.Instance.DisableAim();
+        DropItem((item) => {
+            _throwScript.ThrowItem(item);
+            itemAction?.Invoke(item);
+        });
     }
 
-    public Item GetItemComponent()
+    public void DropItem(Action<Item> itemAction = null)
     {
-        return HoldingItem.GetComponent<Item>();
+        if(IsHoldingItem && HeldItemGenerator != null)
+        {
+            void positionItem(Item generatedItem)
+            {
+                if(!generatedItem.IsOwner)
+                {
+                    return;
+                }
+
+                generatedItem.transform.position = _heldItemPosition.position;
+                generatedItem.transform.rotation = _heldItemPosition.rotation;
+
+                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+
+                AimCanvas.Instance.DisableAim();
+
+                itemAction?.Invoke(generatedItem);
+            }
+
+            HeldItemGenerator.GenerateItem(positionItem);
+        }
     }
 
     public void ListComplete()
@@ -77,4 +168,5 @@ public class Player : NetworkBehaviour
         MatchMessages.Instance.ShowMessage();
         IsListComplete = true;
     }
+
 }

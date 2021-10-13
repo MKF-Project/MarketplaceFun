@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MLAPI;
 using UnityEngine;
 
+/** ---- UNUSED AT THE MOMENT ---- **/
 public class Put : NetworkBehaviour
 {
     private Player _player;
@@ -13,9 +14,7 @@ public class Put : NetworkBehaviour
     {
         _player = GetComponent<Player>();
         _shoppingList = GetComponent<ShoppingList>();
-        InputController.OnPut += OnPut;
     }
-
 
     public override void NetworkStart()
     {
@@ -25,16 +24,11 @@ public class Put : NetworkBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        InputController.OnPut -= OnPut;
-    }
-
     public void OnPut()
     {
         if (_player.IsHoldingItem)
         {
-            bool isChecked = CheckItem(_player.GetItemComponent().ItemTypeCode);
+            bool isChecked = CheckItem(_player.HeldItemType.Value);
             if (isChecked)
             {
                 if (_shoppingList.IsListChecked())
@@ -51,6 +45,4 @@ public class Put : NetworkBehaviour
     {
         return _shoppingList.CheckItem(itemTypeCode);
     }
-
-
 }

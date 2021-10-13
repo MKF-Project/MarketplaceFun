@@ -3,18 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
 using MLAPI.Messaging;
-using MLAPI.Serialization;
 using UnityEngine;
 
 public class Item : NetworkBehaviour
 {
-    private Transform _heldPosition;
-    private bool _isHeld;
+    public const int NO_ITEMTYPE_CODE = int.MinValue;
+
     private NetworkObject _networkObject;
-    
+
     [HideInInspector]
     public bool IsOnThrow;
-    
+
     [HideInInspector]
     public int ItemTypeCode;
 
@@ -32,11 +31,6 @@ public class Item : NetworkBehaviour
         RegisterItem();
     }
 
-    void Start()
-    {
-        _isHeld = false;
-    }
-
     private void OnDestroy()
     {
         UnregisterItem();
@@ -52,15 +46,8 @@ public class Item : NetworkBehaviour
         NetworkItemManager.UnregisterItem(_networkObject.PrefabHash, _networkObject.NetworkObjectId);
     }
 
-    void Update()
+    private void Update()
     {
-        if (_isHeld)
-        {
-            transform.position = _heldPosition.position;
-            transform.forward = _heldPosition.forward;
-            Debug.DrawRay(_heldPosition.position, _heldPosition.forward* 10, Color.red);
-        }
-
         if (IsOnThrow)
         {
             if (gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude <= 0.1)
@@ -70,18 +57,11 @@ public class Item : NetworkBehaviour
         }
     }
 
-    public void BeHeld(Transform holderPosition)
+    public GameObject GetItemVisuals()
     {
-        _heldPosition = holderPosition;
-        _isHeld = true;
+        // TODO update this function when we have better structured visuals
+        return transform.Find("Cube")?.gameObject;
     }
-
-    public void BeDropped()
-    {
-        _heldPosition = null;
-        _isHeld = false;
-    }
-
 
     public void OnCollisionEnter(Collision other)
     {

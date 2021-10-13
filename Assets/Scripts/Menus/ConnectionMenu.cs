@@ -82,6 +82,23 @@ public class ConnectionMenu : MonoBehaviour
         {
             _addressInput.text = "";
         }
+
+        #if UNITY_EDITOR
+            const string DEBUG_IP_HOST = "127.0.0.1";
+            const string DEBUG_PHOTON_HOST = "sala";
+
+            if(_transportDropdown.value == 0)
+            {
+                if(!_isHost)
+                {
+                    _addressInput.text = DEBUG_IP_HOST;
+                }
+            }
+            else
+            {
+                _addressInput.text = DEBUG_PHOTON_HOST;
+            }
+        #endif
     }
 
     // Button Actions

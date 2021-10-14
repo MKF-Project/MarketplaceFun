@@ -221,6 +221,16 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
+        if(!_playerScript.CanInteract)
+        {
+            if(_currentLookingObject != null)
+            {
+                _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
+                _currentLookingObject = null;
+            }
+            return;
+        }
+
         // Wait before interaction
         if(Time.time - _lastInteractionTime < InteractCooldown)
         {

@@ -484,7 +484,7 @@ MonoBehaviour:
   InteractionDistance: 2
   InteractCooldown: 0.5
   MovingTurnSpeed: 100
-  InPlaceTurnSpeed: 0
+  InPlaceTurnSpeed: 50
   Deadzone: 0.5
   MaximumViewAngle: 60
 --- !u!114 &4332930791717381991

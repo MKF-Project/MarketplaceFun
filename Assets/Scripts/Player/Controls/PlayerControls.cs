@@ -144,6 +144,15 @@ public abstract class PlayerControls : NetworkBehaviour
 
     public void switchControlScheme()
     {
+        // Delay this by one frame to prevent input events from
+        // one control scheme to bleed over to the other in the same frame
+        StartCoroutine(nameof(switchControlSchemeCoroutine));
+    }
+
+    private IEnumerator switchControlSchemeCoroutine()
+    {
+        yield return Utils.EndOfFrameWait;
+
         // Store currentDirection from the current active control script
         // so we can keep our momentum when we switch scripts
         var transferDirection = _currentDirection;

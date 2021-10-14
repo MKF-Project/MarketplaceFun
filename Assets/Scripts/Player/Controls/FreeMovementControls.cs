@@ -57,10 +57,12 @@ public class FreeMovementControls : PlayerControls
 
     public override void Jump()
     {
-        if(IsOwner)
+        if(!(isActiveAndEnabled && IsOwner))
         {
-            _shouldJump = true;
+            return;
         }
+
+        _shouldJump = true;
     }
 
     private void updateMovement()

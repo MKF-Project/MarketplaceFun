@@ -13,9 +13,8 @@ public class ScoreController : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-
         Instance = this;
-        IAmWinner = false; 
+        IAmWinner = false;
     }
 
  

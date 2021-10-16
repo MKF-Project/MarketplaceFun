@@ -5,9 +5,13 @@ using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
 
+[SelectionBase]
 public class Item : NetworkBehaviour
 {
     public const int NO_ITEMTYPE_CODE = int.MinValue;
+
+    // All items MUST have a gameObject named "Visuals" for it to be considered valid
+    public const string ITEM_VISUALS_NAME = "Visuals";
 
     private NetworkObject _networkObject;
 
@@ -59,8 +63,7 @@ public class Item : NetworkBehaviour
 
     public GameObject GetItemVisuals()
     {
-        // TODO update this function when we have better structured visuals
-        return transform.Find("Cube")?.gameObject;
+        return transform.Find(ITEM_VISUALS_NAME)?.gameObject;
     }
 
     public void OnCollisionEnter(Collision other)

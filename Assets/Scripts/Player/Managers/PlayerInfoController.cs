@@ -44,4 +44,11 @@ public class PlayerInfoController : MonoBehaviour
         colors.Push(PlayerInfos[playerId].Color);
         PlayerInfos.Remove(playerId);
     }
+
+    public void Reset()
+    {
+        PlayerInfos = new Dictionary<ulong, PlayerData>();
+        
+        InitializeColors();
+    }
 }

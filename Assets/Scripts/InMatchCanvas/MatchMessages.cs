@@ -17,11 +17,21 @@ public class MatchMessages : MonoBehaviour
 
     public void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        Instance = this;
-        _messageText = MessageText.GetComponent<Text>();
-        _messageOnDisplay = false;
-        _waitToDisappear = .3f;
+        if (MatchMessages.Instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            Instance = this;
+            _messageText = MessageText.GetComponent<Text>();
+            _messageOnDisplay = false;
+            _waitToDisappear = .3f;
+        }
+        else
+        {
+            DestroyImmediate(gameObject);
+        }
+
+
+
     }
 
     public void ShowMessage()

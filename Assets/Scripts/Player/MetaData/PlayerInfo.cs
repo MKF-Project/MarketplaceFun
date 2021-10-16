@@ -26,6 +26,11 @@ public class PlayerInfo : NetworkBehaviour
         }
     }
 
+    public void OnDestroy()
+    {
+        PlayerInfoController.Instance.Reset();
+    }
+
     [ServerRpc]
     public void SendInfo_ServerRpc(String nickname)
     {

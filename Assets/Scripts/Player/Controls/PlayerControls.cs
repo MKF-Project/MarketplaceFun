@@ -73,6 +73,25 @@ public abstract class PlayerControls : NetworkBehaviour
     public bool isCollidingWithWall { get; protected set; } = false;
     public bool isGrounded { get; protected set; } = false;
 
+    // Gravity related
+    private Vector3 _recentGlobalGravity;
+    private Vector3 _playerGravityVelocity;
+
+    private float _gravityMagnitude = Physics.gravity.magnitude;
+    public float PlayerGravity {
+        get => _gravityMagnitude;
+        set
+        {
+            _gravityMagnitude = value;
+            _recentGlobalGravity = Physics.gravity;
+            _playerGravityVelocity = Physics.gravity.normalized * value;
+
+            #if UNITY_EDITOR
+                _gravity = value;
+            #endif
+        }
+    }
+
     // Interaction related
     public bool HasInteractedThisFrame { get; protected set; } = false;
     private bool _updateLastInteraction = false;
@@ -83,6 +102,10 @@ public abstract class PlayerControls : NetworkBehaviour
     [Range(0, 90)]
     public float MaximumGroundSlope;
     public LayerMask groundMask;
+
+    [Header("Gravity")]
+    [SerializeField]
+    private float _gravity = Physics.gravity.magnitude;
 
     [Header("Movement")]
     public float MoveSpeed;
@@ -129,6 +152,9 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _rigidBody.maxAngularVelocity = MAX_ANGULAR_VELOCITY;
         _rigidBody.sleepThreshold = 0; // Since this is the player object, we never sleep it's rigidbody
+        _rigidBody.useGravity = false;
+
+        PlayerGravity = _gravity;
 
         _currentSpeed = MoveSpeed;
 
@@ -281,6 +307,28 @@ public abstract class PlayerControls : NetworkBehaviour
             _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
             _currentLookingObject = null;
         }
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        // Update Gravity if it was changed in inspector
+        #if UNITY_EDITOR
+            if(_gravity != PlayerGravity)
+            {
+                PlayerGravity = _gravity;
+            }
+        #endif
+
+        if(Physics.gravity != _recentGlobalGravity)
+        {
+            _recentGlobalGravity = Physics.gravity;
+
+            // use vector normal from global gravity, but change strength magnitude
+            _playerGravityVelocity = Physics.gravity.normalized * PlayerGravity;
+        }
+
+        // Apply custom player gravity manually
+        _rigidBody.AddForce(_playerGravityVelocity * _rigidBody.mass, ForceMode.Force);
     }
 
     protected virtual void LateUpdate()

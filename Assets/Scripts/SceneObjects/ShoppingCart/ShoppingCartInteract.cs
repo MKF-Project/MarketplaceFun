@@ -24,7 +24,7 @@ public class ShoppingCartInteract : NetworkBehaviour
     private Transform _cartPlayerPosition;
 
     [SerializeField]
-    private PhysicMaterial _playerBodyMaterial;
+    private PhysicMaterial _playerBodyMaterial = null;
 
     private List<Collider> _cartColliders;
     private List<PhysicMaterial> _cartMaterials;

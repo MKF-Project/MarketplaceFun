@@ -32,8 +32,10 @@ public class CartControls : PlayerControls
         }
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if(IsOwner)
         {
             updateMovement();

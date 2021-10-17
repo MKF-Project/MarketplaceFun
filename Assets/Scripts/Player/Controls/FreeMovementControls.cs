@@ -25,8 +25,10 @@ public class FreeMovementControls : PlayerControls
         }
     }
 
-    protected void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if(IsOwner)
         {
             updatePlayerRotation();

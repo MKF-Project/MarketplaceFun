@@ -153,8 +153,6 @@ public class ShoppingCartItem : NetworkBehaviour
             generatedItem.transform.localPosition = Vector3.zero;
             generatedItem.transform.localRotation = Quaternion.identity;
             generatedItem.transform.localScale = itemVisuals.transform.localScale;
-
-            generatedItem.GetComponent<ItemVisuals>()?.EnableHandVisuals();
         }
 
         _nextIndex = (_nextIndex + 1) % _itemPositions.Count;

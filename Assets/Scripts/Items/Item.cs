@@ -5,11 +5,14 @@ using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
 
+[SelectionBase]
 public class Item : NetworkBehaviour
 {
     public const int NO_ITEMTYPE_CODE = int.MinValue;
 
     private NetworkObject _networkObject;
+
+    private ItemVisuals _itemVisuals = null;
 
     [HideInInspector]
     public bool IsOnThrow;
@@ -17,12 +20,25 @@ public class Item : NetworkBehaviour
     [HideInInspector]
     public int ItemTypeCode;
 
-
     public int EffectType;
 
+    public ItemVisuals ItemVisuals
+    {
+        get
+        {
+            if(_itemVisuals == null)
+            {
+                _itemVisuals = transform.Find(ItemVisuals.ITEM_VISUALS_NAME)?.GetComponent<ItemVisuals>();
+            }
+
+            return _itemVisuals;
+        }
+    }
+
     public TakeEffect takeEffect;
-    //Object needs to be registered not before NetworkStart, like Awake
-    //Because before this the object doesn't have an networkId
+
+    // Object needs to be registered not before NetworkStart, like Awake
+    // Because before this the object doesn't have an networkId
     public override void NetworkStart()
     {
         IsOnThrow = false;
@@ -55,12 +71,6 @@ public class Item : NetworkBehaviour
                 TriggerDestroyItem();
             }
         }
-    }
-
-    public GameObject GetItemVisuals()
-    {
-        // TODO update this function when we have better structured visuals
-        return transform.Find("Cube")?.gameObject;
     }
 
     public void OnCollisionEnter(Collision other)

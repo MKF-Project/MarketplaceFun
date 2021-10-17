@@ -96,16 +96,18 @@ public class Player : NetworkBehaviour
         if(newItemType != Item.NO_ITEMTYPE_CODE)
         {
             var itemPrefab = ItemTypeList.ItemList[newItemType].ItemPrefab;
-            var meshObject = itemPrefab?.GetComponent<Item>()?.GetItemVisuals();
+            var itemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
 
-            if(meshObject != null)
+            if(itemVisuals != null)
             {
                 // Place visual item on player's hand
-                var generatedItem = Instantiate(meshObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
+                var generatedItem = Instantiate(itemVisuals.gameObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
 
                 generatedItem.transform.localPosition = Vector3.zero;
                 generatedItem.transform.localRotation = Quaternion.identity;
-                generatedItem.transform.localScale = meshObject.transform.localScale;
+                generatedItem.transform.localScale = itemVisuals.transform.localScale;
+
+                generatedItem.GetComponent<ItemVisuals>()?.EnableHandVisuals();
 
                 HeldItem = generatedItem;
 
@@ -148,8 +150,11 @@ public class Player : NetworkBehaviour
                     return;
                 }
 
-                generatedItem.transform.position = _heldItemPosition.position;
+                var itemVisuals = _heldItemPosition.GetComponentInChildren<ItemVisuals>();
+
+                generatedItem.transform.position = _heldItemPosition.position + itemVisuals.handPositionOffset;
                 generatedItem.transform.rotation = _heldItemPosition.rotation;
+                generatedItem.transform.eulerAngles += itemVisuals.handRotationOffset;
 
                 HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
 

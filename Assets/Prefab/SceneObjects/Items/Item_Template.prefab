@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3268418967978995231}
+  - component: {fileID: 7191565718758277020}
   m_Layer: 0
   m_Name: Visuals
   m_TagString: Untagged
@@ -31,6 +32,20 @@ Transform:
   m_Father: {fileID: 1334874479549508299}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7191565718758277020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3784972572908477542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc0ed5322d85204c9eecc93c5a3fb7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handPositionOffset: {x: -0.083, y: -0.223, z: 0}
+  handRotationOffset: {x: 0, y: 0, z: -11.427}
 --- !u!1 &4239724707313795369
 GameObject:
   m_ObjectHideFlags: 0

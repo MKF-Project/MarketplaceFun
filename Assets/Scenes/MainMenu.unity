@@ -3069,7 +3069,7 @@ MonoBehaviour:
   - Code: 5
     Name: Gray
     Image: {fileID: 390784358483433145, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 600724418687985999, guid: 954a8abac7c87a04084db3b7d33a713f,
+    ItemPrefab: {fileID: 4685596940446405792, guid: 2e519cb580392c348929e904d662cbd2,
       type: 3}
   - Code: 6
     Name: Purple
@@ -5130,6 +5130,9 @@ MonoBehaviour:
         type: 3}
       PlayerPrefab: 1
     - Prefab: {fileID: 1467091572927595630, guid: 79ba415021884264ea9d5cac04ab3676,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 4685596940446405792, guid: 2e519cb580392c348929e904d662cbd2,
         type: 3}
       PlayerPrefab: 0
     - Prefab: {fileID: 7149332572805401716, guid: 41da687aebcb3bd4aa27ecafbe13d337,

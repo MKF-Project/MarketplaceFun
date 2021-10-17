@@ -150,8 +150,11 @@ public class Player : NetworkBehaviour
                     return;
                 }
 
-                generatedItem.transform.position = _heldItemPosition.position;
+                var itemVisuals = _heldItemPosition.GetComponentInChildren<ItemVisuals>();
+
+                generatedItem.transform.position = _heldItemPosition.position + itemVisuals.handPositionOffset;
                 generatedItem.transform.rotation = _heldItemPosition.rotation;
+                generatedItem.transform.eulerAngles += itemVisuals.handRotationOffset;
 
                 HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
 

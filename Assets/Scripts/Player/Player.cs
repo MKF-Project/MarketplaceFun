@@ -18,7 +18,7 @@ public class Player : NetworkBehaviour
     private Transform _heldItemPosition;
 
     [HideInInspector]
-    public NetworkVariableInt HeldItemType = new NetworkVariableInt(
+    public NetworkVariableInt HeldItemType { get; private set; } = new NetworkVariableInt(
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
@@ -27,11 +27,20 @@ public class Player : NetworkBehaviour
         Item.NO_ITEMTYPE_CODE
     );
 
+    private ItemGenerator _heldItemGenerator = null;
     [HideInInspector]
-    public ItemGenerator HeldItemGenerator = null;
+    public ItemGenerator HeldItemGenerator
+    {
+        get => _heldItemGenerator;
+        set
+        {
+            _heldItemGenerator = value;
+            HeldItemType.Value = value != null? value.ItemTypeCode : Item.NO_ITEMTYPE_CODE;
+        }
+    }
 
     public GameObject HeldItem { get; private set; } = null;
-    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE;
+    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE && HeldItemGenerator != null;
 
     [HideInInspector]
     public bool IsDrivingCart;
@@ -83,8 +92,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-
-
     private void onHeldItemChange(int previousItemType, int newItemType)
     {
         if(previousItemType != Item.NO_ITEMTYPE_CODE)
@@ -121,14 +128,21 @@ public class Player : NetworkBehaviour
             // should therefore update others that it is holding no item
             else if(IsOwner)
             {
-                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+                HeldItemGenerator = null;
             }
         }
         else
         {
             HeldItem = null;
-            HeldItemGenerator = null;
         }
+    }
+
+    // This method is intended to be used when there's a need to update the
+    // ItemGenerator without modifying HeldItemType, for example when updating
+    // the server-side generator for another player (in case they disconnect)
+    internal void UpdateItemGenerator(ItemGenerator generator)
+    {
+        _heldItemGenerator = generator;
     }
 
     public void ThrowItem(Action<Item> itemAction = null)
@@ -141,7 +155,7 @@ public class Player : NetworkBehaviour
 
     public void DropItem(Action<Item> itemAction = null)
     {
-        if(IsHoldingItem && HeldItemGenerator != null)
+        if(IsHoldingItem)
         {
             void positionItem(Item generatedItem)
             {

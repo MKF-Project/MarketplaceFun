@@ -29,6 +29,8 @@ public class ShoppingCartItem : NetworkBehaviour
 
     private float _lastCollision = 0;
 
+    public MeshRenderer WheelsColor;
+
     private void Awake()
     {
         // Items
@@ -168,8 +170,20 @@ public class ShoppingCartItem : NetworkBehaviour
                 return;
             }
 
+            int colorNumber = NetworkManager.ConnectedClients[playerID].PlayerObject.GetComponent<PlayerInfo>().PlayerData.Color;
+            UpdateCartColor(colorNumber);
+            setCartColor_ClientRpc(colorNumber);
+            
             _ownerID.Value = playerID;
         }
+    }
+
+    private void UpdateCartColor(int colorNumber)
+    {
+        Material material = ColorManager.Instance.GetColor(colorNumber);
+        Material[] materials = WheelsColor.materials;
+        materials[0] = material;
+        WheelsColor.materials = materials;
     }
 
     /** ---- RPCs ---- **/
@@ -200,5 +214,11 @@ public class ShoppingCartItem : NetworkBehaviour
         {
             setNextItem(itemTypeCode);
         }
+    }
+
+    [ClientRpc]
+    private void setCartColor_ClientRpc(int colorNumber)
+    {
+        UpdateCartColor(colorNumber);
     }
 }

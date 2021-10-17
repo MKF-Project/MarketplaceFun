@@ -65,7 +65,6 @@ public class ItemGenerator : NetworkBehaviour
         var playerScript = player.GetComponent<Player>();
         if(!playerScript.IsHoldingItem)
         {
-            playerScript.HeldItemType.Value = ItemTypeCode;
             playerScript.HeldItemGenerator = this;
             AssignPlayerItemGenerator_ServerRpc();
         }
@@ -116,7 +115,7 @@ public class ItemGenerator : NetworkBehaviour
         var player = NetworkController.GetPlayerByID(rpcReceiveParams.Receive.SenderClientId);
         if(player != null)
         {
-            player.HeldItemGenerator = this;
+            player.UpdateItemGenerator(this);
         }
     }
 

@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using MLAPI;
 
-public class SpawnController : MonoBehaviour
+public class SpawnController : NetworkBehaviour
 {
     public const string SPAWN_BOUNDING_BOX_NAME = "BoundingBox";
 
+    // Spawn logic
+    public static int PlayerSpawns = 1;
+
+    private int _playersCollected = 0;
+
+    // Collider vars
     public PhysicMaterial BoundingBoxMaterial;
 
     private GameObject _boundingBox;
@@ -31,5 +38,10 @@ public class SpawnController : MonoBehaviour
 
         // Disable editor bounding box rendering
         _boundingBoxRenderer.enabled = false;
+    }
+
+    private void Start()
+    {
+
     }
 }

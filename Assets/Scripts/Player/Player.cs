@@ -203,7 +203,7 @@ public class Player : NetworkBehaviour
             return;
         }
 
-        _rigidbody.position = position;
+        transform.position = position;
 
         if(eulerAngles != default(Vector3))
         {

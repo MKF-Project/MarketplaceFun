@@ -62,6 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c919e968e368e0749b91cda62828ef1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerPrefabCollider: {fileID: 6051285000599007834, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
+    type: 3}
   BoundingBoxMaterial: {fileID: 13400000, guid: d51b84f5876485a4eabd8c8a72abeeae,
     type: 2}
 --- !u!1 &7045816489021740697

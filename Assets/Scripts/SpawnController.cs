@@ -15,12 +15,16 @@ public class SpawnController : NetworkBehaviour
 
     private static SpawnController _levelSpawnInstance = null;
 
+    [SerializeField]
+    private Collider _playerPrefabCollider = null;
+
     // Collider vars
     public PhysicMaterial BoundingBoxMaterial;
 
     private GameObject _boundingBox;
     private MeshFilter _boundingBoxMesh = null;
     private MeshRenderer _boundingBoxRenderer = null;
+    private MeshCollider _generatedCollider;
 
     private void Awake()
     {
@@ -47,9 +51,9 @@ public class SpawnController : NetworkBehaviour
         invertedMesh.triangles = invertedMesh.triangles.Reverse().ToArray();
 
         // Generate dynamic collider from reversed mesh
-        var generatedColiider = _boundingBox.AddComponent<MeshCollider>();
-        generatedColiider.sharedMesh = invertedMesh;
-        generatedColiider.material = BoundingBoxMaterial;
+        _generatedCollider = _boundingBox.AddComponent<MeshCollider>();
+        _generatedCollider.sharedMesh = invertedMesh;
+        _generatedCollider.material = BoundingBoxMaterial;
 
         // Disable editor bounding box rendering
         _boundingBoxRenderer.enabled = false;
@@ -63,18 +67,29 @@ public class SpawnController : NetworkBehaviour
         }
     }
 
-    private void Start()
+    public override void NetworkStart()
     {
         // Since this procedure will be run when the level loads,
         // we can be assured that a new player has finished loading their local
         // version of the level
         if(IsClient)
         {
-            // TODO add randomness to spawn location, keeping it inside bbox
-            NetworkController.SelfPlayer?.Teleport(transform.position);
+            NetworkController.SelfPlayer?.Teleport(RandomPointInSpawnFloor());
 
             PlayerInSpawn_ServerRpc();
         }
+    }
+
+    private Vector3 RandomPointInSpawnFloor()
+    {
+        // We add some padding to the RandomPoint to make sure the Player
+        // won't spawn halfway inside the wall
+        return new Vector3
+        (
+            Random.Range(_generatedCollider.bounds.min.x + _playerPrefabCollider.bounds.extents.x, _generatedCollider.bounds.max.x - _playerPrefabCollider.bounds.extents.x),
+            0,
+            Random.Range(_generatedCollider.bounds.min.z + _playerPrefabCollider.bounds.extents.z, _generatedCollider.bounds.max.z - _playerPrefabCollider.bounds.extents.z)
+        );
     }
 
     /** ----- RPCs ----- **/

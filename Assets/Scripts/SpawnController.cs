@@ -35,7 +35,11 @@ public class SpawnController : NetworkBehaviour
 
     private const int COUNTDOWN_SECONDS = 3;
 
-    private Text _releaseCountdown;
+    [SerializeField]
+    private Text _releaseCountdown = null;
+
+    [SerializeField]
+    private Canvas _releaseCanvas = null;
 
     private static readonly WaitForSeconds OneSecondWait = new WaitForSeconds(1);
     private static readonly WaitForSeconds HoldMessageWait = new WaitForSeconds(COUNTDOWN_MESSAGE_HOLD_SECONDS);
@@ -71,9 +75,6 @@ public class SpawnController : NetworkBehaviour
 
         // Disable editor bounding box rendering
         _boundingBoxRenderer.enabled = false;
-
-        /* Release */
-        transform.Find(RELEASE_COUNTDOWN_NAME).TryGetComponent(out _releaseCountdown);
     }
 
     private void OnDestroy()
@@ -111,9 +112,12 @@ public class SpawnController : NetworkBehaviour
 
     private IEnumerator PerformCountdown(int countdownSeconds)
     {
-        _releaseCountdown.gameObject.SetActive(true);
+        yield return Utils.ShortWait;
 
-        for(int i = 1; i <= COUNTDOWN_SECONDS; i++)
+        // Enable the Spawn canvas for the duration of the countdown
+        _releaseCanvas.gameObject.SetActive(true);
+
+        for(int i = COUNTDOWN_SECONDS; i > 0; i--)
         {
             _releaseCountdown.text = i.ToString();
             yield return OneSecondWait;
@@ -122,7 +126,9 @@ public class SpawnController : NetworkBehaviour
         _releaseCountdown.text = RELEASE_COUNTDOWN_MESSAGE;
         yield return HoldMessageWait;
 
-        _releaseCountdown.gameObject.SetActive(false);
+        // Disable the canvas again
+        _releaseCanvas.gameObject.SetActive(false);
+
         // TODO disable collider
         // TODO Fire spawn release event
     }

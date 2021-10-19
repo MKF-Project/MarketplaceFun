@@ -5146,6 +5146,9 @@ MonoBehaviour:
     - Prefab: {fileID: 776817132323081258, guid: 5af4e74264f89ad4f97f2d00a011f9f4,
         type: 3}
       PlayerPrefab: 0
+    - Prefab: {fileID: 1648491957000830187, guid: e56dfd7348833b6468290113f3340708,
+        type: 3}
+      PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
     CreatePlayerPrefab: 1
@@ -8530,7 +8533,7 @@ PrefabInstance:
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
       propertyPath: MatchScene
-      value: ItemListTestScene
+      value: _Beta
       objectReference: {fileID: 0}
     - target: {fileID: 3806232346622104752, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}

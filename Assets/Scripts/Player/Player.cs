@@ -14,6 +14,8 @@ public class Player : NetworkBehaviour
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
 
+    private Rigidbody _rigidbody = null;
+
     // Held Item Vars
     private Transform _heldItemPosition;
 
@@ -60,19 +62,25 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         _throwScript = GetComponent<Throw>();
+        _rigidbody = GetComponent<Rigidbody>();
         _heldItemPosition = gameObject.transform.Find(HELD_POSITION_NAME);
 
-
+        #if UNITY_EDITOR
             if(_throwScript == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Throw Script");
+            }
+
+            if(_rigidbody == null)
+            {
+                Debug.LogError($"[{gameObject.name}]: Could not find Player Rigidbody");
             }
 
             if(_heldItemPosition == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Held Item Position");
             }
-
+        #endif
 
         IsDrivingCart = false;
         IsListComplete = false;
@@ -188,4 +196,19 @@ public class Player : NetworkBehaviour
         IsListComplete = true;
     }
 
+    public void Teleport(Vector3 position, Vector3 eulerAngles = default)
+    {
+        if(!IsOwner)
+        {
+            return;
+        }
+
+        transform.position = position;
+
+        if(eulerAngles != default(Vector3))
+        {
+            var newRotation = eulerAngles + _rigidbody.rotation.eulerAngles;
+            _rigidbody.rotation = Quaternion.Euler(newRotation);
+        }
+    }
 }

@@ -12,6 +12,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item_Pao
       objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handPositionOffset.x
+      value: -0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handPositionOffset.y
+      value: -0.153
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handRotationOffset.x
+      value: -9.904
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handRotationOffset.y
+      value: -165.526
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handRotationOffset.z
+      value: 23.612
+      objectReference: {fileID: 0}
     - target: {fileID: 4686362902577439532, guid: ba86db1d1bc82d1489363bb7553b69df,
         type: 3}
       propertyPath: m_LocalPosition.x

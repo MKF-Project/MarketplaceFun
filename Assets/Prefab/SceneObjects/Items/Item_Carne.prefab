@@ -12,6 +12,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item_Carne
       objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handPositionOffset.x
+      value: -0.027
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handPositionOffset.y
+      value: -0.028
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handPositionOffset.z
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handRotationOffset.x
+      value: -0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handRotationOffset.y
+      value: 6.664001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477537113250772603, guid: ba86db1d1bc82d1489363bb7553b69df,
+        type: 3}
+      propertyPath: handRotationOffset.z
+      value: 127.984
+      objectReference: {fileID: 0}
     - target: {fileID: 4686362902577439532, guid: ba86db1d1bc82d1489363bb7553b69df,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -8,6 +8,10 @@ using MLAPI.Messaging;
 
 public class SpawnController : NetworkBehaviour
 {
+    // Spawn Events
+    public delegate void OnSpawnOpenedDelegate();
+    public static event OnSpawnOpenedDelegate OnSpawnOpened;
+
     // Spawn logic
     public static int PlayerSpawnsRequired = 1;
     private HashSet<ulong> _playerInSpawn = new HashSet<ulong>();
@@ -124,13 +128,14 @@ public class SpawnController : NetworkBehaviour
         }
 
         _releaseCountdown.text = RELEASE_COUNTDOWN_MESSAGE;
-        yield return HoldMessageWait;
+
+        // Open up the spawn together with the "Go!" message
+        _generatedCollider.enabled = false;
+        OnSpawnOpened?.Invoke();
 
         // Disable the canvas again
+        yield return HoldMessageWait;
         _releaseCanvas.gameObject.SetActive(false);
-
-        // TODO disable collider
-        // TODO Fire spawn release event
     }
 
     /** ----- RPCs ----- **/

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8148567355363609406}
   - component: {fileID: 1961818565890406787}
   - component: {fileID: 2726642635145719269}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: SpawnArea
   m_TagString: Untagged
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
@@ -127,7 +127,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -32768
   m_TargetDisplay: 0
 --- !u!114 &5299020303683390153
 MonoBehaviour:
@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 3074201083431291641}
   - component: {fileID: 2681067401576367481}
   - component: {fileID: 3285227333294351187}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: BoundingBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

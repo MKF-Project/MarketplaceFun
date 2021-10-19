@@ -146,15 +146,15 @@ public class ShoppingCartItem : NetworkBehaviour
 
         // Create new mesh
         var itemPrefab = ItemTypeList.ItemList[itemTypeCode].ItemPrefab;
-        var meshObject = itemPrefab?.GetComponent<Item>()?.GetItemVisuals();
+        var itemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
 
-        if(meshObject != null)
+        if(itemVisuals != null)
         {
-            GameObject generatedItem = Instantiate(meshObject, Vector3.zero, Quaternion.identity, _itemPositions[_nextIndex].transform);
+            var generatedItem = Instantiate(itemVisuals.gameObject, Vector3.zero, Quaternion.identity, _itemPositions[_nextIndex].transform);
 
             generatedItem.transform.localPosition = Vector3.zero;
             generatedItem.transform.localRotation = Quaternion.identity;
-            generatedItem.transform.localScale = meshObject.transform.localScale;
+            generatedItem.transform.localScale = itemVisuals.transform.localScale;
         }
 
         _nextIndex = (_nextIndex + 1) % _itemPositions.Count;

@@ -25,8 +25,10 @@ public class FreeMovementControls : PlayerControls
         }
     }
 
-    protected void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if(IsOwner)
         {
             updatePlayerRotation();
@@ -57,10 +59,12 @@ public class FreeMovementControls : PlayerControls
 
     public override void Jump()
     {
-        if(IsOwner)
+        if(!(isActiveAndEnabled && IsOwner))
         {
-            _shouldJump = true;
+            return;
         }
+
+        _shouldJump = true;
     }
 
     private void updateMovement()

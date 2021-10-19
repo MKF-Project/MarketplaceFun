@@ -24,7 +24,7 @@ public class ShoppingCartInteract : NetworkBehaviour
     private Transform _cartPlayerPosition;
 
     [SerializeField]
-    private PhysicMaterial _playerBodyMaterial;
+    private PhysicMaterial _playerBodyMaterial = null;
 
     private List<Collider> _cartColliders;
     private List<PhysicMaterial> _cartMaterials;
@@ -131,6 +131,8 @@ public class ShoppingCartInteract : NetworkBehaviour
             return;
         }
 
+        player.IsDrivingCart = true;
+
         // We disable this cart's Network Transform and Rigidbody
         // because while the cart is contained in the player object
         // we let the player prefab handle network Positioning and Physics
@@ -165,7 +167,9 @@ public class ShoppingCartInteract : NetworkBehaviour
 
     private void clientDetachCart(Player player)
     {
-        // Decoupple cart from player
+        player.IsDrivingCart = false;
+
+        // Decouple cart from player
         transform.SetParent(null);
         player.OnBeforeDestroy -= clientDetachCart;
 
@@ -173,7 +177,7 @@ public class ShoppingCartInteract : NetworkBehaviour
         // configurations as the one that was previously removed
         _rigidbody = _rigidBodyTemplate.ImportFromTemplate(gameObject);
 
-        // Reaalow cart interaction
+        // Realow cart interaction
         _interactScript.enabled = true;
 
         // Reenable network components

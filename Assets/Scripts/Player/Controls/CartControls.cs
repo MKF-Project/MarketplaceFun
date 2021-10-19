@@ -32,8 +32,10 @@ public class CartControls : PlayerControls
         }
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if(IsOwner)
         {
             updateMovement();
@@ -48,12 +50,18 @@ public class CartControls : PlayerControls
         _currentLookAngle = Vector2.zero;
     }
 
-    public override void Jump()
+    public override void Interact()
     {
-        if(IsOwner)
+        // Since we can't interact while in cart mode anyways,
+        // we don't need to run the base interact action
+        // base.Interact();
+
+        if(!(isActiveAndEnabled && IsOwner))
         {
-           _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
+            return;
         }
+
+        _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
     }
 
     private void updateMovement()

@@ -337,7 +337,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
@@ -453,15 +453,16 @@ MonoBehaviour:
   MaximumGroundSlope: 45
   groundMask:
     serializedVersion: 2
-    m_Bits: 523265
-  MoveSpeed: 4
-  WalkSpeed: 2
+    m_Bits: 33554433
+  _gravity: 30
+  MoveSpeed: 3.5
+  WalkSpeed: 1.7
   Sensitivity: 2.4
   InteractionDistance: 1.2
   InteractCooldown: 0.5
-  FallSpeed: 2.75
-  JumpHeight: 1.2
-  MaximumViewAngle: 90
+  FallSpeed: 3
+  JumpHeight: 1.55
+  MaximumViewAngle: 73
 --- !u!114 &7903483743102282125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,17 +475,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ac7f4f806ca604ea5849cdf721d8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaximumGroundSlope: 45
+  MaximumGroundSlope: 0
   groundMask:
     serializedVersion: 2
-    m_Bits: 65537
+    m_Bits: 33554433
+  _gravity: 30
   MoveSpeed: 3.5
   WalkSpeed: 2
   Sensitivity: 1
   InteractionDistance: 2
   InteractCooldown: 0.5
   MovingTurnSpeed: 100
-  InPlaceTurnSpeed: 40
+  InPlaceTurnSpeed: 50
   Deadzone: 0.5
   MaximumViewAngle: 60
 --- !u!114 &4332930791717381991
@@ -511,8 +513,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c897505851021e439498b7e0f594bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Strength: 15
-  Distance: 20
+  Strength: 30
+  Distance: 50
 --- !u!114 &-4058306511684965661
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3043,54 +3043,54 @@ MonoBehaviour:
     Name: Red
     Image: {fileID: -1353976113170245158, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
       type: 3}
-    ItemPrefab: {fileID: 6295935029257739102, guid: 843fa0e0482c40f40b0e81fcd468cf23,
+    ItemPrefab: {fileID: 2530138506032579851, guid: a7bf590008fcd6046b1fe812c3516994,
       type: 3}
   - Code: 1
     Name: Green
     Image: {fileID: -1978600337988851930, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
       type: 3}
-    ItemPrefab: {fileID: 8622721280650574499, guid: 3e61d4f9796435d4d81d235a622f633d,
+    ItemPrefab: {fileID: 6016142309077300777, guid: b7f518d56fc3ac946b538fdfa91533f0,
       type: 3}
   - Code: 2
     Name: Blue
     Image: {fileID: -142815462172765816, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 7149332572805401716, guid: 41da687aebcb3bd4aa27ecafbe13d337,
+    ItemPrefab: {fileID: 6709801379341888859, guid: 906d388d2954f874e831c67907969fbb,
       type: 3}
   - Code: 3
     Name: Yellow
     Image: {fileID: 4790776664046459425, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 3133438055858914724, guid: 2fb00fe7abbc180448c4db73f644b1e2,
+    ItemPrefab: {fileID: 1000398753489548671, guid: 2565a035be19fef4e86b55611d2ff485,
       type: 3}
   - Code: 4
     Name: Orange
     Image: {fileID: 5536361130491220658, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 2027732251567097906, guid: 1f1754f47dea5dd41a4150a03d08ea4d,
+    ItemPrefab: {fileID: 2239752140182076839, guid: 5bda62f8a1e08734e8c8fe49985ec5d4,
       type: 3}
   - Code: 5
     Name: Gray
     Image: {fileID: 390784358483433145, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 4685596940446405792, guid: 2e519cb580392c348929e904d662cbd2,
+    ItemPrefab: {fileID: 734230514809102980, guid: 4cd376ff1b038d94fa9ce9c09ceb5280,
       type: 3}
   - Code: 6
     Name: Purple
     Image: {fileID: -8374686303325181804, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
       type: 3}
-    ItemPrefab: {fileID: 4516576002741576207, guid: a711a27dd2072ac46b89990d06bf991d,
+    ItemPrefab: {fileID: 734230514809102980, guid: 4cd376ff1b038d94fa9ce9c09ceb5280,
       type: 3}
   - Code: 7
     Name: Pink
     Image: {fileID: 7309923959803071797, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 3849004198024000095, guid: bb4af0c08644d054a9eadf0ce7b637a5,
+    ItemPrefab: {fileID: 3193296965598108702, guid: aa6d6e51a93555a41b06573bea3355bb,
       type: 3}
   - Code: 8
     Name: Brown
     Image: {fileID: 6246745314625155968, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 4678254042487678087, guid: 9c7ea4a23e9bce948bbbfc39e326772d,
+    ItemPrefab: {fileID: 2040231539732015775, guid: f00d2e8cf1e948649bf9c7d43768368c,
       type: 3}
   - Code: 9
     Name: LightBlue
     Image: {fileID: 8611265230378137407, guid: 2df3661ecdfaa2249a3529fc6ea4766d, type: 3}
-    ItemPrefab: {fileID: 8522453284705817028, guid: 1c72fe2be49442f4aa3c7b6e9ea94492,
+    ItemPrefab: {fileID: 1000398753489548671, guid: 2565a035be19fef4e86b55611d2ff485,
       type: 3}
 --- !u!4 &700527693
 Transform:

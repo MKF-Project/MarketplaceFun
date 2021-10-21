@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -2998328256164618858}
   - component: {fileID: 1431928485063888564}
   m_Layer: 0
-  m_Name: Shelf
+  m_Name: ShelfOld
   m_TagString: ItemGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,8 +111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkInstanceId: 0
-  PrefabHash: 784746889997364491
-  PrefabHashGenerator: Shelf
+  PrefabHash: 2517552694598987878
+  PrefabHashGenerator: ShelfOld
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
 --- !u!65 &1431928485063888564

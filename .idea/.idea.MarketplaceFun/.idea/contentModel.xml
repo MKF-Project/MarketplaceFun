@@ -7,7 +7,7 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
-          <e p="Extensions.cs" t="Include" />
+          <e p="CameraScript.cs" t="Include" />
           <e p="InMatchCanvas" t="Include">
             <e p="AimCanvas.cs" t="Include" />
             <e p="MatchMessages.cs" t="Include" />
@@ -20,8 +20,13 @@
             <e p="ItemType.cs" t="Include" />
             <e p="ItemTypeList.cs" t="Include" />
           </e>
-          <e p="MatchManager.cs" t="Include" />
+          <e p="Managers" t="Include">
+            <e p="ColorManager.cs" t="Include" />
+          </e>
           <e p="Menus" t="Include">
+            <e p="Auxiliary" t="Include">
+              <e p="LobbyPositionController.cs" t="Include" />
+            </e>
             <e p="ConnectionMenu.cs" t="Include" />
             <e p="DisconnectMenu.cs" t="Include" />
             <e p="ExitMenu.cs" t="Include" />
@@ -31,18 +36,31 @@
             <e p="MenuManager.cs" t="Include" />
           </e>
           <e p="Network" t="Include">
+            <e p="NetRigidbody.cs" t="Include" />
             <e p="NetworkController.cs" t="Include" />
+            <e p="NetworkExtensions.cs" t="Include" />
             <e p="NetworkItemManager.cs" t="Include" />
+            <e p="NetworkObjects.cs" t="Include" />
           </e>
-          <e p="ObjectsManager.cs" t="Include" />
           <e p="Player" t="Include">
+            <e p="Actions" t="Include">
+              <e p="TakeEffect.cs" t="Include" />
+            </e>
             <e p="Controls" t="Include">
               <e p="CartControls.cs" t="Include" />
               <e p="FreeMovementControls.cs" t="Include" />
               <e p="PlayerControls.cs" t="Include" />
             </e>
+            <e p="Managers" t="Include">
+              <e p="PlayerInfoController.cs" t="Include" />
+            </e>
+            <e p="MetaData" t="Include">
+              <e p="LobbyPosition.cs" t="Include" />
+              <e p="PlayerData.cs" t="Include" />
+              <e p="PlayerDisplay.cs" t="Include" />
+              <e p="PlayerInfo.cs" t="Include" />
+            </e>
             <e p="Player.cs" t="Include" />
-            <e p="PlayerController.cs" t="Include" />
             <e p="PlayerManager.cs" t="Include" />
             <e p="Put.cs" t="Include" />
             <e p="Throw.cs" t="Include" />
@@ -51,7 +69,16 @@
           <e p="SceneObjects" t="Include">
             <e p="Cashier.cs" t="Include" />
             <e p="Shelf.cs" t="Include" />
+            <e p="ShoppingCart" t="Include">
+              <e p="ShoppingCartInteract.cs" t="Include" />
+              <e p="ShoppingCartItem.cs" t="Include" />
+            </e>
             <e p="Target.cs" t="Include" />
+          </e>
+          <e p="Score" t="Include">
+            <e p="ScoreCanvas.cs" t="Include" />
+            <e p="ScoreController.cs" t="Include" />
+            <e p="ScoreNetwork.cs" t="Include" />
           </e>
           <e p="ShoppingList" t="Include">
             <e p="SerializedShoppingList.cs" t="Include" />
@@ -59,6 +86,7 @@
             <e p="ShoppingListItem.cs" t="Include" />
             <e p="ShoppingListUI.cs" t="Include" />
           </e>
+          <e p="Utils.cs" t="Include" />
         </e>
       </e>
       <e p="MarketplaceFun.sln" t="IncludeFlat" />

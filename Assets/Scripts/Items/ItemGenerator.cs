@@ -13,8 +13,7 @@ public class ItemGenerator : NetworkBehaviour
     public int ItemTypeCode;
 
     private GameObject _itemPrefab;
-    private GameObject _player = null;
-    // private Action<GameObject> _onItemGenerated = null;
+    private Action<Item> _itemAction = null;
     private Interactable _interactScript = null;
 
     private void Awake()
@@ -29,8 +28,8 @@ public class ItemGenerator : NetworkBehaviour
         }
 
         _interactScript.OnLookEnter += showButtonPrompt;
-        _interactScript.OnLookExit += hideButtonPrompt;
-        _interactScript.OnInteract += generateItem;
+        _interactScript.OnLookExit  += hideButtonPrompt;
+        _interactScript.OnInteract  += giveItemToPlayer;
     }
 
     private void OnDestroy()
@@ -41,19 +40,15 @@ public class ItemGenerator : NetworkBehaviour
         }
 
         _interactScript.OnLookEnter -= showButtonPrompt;
-        _interactScript.OnLookExit -= hideButtonPrompt;
-        _interactScript.OnInteract -= generateItem;
+        _interactScript.OnLookExit  -= hideButtonPrompt;
+        _interactScript.OnInteract  -= giveItemToPlayer;
     }
 
     private void showButtonPrompt(GameObject player)
     {
-        #if UNITY_EDITOR
-            Debug.Log($"[{gameObject.name}]: Showing button prompt");
-        #endif
-
-        // Show UI if not holding item
-        var objectScript = player.GetComponent<Player>();
-        if(objectScript != null && !objectScript.IsHoldingItem)
+        // Show UI if not holding item or driving a shopping cart
+        var playerScript = player.GetComponent<Player>();
+        if(playerScript != null && !playerScript.IsHoldingItem)
         {
             _interactScript.InteractUI.SetActive(true);
         }
@@ -61,58 +56,87 @@ public class ItemGenerator : NetworkBehaviour
 
     private void hideButtonPrompt(GameObject player)
     {
-        #if UNITY_EDITOR
-            Debug.Log($"[{gameObject.name}]: Hiding button prompt");
-        #endif
-
         // Hide button prompt
         _interactScript.InteractUI.SetActive(false);
     }
 
-    private void generateItem(GameObject player)
+    private void giveItemToPlayer(GameObject player)
+    {
+        var playerScript = player.GetComponent<Player>();
+        if(!playerScript.IsHoldingItem)
+        {
+            playerScript.HeldItemGenerator = this;
+            AssignPlayerItemGenerator_ServerRpc();
+        }
+    }
+
+
+    public void GenerateItem(Action<Item> itemAction = null)
     {
         #if UNITY_EDITOR
             Debug.Log($"[{gameObject.name}]: Trigger generate item");
         #endif
 
-        _player = player;
+        _itemAction = itemAction;
         GenerateItem_ServerRpc();
+    }
+
+    // This one is intended to be used when a player disconnects while holding an item
+    // The item should be created server-side after the player disconnects
+    public void GenerateOwnerlessItem(Vector3 location, Quaternion rotation)
+    {
+        if(!IsServer)
+        {
+            return;
+        }
+
+        #if UNITY_EDITOR
+            Debug.Log($"[{gameObject.name}]: Trigger generate NO OWNER item");
+        #endif
+
+        SpawnItemWithOwnership(NetworkController.ServerID, location, rotation);
+    }
+
+    private NetworkObject SpawnItemWithOwnership(ulong ownerID, Vector3 location, Quaternion rotation)
+    {
+        var generatedItem = Instantiate(_itemPrefab, location, rotation);
+        var item = generatedItem.GetComponent<Item>();
+        item.ItemTypeCode = ItemTypeCode;
+
+        var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
+        itemNetworkObject.SpawnWithOwnership(ownerID, destroyWithScene: true);
+
+        return itemNetworkObject;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void AssignPlayerItemGenerator_ServerRpc(ServerRpcParams rpcReceiveParams = default)
+    {
+        var player = NetworkController.GetPlayerByID(rpcReceiveParams.Receive.SenderClientId);
+        if(player != null)
+        {
+            player.UpdateItemGenerator(this);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void GenerateItem_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
-        GameObject generatedItem = Instantiate(_itemPrefab, Vector3.zero, Quaternion.identity);
-
-        var item = generatedItem.GetComponent<Item>();
-        item.ItemTypeCode = ItemTypeCode;
-
-        var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
-        itemNetworkObject.SpawnWithOwnership(rpcReceiveParams.Receive.SenderClientId, destroyWithScene: true);
-
-        var clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new ulong[] {rpcReceiveParams.Receive.SenderClientId}
-            }
-        };
-
-        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, clientRpcParams);
+        var itemNetworkObject = SpawnItemWithOwnership(rpcReceiveParams.Receive.SenderClientId, Vector3.zero, Quaternion.identity);
+        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, rpcReceiveParams.ReturnRpcToSender());
     }
-
 
     [ClientRpc]
     private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, int itemTypeCode, ClientRpcParams clientRpcParams = default)
     {
         GameObject itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
 
-        if (itemGenerated != null && _player != null)
+        if (itemGenerated != null)
         {
-            itemGenerated.GetComponent<Item>().ItemTypeCode = itemTypeCode;
-            _player.GetComponent<Player>().HoldItem(itemGenerated);
-
-            _interactScript.InteractUI.SetActive(false);
+            var itemScript = itemGenerated.GetComponent<Item>();
+            itemScript.ItemTypeCode = itemTypeCode;
+            _itemAction?.Invoke(itemScript);
+            _itemAction = null;
         }
     }
 

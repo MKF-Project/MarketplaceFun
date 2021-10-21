@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Connection;
 using MLAPI.Transports;
 using MLAPI.Transports.UNET;
 using MLAPI.Transports.PhotonRealtime;
@@ -32,6 +34,7 @@ public class NetworkController : MonoBehaviour
     // Static
     private static NetworkController _instance = null;
 
+    internal const ulong NO_CLIENT_ID = ulong.MaxValue;
     private const ushort _port = 53658;
 
     private NetworkManager _netManager;
@@ -86,9 +89,21 @@ public class NetworkController : MonoBehaviour
         }
     }
 
+    private Dictionary<ulong, Player> _localPlayers = new Dictionary<ulong, Player>();
+
+    public static bool IsServer => _instance._netManager.IsServer;
+    public static bool IsClient => _instance._netManager.IsClient;
+    public static bool IsHost   => _instance._netManager.IsHost;
+
     private void Awake()
     {
-        _instance = _instance ?? this;
+        if(_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
 
         _netManager = GetComponent<NetworkManager>();
         _ipTransport = GetComponent<UNetTransport>();
@@ -114,15 +129,23 @@ public class NetworkController : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Disconnect from Events
-        _netManager.OnClientConnectedCallback -= clientConnectEvent;
-        _netManager.OnClientDisconnectCallback -= clientDisconnectEvent;
+        // Clear instance
+        if(_instance == this)
+        {
+            _localPlayers.Clear();
 
-        ConnectionMenu.OnGoToLobby -= startLobbyConnection;
+            // Disconnect from Events
+            _netManager.OnClientConnectedCallback -= clientConnectEvent;
+            _netManager.OnClientDisconnectCallback -= clientDisconnectEvent;
 
-        LoadingMenu.OnCancel -= disconnect;
-        LobbyMenu.OnCancelMatch -= disconnect;
-        ExitMenu.OnLeaveMatch -= disconnect;
+            ConnectionMenu.OnGoToLobby -= startLobbyConnection;
+
+            LoadingMenu.OnCancel -= disconnect;
+            LobbyMenu.OnCancelMatch -= disconnect;
+            ExitMenu.OnLeaveMatch -= disconnect;
+
+            _instance = null;
+        }
     }
 
     private void startLobbyConnection(bool isHost, NetworkTransportTypes transportType, string address)
@@ -230,15 +253,57 @@ public class NetworkController : MonoBehaviour
         }
     }
 
-    public static void switchNetworkScene(string sceneName) => _instance.switchManagerNetworkScene(sceneName);
-    private void switchManagerNetworkScene(string sceneName)
+    public static ulong ServerID => _instance._netManager.ServerClientId;
+    public static ulong SelfID => IsServer? _instance._netManager.ServerClientId : _instance._netManager.LocalClientId;
+    public static Player SelfPlayer => GetPlayerByID(SelfID);
+
+    public static Player GetPlayerByID(ulong playerID)
     {
-        if(!_netManager.IsServer)
+
+        // Try finding it in players dictionary
+        if(_instance._localPlayers.ContainsKey(playerID))
+        {
+            var res = _instance._localPlayers[playerID];
+            if(res.gameObject != null)
+            {
+                return res;
+            }
+        }
+
+        // Second attempt, try looking for playerObject in NetworkClientList
+        return _instance._netManager.ConnectedClients[playerID]?.PlayerObject?.GetComponent<Player>();
+    }
+
+    public static int NumberOfClients => _instance._netManager.ConnectedClientsList.Count;
+
+    public static IEnumerable<ulong> getClientIDs()
+    {
+        if(!IsServer)
+        {
+            return Enumerable.Empty<ulong>();
+        }
+
+        return _instance._netManager.ConnectedClientsList.Select(client => client.ClientId);
+    }
+
+    public static void RegisterPlayer(Player player)
+    {
+        if(_instance._localPlayers.ContainsKey(player.OwnerClientId))
         {
             return;
         }
 
-        if(!_netManager.NetworkConfig.EnableSceneManagement || !_netManager.NetworkConfig.RegisteredScenes.Contains(sceneName))
+        _instance._localPlayers.Add(player.OwnerClientId, player);
+    }
+
+    public static void switchNetworkScene(string sceneName)
+    {
+        if(!_instance._netManager.IsServer)
+        {
+            return;
+        }
+
+        if(!_instance._netManager.NetworkConfig.EnableSceneManagement || !_instance._netManager.NetworkConfig.RegisteredScenes.Contains(sceneName))
         {
             return;
         }
@@ -246,35 +311,37 @@ public class NetworkController : MonoBehaviour
         NetworkSceneManager.SwitchScene(sceneName);
     }
 
-    private IEnumerator disconnectAfterDelay(float delaySeconds)
+    private static IEnumerator disconnectAfterDelay(float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
         disconnect();
     }
 
-    public static void disconnect() => _instance.managerDisconnect();
-    private void managerDisconnect()
+    public static void disconnect()
     {
+        // Make sure list of local players is clear
+        _instance._localPlayers.Clear();
+
         // Can't disconnect if you're neither a Server nor Client (Host is both)
-        if(!(_netManager.IsServer || _netManager.IsClient))
+        if(!(IsServer || IsClient))
         {
             return;
         }
 
-        if(_netManager.IsHost)
+        if(IsHost)
         {
-            _netManager.StopHost();
+            _instance._netManager.StopHost();
             OnDisconnected?.Invoke(true, false);
         }
         /* Not valid for this Game, as all Servers are also Hosts */
-        // else if(_netManager.IsServer)
+        // else if(IsServer)
         // {
-        //     _netManager.StopServer();
+        //     _instance._netManager.StopServer();
         //     OnDisconnected?.Invoke(true);
         // }
-        else if(_netManager.IsClient)
+        else if(IsClient)
         {
-            _netManager.StopClient();
+            _instance._netManager.StopClient();
             OnDisconnected?.Invoke(false, false);
         }
     }

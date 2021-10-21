@@ -176,12 +176,39 @@ public class InputController : MonoBehaviour
         OnDestroyController += autoUnsubscribeOnDestroy;
     }
 
+    // Allow/Deny input propagation to event subscribers
+    public static void FreezePlayerControls() => PlayerControlsFrozen = true;
+    public static void UnfreezePlayerControls() => PlayerControlsFrozen = false;
+    private static bool _playerControlsFrozen = false;
+    public static bool PlayerControlsFrozen
+    {
+        get => _playerControlsFrozen;
+        private set
+        {
+            if(value)
+            {
+                // Stop Movement prior to freezing
+                OnMove?.Invoke(Vector2.zero);
+                OnMoveReleased?.Invoke();
+
+                // Stop Look prior to freezing
+                OnLook?.Invoke(Vector2.zero);
+                OnLookStop?.Invoke();
+
+                // Stop walk action
+                OnWalkReleased?.Invoke();
+            }
+            _playerControlsFrozen = value;
+        }
+    }
+
     // Mode Switch Events
     public delegate void OnMenuControlsDelegate();
     public static event OnMenuControlsDelegate OnMenuControls;
 
     public static EventBlocker OnAllowMenuControlsSwitch = new EventBlocker(SwitchToMenuControls);
 
+    // Can only switch to menu controls if MenuControls aren't frozen
     public static bool RequestMenuControlsSwitch() => OnAllowMenuControlsSwitch.DispatchEvent();
     private static void SwitchToMenuControls() => _instance?.instanceSwitchToMenuControls();
     private void instanceSwitchToMenuControls()
@@ -197,6 +224,7 @@ public class InputController : MonoBehaviour
 
     public static EventBlocker OnAllowPlayerControlsSwitch = new EventBlocker(SwitchToPlayerControls);
 
+    // Can only switch to player controls if PlayerControls aren't frozen
     public static bool RequestPlayerControlsSwitch() => OnAllowPlayerControlsSwitch.DispatchEvent();
     private static void SwitchToPlayerControls() => _instance?.instanceSwitchToPlayerControls();
     private void instanceSwitchToPlayerControls()
@@ -224,6 +252,11 @@ public class InputController : MonoBehaviour
 
     private void OnMoveAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         switch(context.phase)
         {
             case InputActionPhase.Performed:
@@ -246,6 +279,11 @@ public class InputController : MonoBehaviour
 
     private void OnLookAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         switch(context.phase)
         {
             case InputActionPhase.Performed:
@@ -265,6 +303,11 @@ public class InputController : MonoBehaviour
 
     private void OnJumpAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         if(context.performed) {
             OnJump?.Invoke();
         }
@@ -276,6 +319,11 @@ public class InputController : MonoBehaviour
 
     private void OnInteractAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         if(context.performed) {
             OnInteract?.Invoke();
         }
@@ -287,6 +335,11 @@ public class InputController : MonoBehaviour
 
     private void OnThrowAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         if(context.performed) {
             OnThrow?.Invoke();
         }
@@ -298,6 +351,11 @@ public class InputController : MonoBehaviour
 
     private void OnDropAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         if(context.performed) {
             OnDrop?.Invoke();
         }
@@ -309,11 +367,16 @@ public class InputController : MonoBehaviour
 
     private void OnPutAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         if(context.performed) {
             OnPut?.Invoke();
         }
     }
-    
+
 
     public delegate void OnWalkDelegate();
     public delegate void OnWalkPressedDelegate();
@@ -325,6 +388,11 @@ public class InputController : MonoBehaviour
 
     private void OnWalkAction(InputAction.CallbackContext context)
     {
+        if(PlayerControlsFrozen)
+        {
+            return;
+        }
+
         switch(context.phase)
         {
             case InputActionPhase.Performed:

@@ -5,8 +5,10 @@ using MLAPI;
 
 public class FreeMovementControls : PlayerControls
 {
-    private Vector3 _currentVelocity = Vector3.zero;
-    private float _currentRotation = 0;
+    private Vector3 _targetVelocity = Vector3.zero;
+    private Vector3 _targetHorizontalRotation = Vector3.zero;
+    private float _targetVerticalRotation = 0;
+    private bool _shouldJump = false;
     private bool _isJumping = false;
 
     public float FallSpeed;
@@ -14,60 +16,122 @@ public class FreeMovementControls : PlayerControls
 
     public float MaximumViewAngle = 90f;
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         if(IsOwner)
         {
-            updateCamera();
+            updateCameraRotation();
+        }
+    }
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        if(IsOwner)
+        {
+            updatePlayerRotation();
             updateMovement();
         }
     }
 
+    private void OnEnable()
+    {
+        ControlScheme = PlayerControlSchemes.FreeMovementControls;
+
+        _cameraPosition.transform.localRotation = _initialCameraLocalRotation;
+        _targetVerticalRotation = 0;
+    }
+
+    protected override void OnDisable()
+    {
+        // Stop propagation of previous forces when disabling the script
+        base.OnDisable();
+
+        updateMovement();
+
+        updatePlayerRotation();
+        updateCameraRotation();
+
+        _shouldJump = false;
+    }
+
     public override void Jump()
     {
-        if(IsOwner)
+        if(!(isActiveAndEnabled && IsOwner))
         {
-            _isJumping = true;
+            return;
         }
+
+        _shouldJump = true;
     }
 
     private void updateMovement()
     {
-        var planeMovement = (_controller.isGrounded? _currentSpeed : FallSpeed) * _currentDirection;
-        _currentVelocity.Set(planeMovement.x, _currentVelocity.y, planeMovement.y);
-
-        // Reset vertical acceleration if some external force causes it to be affected
-        // Like hitting the floor or ceiling
-        if(_controller.velocity.y == 0)
+        if(!isGrounded)
         {
-            _currentVelocity.y = 0;
+            _isJumping = false;
+        }
+        else if(_shouldJump)
+        {
+            _isJumping = true;
         }
 
-        // Always apply gravity, even when the player is possibly already Grounded
-        _currentVelocity += Physics.gravity * Time.deltaTime;
+        // Calculate desired velocity
+        _targetVelocity.Set(_currentDirection.x, 0, _currentDirection.y);
+        _targetVelocity = transform.TransformDirection(_targetVelocity);
+        _targetVelocity *= _currentSpeed;
 
-        if(_controller.isGrounded && _isJumping)
+        // Apply force
+        _targetVelocity = (_targetVelocity - _rigidBody.velocity);
+        if(!isGrounded || _isJumping)
         {
-            // if Jumping Apply instant vertical velocity change, overriding gravity
-            _currentVelocity.y = Mathf.Sqrt(2 * Physics.gravity.magnitude * JumpHeight);
+            _targetVelocity.y = 0;
         }
 
-        _controller.Move(transform.TransformDirection(_currentVelocity) * Time.deltaTime);
+        // Detect if we're colliding against a steep slope
+        if(isCollidingWithWall && _wallCollisionNormal.y > 0)
+        {
+            var angle = Vector3.Angle(_targetVelocity, _wallCollisionNormal);
+            if(angle > 90 && angle < 180)
+            {
+                _targetVelocity = Vector3.zero;
+            }
+        }
 
-        // Reset jumpstate after every frame
-        _isJumping = false;
+        _rigidBody.AddForce(_targetVelocity, ForceMode.VelocityChange);
+
+        if(_shouldJump && isGrounded)
+        {
+            _rigidBody.AddForce(transform.up * Mathf.Sqrt(2 * Physics.gravity.magnitude * JumpHeight), ForceMode.VelocityChange);
+        }
+        _shouldJump = false;
     }
 
-    private void updateCamera()
+    private void updateCameraRotation()
     {
-        transform.Rotate(Vector3.up, _nextRotation.x);
-
-        _currentRotation += _nextRotation.y;
-        if(_currentRotation <= MaximumViewAngle && _currentRotation >= -MaximumViewAngle)
+        // Since rotating the view sideways requires moving the player body,
+        // this method ONLY affects vertical camera rotation.
+        // This should be run on Update instead of FixedUpdate,
+        // since it only affects the camera, not the player Physics.
+        _targetVerticalRotation += _nextRotation.y;
+        if(_targetVerticalRotation <= MaximumViewAngle && _targetVerticalRotation >= -MaximumViewAngle)
         {
-            _camera.Rotate(Vector3.left, _nextRotation.y);
+            _cameraPosition.transform.Rotate(Vector3.left, _nextRotation.y);
         }
 
-        _currentRotation = Mathf.Clamp(_currentRotation, -MaximumViewAngle, MaximumViewAngle);
+        _targetVerticalRotation = Mathf.Clamp(_targetVerticalRotation, -MaximumViewAngle, MaximumViewAngle);
+    }
+
+    private void updatePlayerRotation()
+    {
+        // This method handles the player's sideways rotation,
+        // and since rotation to the sides requires Physics movement,
+        // this method MUST run on FixedUpdate.
+        // The rotation for the in-between frames is interpolated.
+        _targetHorizontalRotation = Vector3.up * _nextRotation.x * Sensitivity;
+        _targetHorizontalRotation = (_targetHorizontalRotation - _rigidBody.angularVelocity);
+        _rigidBody.AddTorque(_targetHorizontalRotation, ForceMode.VelocityChange);
     }
 }

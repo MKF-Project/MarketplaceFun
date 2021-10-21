@@ -23,14 +23,15 @@ public class ShoppingList : NetworkBehaviour
     {
         _quantityChecked = 0;
         ItemDictionary = new Dictionary<int, ShoppingListItem>();
-        
+
         if (IsOwner)
         {
             ShoppingListUi = GameObject.FindGameObjectsWithTag("ShoppingListUI")[0].GetComponent<ShoppingListUI>();
-            Debug.Log("Colocou Owner");    
+            Debug.Log("Colocou Owner");
             NetworkController.OnDisconnected += EraseListClient;
+
         }
-        
+
         if (IsServer)
         {
             Debug.Log("Colocou Server");
@@ -39,9 +40,9 @@ public class ShoppingList : NetworkBehaviour
             NetworkController.OnOtherClientDisconnected += EraseListServer;
         }
     }
-    
-    
-    
+
+
+
     private void OnDestroy()
     {
         //Didn't verify IsOwner or IsClient(bug if verify)
@@ -49,7 +50,7 @@ public class ShoppingList : NetworkBehaviour
         SceneManager.OnMatchLoaded -= GenerateList_OnMatchLoaded;
         NetworkController.OnOtherClientDisconnected -= EraseListServer;
     }
-    
+
     public void GenerateList_OnMatchLoaded(string _sceneName)
     {
         GenerateList(5, ItemTypeList.ItemList.ToList());
@@ -60,31 +61,31 @@ public class ShoppingList : NetworkBehaviour
     public void GenerateList(int numberOfItems, List<ItemType> allItemsList)
     {
         Random random = new Random(_randomSeed);
-        
+
         while (numberOfItems > 0)
         {
-            
+
             int randomIndex = random.Next(0, allItemsList.Count);
-            
+
             ShoppingListItem shoppingListItem = new ShoppingListItem(allItemsList[randomIndex].Code);
 
             //Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
-                
+
             ItemDictionary.Add(allItemsList[randomIndex].Code, shoppingListItem);
             allItemsList.RemoveAt(randomIndex);
             numberOfItems--;
         }
-        
+
         SerializedShoppingList serializedShoppingList = new SerializedShoppingList(ItemDictionary.Values.ToList());
         ReceiveList_ClientRpc(serializedShoppingList);
-        
+
     }
-    
+
     [ClientRpc]
     //Populate List on Client RPC
     public void ReceiveList_ClientRpc(SerializedShoppingList serializedShoppingList)
     {
-        
+
         List<ShoppingListItem> itemList = serializedShoppingList.Array.ToList();
         if (!IsServer)
         {
@@ -121,6 +122,12 @@ public class ShoppingList : NetworkBehaviour
         {
             return false;
         }
+
+        if(!ItemDictionary.ContainsKey(itemCode))
+        {
+            return false;
+        }
+
         ShoppingListItem listItem = ItemDictionary[itemCode];
         if (listItem.Caught)
         {
@@ -137,6 +144,11 @@ public class ShoppingList : NetworkBehaviour
 
     public void UncheckItem(int itemCode)
     {
+        if(!ItemDictionary.ContainsKey(itemCode))
+        {
+            return;
+        }
+
         ShoppingListItem listItem = ItemDictionary[itemCode];
         listItem.Caught = false;
         ItemDictionary.Remove(itemCode);
@@ -163,7 +175,7 @@ public class ShoppingList : NetworkBehaviour
 
     public void PrintList()
     {
-        
+
         String msg = "";
         foreach (ShoppingListItem item in ItemDictionary.Values)
         {

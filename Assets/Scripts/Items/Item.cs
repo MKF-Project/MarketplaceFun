@@ -2,28 +2,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
-using MLAPI.Serialization;
+using MLAPI.Messaging;
 using UnityEngine;
 
+[SelectionBase]
 public class Item : NetworkBehaviour
 {
-    private Transform _heldPosition;
-    private bool _isHeld;
+    public const int NO_ITEMTYPE_CODE = int.MinValue;
+
     private NetworkObject _networkObject;
+
+    private ItemVisuals _itemVisuals = null;
+
+    [HideInInspector]
+    public bool IsOnThrow;
+
+    [HideInInspector]
     public int ItemTypeCode;
 
-    
-    //Object needs to be registered not before NetworkStart, like Awake
-    //Because before this the object doesn't have an networkId
-    public override void NetworkStart()
+    public int EffectType;
+
+    public ItemVisuals ItemVisuals
     {
-        _networkObject = GetComponent<NetworkObject>();
-        RegisterItem();
+        get
+        {
+            if(_itemVisuals == null)
+            {
+                _itemVisuals = transform.Find(ItemVisuals.ITEM_VISUALS_NAME)?.GetComponent<ItemVisuals>();
+            }
+
+            return _itemVisuals;
+        }
     }
 
-    void Start()
+    public TakeEffect takeEffect;
+
+    // Object needs to be registered not before NetworkStart, like Awake
+    // Because before this the object doesn't have an networkId
+    public override void NetworkStart()
     {
-        _isHeld = false;
+        IsOnThrow = false;
+        EffectType = 0;
+        _networkObject = GetComponent<NetworkObject>();
+        RegisterItem();
     }
 
     private void OnDestroy()
@@ -41,28 +62,52 @@ public class Item : NetworkBehaviour
         NetworkItemManager.UnregisterItem(_networkObject.PrefabHash, _networkObject.NetworkObjectId);
     }
 
-    void Update()
+    private void Update()
     {
-        if (_isHeld)
+        if (IsOnThrow)
         {
-            transform.position = _heldPosition.position;
-            transform.forward = _heldPosition.forward;
-            Debug.DrawRay(_heldPosition.position, _heldPosition.forward* 10, Color.red);
+            if (gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude <= 0.1)
+            {
+                TriggerDestroyItem();
+            }
         }
     }
 
-    public void BeHeld(Transform holderPosition)
+    public void OnCollisionEnter(Collision other)
     {
-        _heldPosition = holderPosition;
-        _isHeld = true;
+        if (IsOnThrow)
+        {
+            GameObject hitObject = other.gameObject;
+            if (hitObject.CompareTag("Player"))
+            {
+                takeEffect = hitObject.GetComponent<TakeEffect>();
+                takeEffect.OnTakeEffect(0);
+                TriggerDestroyItem();
+            }
+        }
     }
 
-    public void BeDropped()
+    private void TriggerDestroyItem()
     {
-        _heldPosition = null;
-        _isHeld = false;
+        IsOnThrow = false;
+        StartCoroutine(nameof(DestroyAfterSeconds), 4f);
     }
-    
 
+    private IEnumerator DestroyAfterSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        DestroyItem_ServerRpc();
+    }
 
+    [ServerRpc]
+    public void DestroyItem_ServerRpc()
+    {
+        DestroyItem_ClientRpc();
+    }
+
+    [ClientRpc]
+    public void DestroyItem_ClientRpc()
+    {
+        Destroy(gameObject);
+    }
 }

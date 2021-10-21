@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
-    private static MenuManager _instance;
+    public static MenuManager instance;
 
     private const string menuTag = "Menu";
     private static List<GameObject> _menus;
 
     public GameObject startingMenu = null;
 
+    public LobbyMenu LobbyMenu;
+
     private void Awake()
     {
-        _instance = _instance ?? this;
-        _menus = _menus ?? new List<GameObject>(gameObject.FindChildrenWithTag(menuTag));
+        instance = instance ?? this;
+        _menus = _menus ?? gameObject.FindChildrenWithTag(menuTag);
         initializeMenus();
     }
 
@@ -26,9 +28,9 @@ public class MenuManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(_instance == this)
+        if(instance == this)
         {
-            _instance = null;
+            instance = null;
             _menus = null;
         }
     }
@@ -56,11 +58,11 @@ public class MenuManager : MonoBehaviour
         _menus.ForEach(menu => menu.SetActive(menu == activeMenu));
     }
 
-    public static void toggleMenuDelayed(GameObject activeMenu) => _instance.StartCoroutine(menuToggleCoroutine(activeMenu));
+    public static void toggleMenuDelayed(GameObject activeMenu) => instance.StartCoroutine(menuToggleCoroutine(activeMenu));
 
     private static IEnumerator menuToggleCoroutine(GameObject activeMenu)
     {
-        yield return new WaitForEndOfFrame();
+        yield return Utils.EndOfFrameWait;
         toggleMenu(activeMenu);
     }
 }

@@ -31,6 +31,10 @@ public class ConnectionMenu : MonoBehaviour
     // Transport Dropdown
     [SerializeField] private Dropdown _transportDropdown = null;
 
+    // Nickname
+    public static string Nickname { get; private set; }
+    [SerializeField] private Text _nicknameText = null;
+
     private void Awake()
     {
         GameMenu.OnJoinGame += initializeJoinMenu;
@@ -78,6 +82,23 @@ public class ConnectionMenu : MonoBehaviour
         {
             _addressInput.text = "";
         }
+
+        #if UNITY_EDITOR
+            const string DEBUG_IP_HOST = "127.0.0.1";
+            const string DEBUG_PHOTON_HOST = "sala";
+
+            if(_transportDropdown.value == 0)
+            {
+                if(!_isHost)
+                {
+                    _addressInput.text = DEBUG_IP_HOST;
+                }
+            }
+            else
+            {
+                _addressInput.text = DEBUG_PHOTON_HOST;
+            }
+        #endif
     }
 
     // Button Actions
@@ -93,6 +114,9 @@ public class ConnectionMenu : MonoBehaviour
         if(address == "" && (!_isHost || transport != NetworkTransportTypes.Direct)) {
             return;
         }
+
+        // Store chosen nickname
+        Nickname = _nicknameText.text;
 
         // Call Event
         OnGoToLobby(_isHost, transport, address);

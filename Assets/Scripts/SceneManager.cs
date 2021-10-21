@@ -7,30 +7,35 @@ using UnityScene = UnityEngine.SceneManagement;
 
 public class SceneManager : MonoBehaviour
 {
-    
-    
+
+
     // Events
     public delegate void OnMainMenuLostConnectionDelegate();
     public static event OnMainMenuLostConnectionDelegate OnMainMenuLostConnection;
 
-    
+
     public delegate void OnMenuLoadedDelegate(string sceneName);
     public static event OnMenuLoadedDelegate OnMenuLoaded;
 
 
     public delegate void OnMatchLoadedDelegate(string sceneName);
     public static event OnMatchLoadedDelegate OnMatchLoaded;
-    
-    
+
+    public delegate void OnScoreLoadedDelegate();
+    public static event OnScoreLoadedDelegate OnScoreLoaded;
+
+
     public delegate void OnSceneLoadedDelegate(string sceneName);
     public static event OnSceneLoadedDelegate OnSceneLoaded;
 
 
     public String MatchScene;
-    
+
     private const string _selfTag = "SceneManager";
 
     private const string _mainMenu = "MainMenu";
+
+    private const string _scoreScene = "ScoreScene";
     private bool _onMainMenu
     {
         get => UnityScene.SceneManager.GetActiveScene().name == _mainMenu;
@@ -41,7 +46,7 @@ public class SceneManager : MonoBehaviour
         Object.DontDestroyOnLoad(gameObject);
 
         LobbyMenu.OnStartMatch += loadMatch;
-        
+
         NetworkController.OnDisconnected += returnToMainMenu;
 
         UnityScene.SceneManager.sceneLoaded += TriggerSceneLoadEvent;
@@ -86,7 +91,7 @@ public class SceneManager : MonoBehaviour
                 IEnumerator triggerConnectionLost()
                 {
                     // Defer event trigger until after Awakes and Starts
-                    yield return new WaitForEndOfFrame();
+                    yield return Utils.EndOfFrameWait;
                     OnMainMenuLostConnection?.Invoke();
                 }
 
@@ -105,7 +110,18 @@ public class SceneManager : MonoBehaviour
     {
         // TODO get scene name from lobby
         NetworkController.switchNetworkScene(MatchScene);
+
+        // Set the expected number of players that should be moved to spawn
+        // areas during the next match
+        SpawnController.PlayerSpawnsRequired = NetworkController.NumberOfClients;
     }
+
+
+    public static void LoadScore()
+    {
+        NetworkController.switchNetworkScene(_scoreScene);
+    }
+
 
     private void TriggerSceneLoadEvent(UnityScene.Scene scene, UnityScene.LoadSceneMode mode)
     {
@@ -114,6 +130,10 @@ public class SceneManager : MonoBehaviour
         if (scene.name == _mainMenu)
         {
             OnMenuLoaded?.Invoke(scene.name);
+        }
+        else if (scene.name == _scoreScene)
+        {
+            OnScoreLoaded?.Invoke();
         }
         else
         {

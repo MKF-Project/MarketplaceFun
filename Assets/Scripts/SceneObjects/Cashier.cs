@@ -5,20 +5,20 @@ using UnityEngine;
 
 public class Cashier : MonoBehaviour
 {
+    private const string SHOPPING_CART_TAG = "ShoppingCart";
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.tag == SHOPPING_CART_TAG)
         {
-            Player player = other.GetComponent<Player>();
-            if (MatchManager.Instance.IsMainPlayer(player))
+            Player player = other.GetComponent<ShoppingCartItem>().Owner;
+            if (player != null && player == NetworkController.SelfPlayer)
             {
                 if (player.IsListComplete)
                 {
                     MatchMessages.Instance.EditMessage("You Win");
                     MatchMessages.Instance.ShowMessage();
-
-                    //InMatchCanvas.Instance.EndText
+                    ScoreController.Instance.IWin();
                 }
                 else
                 {

@@ -9,9 +9,16 @@ public class AimCanvas : MonoBehaviour
 
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
-        Instance = this;
-        gameObject.SetActive(false);
+        if (AimCanvas.Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            DestroyImmediate(gameObject);
+        }
     }
 
     public void ActivateAim()

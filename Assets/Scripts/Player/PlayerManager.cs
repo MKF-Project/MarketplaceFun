@@ -1,14 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public bool enablePlayerBehaviour = true;
-    public bool allowControlSwitching = true;
+    public static bool AllowPlayerControls = true;
+    public static bool AllowControlSwitching = true;
+    
+
+    [SerializeField] private bool _allowPlayerControls = true;
+    [SerializeField] private bool _allowControlSwitching = true;
 
     private void Awake()
     {
+        AllowPlayerControls = _allowPlayerControls;
+        AllowControlSwitching = _allowControlSwitching;
+
         InputController.OnAllowMenuControlsSwitch += canSwitchControls;
         InputController.OnAllowPlayerControlsSwitch += canSwitchControls;
     }
@@ -19,12 +27,11 @@ public class PlayerManager : MonoBehaviour
         InputController.OnAllowPlayerControlsSwitch -= canSwitchControls;
     }
 
-    private bool canSwitchControls() => allowControlSwitching;
+    private bool canSwitchControls() => AllowControlSwitching;
 
     private void Start()
     {
-        PlayerController.playerBehaviourEnabled = enablePlayerBehaviour;
-        if(enablePlayerBehaviour)
+        if(AllowPlayerControls)
         {
             InputController.RequestPlayerControlsSwitch();
         }

@@ -8,7 +8,7 @@ using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
-public class ItemGenerator : NetworkBehaviour
+public class ItemGeneratorOld : NetworkBehaviour
 {
     public int ItemTypeCode;
 

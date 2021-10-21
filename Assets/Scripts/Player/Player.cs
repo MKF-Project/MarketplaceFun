@@ -29,9 +29,9 @@ public class Player : NetworkBehaviour
         Item.NO_ITEMTYPE_CODE
     );
 
-    private ItemGenerator _heldItemGenerator = null;
+    private ItemGeneratorOld _heldItemGenerator = null;
     [HideInInspector]
-    public ItemGenerator HeldItemGenerator
+    public ItemGeneratorOld HeldItemGenerator
     {
         get => _heldItemGenerator;
         set
@@ -148,7 +148,7 @@ public class Player : NetworkBehaviour
     // This method is intended to be used when there's a need to update the
     // ItemGenerator without modifying HeldItemType, for example when updating
     // the server-side generator for another player (in case they disconnect)
-    internal void UpdateItemGenerator(ItemGenerator generator)
+    internal void UpdateItemGenerator(ItemGeneratorOld generator)
     {
         _heldItemGenerator = generator;
     }

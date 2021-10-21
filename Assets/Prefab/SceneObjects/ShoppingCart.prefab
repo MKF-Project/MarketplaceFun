@@ -384,6 +384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 689751a6f0043ed46b8a44d708a26787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WheelsColor: {fileID: 8863070693558828008}
 --- !u!114 &446760062368117103
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -110,13 +110,16 @@ public class SceneManager : MonoBehaviour
     {
         // TODO get scene name from lobby
         NetworkController.switchNetworkScene(MatchScene);
+
+        // Set the expected number of players that should be moved to spawn
+        // areas during the next match
+        SpawnController.PlayerSpawnsRequired = NetworkController.NumberOfClients;
     }
 
 
     public static void LoadScore()
     {
         NetworkController.switchNetworkScene(_scoreScene);
-
     }
 
 

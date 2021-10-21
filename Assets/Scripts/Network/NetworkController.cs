@@ -274,6 +274,8 @@ public class NetworkController : MonoBehaviour
         return _instance._netManager.ConnectedClients[playerID]?.PlayerObject?.GetComponent<Player>();
     }
 
+    public static int NumberOfClients => _instance._netManager.ConnectedClientsList.Count;
+
     public static IEnumerable<ulong> getClientIDs()
     {
         if(!IsServer)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static bool AllowPlayerControls = true;
     public static bool AllowControlSwitching = true;
+    
 
     [SerializeField] private bool _allowPlayerControls = true;
     [SerializeField] private bool _allowControlSwitching = true;

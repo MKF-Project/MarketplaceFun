@@ -14,11 +14,13 @@ public class Player : NetworkBehaviour
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
 
+    private Rigidbody _rigidbody = null;
+
     // Held Item Vars
     private Transform _heldItemPosition;
 
     [HideInInspector]
-    public NetworkVariableInt HeldItemType = new NetworkVariableInt(
+    public NetworkVariableInt HeldItemType { get; private set; } = new NetworkVariableInt(
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
@@ -27,11 +29,20 @@ public class Player : NetworkBehaviour
         Item.NO_ITEMTYPE_CODE
     );
 
+    private ItemGenerator _heldItemGenerator = null;
     [HideInInspector]
-    public ItemGenerator HeldItemGenerator = null;
+    public ItemGenerator HeldItemGenerator
+    {
+        get => _heldItemGenerator;
+        set
+        {
+            _heldItemGenerator = value;
+            HeldItemType.Value = value != null? value.ItemTypeCode : Item.NO_ITEMTYPE_CODE;
+        }
+    }
 
     public GameObject HeldItem { get; private set; } = null;
-    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE;
+    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE && HeldItemGenerator != null;
 
     [HideInInspector]
     public bool IsDrivingCart;
@@ -51,19 +62,25 @@ public class Player : NetworkBehaviour
     private void Awake()
     {
         _throwScript = GetComponent<Throw>();
+        _rigidbody = GetComponent<Rigidbody>();
         _heldItemPosition = gameObject.transform.Find(HELD_POSITION_NAME);
 
-
+        #if UNITY_EDITOR
             if(_throwScript == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Throw Script");
+            }
+
+            if(_rigidbody == null)
+            {
+                Debug.LogError($"[{gameObject.name}]: Could not find Player Rigidbody");
             }
 
             if(_heldItemPosition == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Held Item Position");
             }
-
+        #endif
 
         IsDrivingCart = false;
         IsListComplete = false;
@@ -82,8 +99,6 @@ public class Player : NetworkBehaviour
             HeldItemGenerator?.GenerateOwnerlessItem(_heldItemPosition.position, _heldItemPosition.rotation);
         }
     }
-
-
 
     private void onHeldItemChange(int previousItemType, int newItemType)
     {
@@ -121,14 +136,21 @@ public class Player : NetworkBehaviour
             // should therefore update others that it is holding no item
             else if(IsOwner)
             {
-                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+                HeldItemGenerator = null;
             }
         }
         else
         {
             HeldItem = null;
-            HeldItemGenerator = null;
         }
+    }
+
+    // This method is intended to be used when there's a need to update the
+    // ItemGenerator without modifying HeldItemType, for example when updating
+    // the server-side generator for another player (in case they disconnect)
+    internal void UpdateItemGenerator(ItemGenerator generator)
+    {
+        _heldItemGenerator = generator;
     }
 
     public void ThrowItem(Action<Item> itemAction = null)
@@ -141,7 +163,7 @@ public class Player : NetworkBehaviour
 
     public void DropItem(Action<Item> itemAction = null)
     {
-        if(IsHoldingItem && HeldItemGenerator != null)
+        if(IsHoldingItem)
         {
             void positionItem(Item generatedItem)
             {
@@ -174,4 +196,19 @@ public class Player : NetworkBehaviour
         IsListComplete = true;
     }
 
+    public void Teleport(Vector3 position, Vector3 eulerAngles = default)
+    {
+        if(!IsOwner)
+        {
+            return;
+        }
+
+        transform.position = position;
+
+        if(eulerAngles != default(Vector3))
+        {
+            var newRotation = eulerAngles + _rigidbody.rotation.eulerAngles;
+            _rigidbody.rotation = Quaternion.Euler(newRotation);
+        }
+    }
 }

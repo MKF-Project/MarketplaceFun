@@ -8,14 +8,14 @@ using UnityEngine.UI;
 public class ItemTypeList : MonoBehaviour
 {
     public Sprite StartingCheckedImage;
-    
+
     public static Sprite CheckedImage;
-    
+
     public List<ItemType> StartingItemsList;
 
     public static List<ItemType> ItemList;
 
-    
+
 
     public void Awake()
     {
@@ -32,6 +32,6 @@ public class ItemTypeList : MonoBehaviour
             itemType.ItemPrefab.GetComponent<Item>().ItemTypeCode = itemType.Code;
         }
     }
-    
+
 
 }

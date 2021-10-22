@@ -174,7 +174,7 @@ PrefabInstance:
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handPositionOffset.y
-      value: -0.223
+      value: -0.119
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

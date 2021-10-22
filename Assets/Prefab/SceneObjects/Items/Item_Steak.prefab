@@ -170,32 +170,32 @@ PrefabInstance:
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handPositionOffset.x
-      value: -0.027
+      value: -0.07
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handPositionOffset.y
-      value: -0.028
+      value: -0.078
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handPositionOffset.z
-      value: -0.002
+      value: -0.003
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handRotationOffset.x
-      value: -0.05
+      value: 31.973
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handRotationOffset.y
-      value: 6.664001
+      value: -69.237
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handRotationOffset.z
-      value: 127.984
+      value: 27.505
       objectReference: {fileID: 0}
     - target: {fileID: 8366653308701922321, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

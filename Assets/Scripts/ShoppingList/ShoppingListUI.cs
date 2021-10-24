@@ -10,10 +10,15 @@ public class ShoppingListUI : MonoBehaviour
     //public List<Image> UIItemsList;
     public Dictionary<ulong, GameObject> UIItemsDictionary;
 
+    [SerializeField]
+    private Sprite StartingCheckedImage;
+    public static Sprite CheckedImage { get; private set; }
+
     private Item _itemScriptPlacement = null;
 
     private void Awake()
     {
+        CheckedImage = StartingCheckedImage;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -37,7 +42,7 @@ public class ShoppingListUI : MonoBehaviour
             GameObject itemUI = transform.GetChild(i).gameObject;
             Image itemImageUI = itemUI.GetComponent<Image>();
 
-            ItemTypeList.ItemList[shoppingListItem.ItemCode].ItemPrefab.TryGetComponent<Item>(out _itemScriptPlacement);
+            NetworkItemManager.NetworkItemPrefabs[shoppingListItem.ItemCode].TryGetComponent<Item>(out _itemScriptPlacement);
             itemImageUI.sprite = _itemScriptPlacement.UISticker;
 
             itemImageUI.enabled = true;
@@ -61,7 +66,7 @@ public class ShoppingListUI : MonoBehaviour
     {
         GameObject itemUI = UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();
-        imageCheckUI.sprite = ItemTypeList.CheckedImage;
+        imageCheckUI.sprite = CheckedImage;
         imageCheckUI.enabled = true;
     }
 

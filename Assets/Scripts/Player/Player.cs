@@ -110,7 +110,7 @@ public class Player : NetworkBehaviour
 
         if(newItemType != Item.NO_ITEMTYPE_CODE)
         {
-            var itemPrefab = ItemTypeList.ItemList[newItemType].ItemPrefab;
+            var itemPrefab = NetworkItemManager.NetworkItemPrefabs[newItemType];
             var itemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
 
             if(itemVisuals != null)

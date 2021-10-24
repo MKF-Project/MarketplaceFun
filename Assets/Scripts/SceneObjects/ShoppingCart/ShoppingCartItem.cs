@@ -145,7 +145,7 @@ public class ShoppingCartItem : NetworkBehaviour
         _itemCodes[_nextIndex] = itemTypeCode;
 
         // Create new mesh
-        var itemPrefab = ItemTypeList.ItemList[itemTypeCode].ItemPrefab;
+        var itemPrefab = NetworkItemManager.NetworkItemPrefabs[itemTypeCode];
         var itemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
 
         if(itemVisuals != null)

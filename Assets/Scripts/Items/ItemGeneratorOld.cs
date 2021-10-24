@@ -27,10 +27,10 @@ public class ItemGeneratorOld : NetworkBehaviour
             itemNetObject = _itemPrefab.GetComponent<NetworkObject>();
         }
 
-        if(itemNetObject != null && ItemTypeList.ItemList.ContainsKey(itemNetObject.PrefabHash))
+        if(itemNetObject != null && NetworkItemManager.NetworkItemPrefabs.ContainsKey(itemNetObject.PrefabHash))
         {
             ItemTypeCode = itemNetObject.PrefabHash;
-            _itemPrefab = ItemTypeList.ItemList[ItemTypeCode].ItemPrefab;
+            _itemPrefab = NetworkItemManager.NetworkItemPrefabs[ItemTypeCode];
         }
         else
         {

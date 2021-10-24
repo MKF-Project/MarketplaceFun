@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using MLAPI;
+using System.Linq;
 using UnityEngine;
+using MLAPI;
+using MLAPI.Configuration;
 
 public class NetworkItemManager : MonoBehaviour
 {
+    // Prefabs
+    public static Dictionary<ulong, GameObject> NetworkItemPrefabs { get; private set; } = null;
+
+    [SerializeField]
+    private List<GameObject> _registeredItems = new List<GameObject>();
+    private NetworkManager _netManager;
+    private NetworkObject _networkItemBuffer = null;
+
+    // Spawned Items
     private static NetworkItemManager _instance = null;
     private static Dictionary<string, GameObject> SpawnedItemList = null;
 
@@ -22,9 +33,12 @@ public class NetworkItemManager : MonoBehaviour
         }
 
         _instance = this;
+        gameObject.EnsureObjectDontDestroy();
+
+        InitializePrefabs();
+
         SpawnedItemList = new Dictionary<string, GameObject>();
 
-        gameObject.EnsureObjectDontDestroy();
     }
 
     private void OnDestroy()
@@ -36,6 +50,40 @@ public class NetworkItemManager : MonoBehaviour
         }
     }
 
+    /* Prefabs */
+    private void InitializePrefabs()
+    {
+        _netManager = GetComponent<NetworkManager>();
+        NetworkItemPrefabs = new Dictionary<ulong, GameObject>(_registeredItems.Count);
+
+        _registeredItems.ForEach(prefab => {
+            // Add registered item to NetworkManager's NetworkPrefabs list
+            var itemNetworkPrefab = new NetworkPrefab();
+            itemNetworkPrefab.Prefab = prefab;
+            itemNetworkPrefab.PlayerPrefab = false;
+
+            _netManager.NetworkConfig.NetworkPrefabs.Add(itemNetworkPrefab);
+
+            // then add it to our own Item Prefabs dictionary
+            prefab.TryGetComponent<NetworkObject>(out _networkItemBuffer);
+            var itemCode = _networkItemBuffer != null? _networkItemBuffer.PrefabHash : Item.NO_ITEMTYPE_CODE;
+
+            if(NetworkItemPrefabs.ContainsKey(itemCode))
+            {
+                #if UNITY_EDITOR
+                    Debug.LogError($"[NetworkItemManager]: Can't register {prefab.name} with ID {itemCode}, already registered to {NetworkItemPrefabs[itemCode].name}");
+                #endif
+
+                return;
+            }
+
+            NetworkItemPrefabs.Add(itemCode, prefab);
+
+            _networkItemBuffer = null;
+        });
+    }
+
+    /* Spawning */
     public static void RegisterItem(ulong prefabHash, ulong id, GameObject item)
     {
 

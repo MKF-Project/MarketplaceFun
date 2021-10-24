@@ -53,7 +53,7 @@ public class ShoppingList : NetworkBehaviour
 
     public void GenerateList_OnMatchLoaded(string _sceneName)
     {
-        GenerateList(5, ItemTypeList.ItemList.Keys.ToList());
+        GenerateList(5, NetworkItemManager.NetworkItemPrefabs.Keys.ToList());
     }
 
 

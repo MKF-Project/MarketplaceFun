@@ -155,6 +155,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: UISticker
+      value: 
+      objectReference: {fileID: 7309923959803071797, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
+        type: 3}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHash

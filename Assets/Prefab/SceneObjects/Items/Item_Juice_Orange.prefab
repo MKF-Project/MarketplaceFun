@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &1301974364727612771
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621825044869907448}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.12, y: 0.275, z: 0.12}
+  m_Center: {x: 0, y: 0.1375, z: 0}
 --- !u!1 &4933421637942877555
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,19 +94,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &1301974364727612771
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621825044869907448}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.12, y: 0.275, z: 0.12}
-  m_Center: {x: 0, y: 0.1375, z: 0}
 --- !u!1001 &8988472709716367337
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -156,6 +156,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: UISticker
+      value: 
+      objectReference: {fileID: 5536361130491220658, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
+        type: 3}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHash

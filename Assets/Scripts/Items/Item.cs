@@ -10,12 +10,15 @@ public class Item : NetworkBehaviour
 {
     public const ulong NO_ITEMTYPE_CODE = ulong.MinValue;
 
-    private NetworkObject _networkObject;
+    [SerializeField]
+    private GameObject _itemPrefab = null;
+    public GameObject Prefab { get; private set; }
+
+    public Sprite UISticker;
 
     private ItemVisuals _itemVisuals = null;
 
-    // public string Name;
-    // public Sprite Image;
+    private NetworkObject _networkObject;
 
     [HideInInspector]
     public bool IsOnThrow;

@@ -162,16 +162,16 @@ public class ShoppingList : NetworkBehaviour
         return false;
     }
 
-    public void PrintList()
-    {
+    // public void PrintList()
+    // {
 
-        String msg = "";
-        foreach (ShoppingListItem item in ItemDictionary.Values)
-        {
-            msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
-        }
-        MatchMessages.Instance.EditMessage(msg, 10f);
-        MatchMessages.Instance.ShowMessage();
-    }
+    //     String msg = "";
+    //     foreach (ShoppingListItem item in ItemDictionary.Values)
+    //     {
+    //         msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
+    //     }
+    //     MatchMessages.Instance.EditMessage(msg, 10f);
+    //     MatchMessages.Instance.ShowMessage();
+    // }
 
 }

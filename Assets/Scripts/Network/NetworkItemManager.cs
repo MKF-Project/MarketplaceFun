@@ -6,16 +6,14 @@ using UnityEngine;
 
 public class NetworkItemManager : NetworkBehaviour
 {
-
     private static Dictionary<string, GameObject> SpawnedItemList = null;
-    // Start is called before the first frame update
-    void Awake()
+
+    private void Awake()
     {
         SpawnedItemList = SpawnedItemList ?? new Dictionary<string, GameObject>();
     }
 
-    // Update is called once per frame
-    void OnDestroy()
+    private void OnDestroy()
     {
         SpawnedItemList = null;
     }

@@ -10,6 +10,7 @@ public class ShoppingListUI : MonoBehaviour
     //public List<Image> UIItemsList;
     public Dictionary<ulong, GameObject> UIItemsDictionary;
 
+    private Item _itemScriptPlacement = null;
 
     private void Awake()
     {
@@ -35,9 +36,13 @@ public class ShoppingListUI : MonoBehaviour
         {
             GameObject itemUI = transform.GetChild(i).gameObject;
             Image itemImageUI = itemUI.GetComponent<Image>();
-            itemImageUI.sprite = ItemTypeList.ItemList[shoppingListItem.ItemCode].Image;
+
+            ItemTypeList.ItemList[shoppingListItem.ItemCode].ItemPrefab.TryGetComponent<Item>(out _itemScriptPlacement);
+            itemImageUI.sprite = _itemScriptPlacement.UISticker;
+
             itemImageUI.enabled = true;
             UIItemsDictionary.Add(shoppingListItem.ItemCode, itemUI);
+
             i++;
         }
     }

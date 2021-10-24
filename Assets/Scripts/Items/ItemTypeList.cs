@@ -27,7 +27,7 @@ public class ItemTypeList : MonoBehaviour
             return;
         }
 
-        DontDestroyOnLoad(gameObject);
+        gameObject.EnsureObjectDontDestroy();
 
         InitializeDictionary();
 

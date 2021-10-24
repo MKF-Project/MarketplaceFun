@@ -4,23 +4,41 @@ using System.Collections.Generic;
 using MLAPI;
 using UnityEngine;
 
-public class NetworkItemManager : NetworkBehaviour
+public class NetworkItemManager : MonoBehaviour
 {
+    private static NetworkItemManager _instance = null;
     private static Dictionary<string, GameObject> SpawnedItemList = null;
 
     private void Awake()
     {
-        SpawnedItemList = SpawnedItemList ?? new Dictionary<string, GameObject>();
+        if(_instance != null)
+        {
+            // NetworkItemManager is NOT the primary script on this GameObject,
+            // so it only Destroys itself when it
+            // detects a singleton already present
+            Destroy(this);
+
+            return;
+        }
+
+        _instance = this;
+        SpawnedItemList = new Dictionary<string, GameObject>();
+
+        gameObject.EnsureObjectDontDestroy();
     }
 
     private void OnDestroy()
     {
-        SpawnedItemList = null;
+        if(_instance == this)
+        {
+            _instance = null;
+            SpawnedItemList = null;
+        }
     }
-
 
     public static void RegisterItem(ulong prefabHash, ulong id, GameObject item)
     {
+
 
         string stringifiedKey = StringifyKey(prefabHash, id);
         if (!SpawnedItemList.ContainsKey(stringifiedKey))
@@ -34,7 +52,6 @@ public class NetworkItemManager : NetworkBehaviour
             }
         #endif
     }
-
 
     public static void UnregisterItem(ulong prefabHash, ulong id)
     {

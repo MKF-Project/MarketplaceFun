@@ -10,15 +10,33 @@ using UnityEngine;
 
 public class ItemGeneratorOld : NetworkBehaviour
 {
-    public int ItemTypeCode;
+    [SerializeField]
+    private GameObject _itemPrefab = null;
 
-    private GameObject _itemPrefab;
+    [HideInInspector]
+    public ulong ItemTypeCode { get; private set; } = Item.NO_ITEMTYPE_CODE;
+
     private Action<Item> _itemAction = null;
     private Interactable _interactScript = null;
 
     private void Awake()
     {
-        _itemPrefab = ItemTypeList.ItemList[ItemTypeCode].ItemPrefab;
+        NetworkObject itemNetObject = null;
+        if(_itemPrefab != null)
+        {
+            itemNetObject = _itemPrefab.GetComponent<NetworkObject>();
+        }
+
+        if(itemNetObject != null && ItemTypeList.ItemList.ContainsKey(itemNetObject.PrefabHash))
+        {
+            ItemTypeCode = itemNetObject.PrefabHash;
+            _itemPrefab = ItemTypeList.ItemList[ItemTypeCode].ItemPrefab;
+        }
+        else
+        {
+            ItemTypeCode = Item.NO_ITEMTYPE_CODE;
+            _itemPrefab = null;
+        }
 
         _interactScript = gameObject.GetComponentInChildren<Interactable>();
 
@@ -99,9 +117,13 @@ public class ItemGeneratorOld : NetworkBehaviour
 
     private NetworkObject SpawnItemWithOwnership(ulong ownerID, Vector3 location, Quaternion rotation)
     {
+        if(_itemPrefab == null)
+        {
+            return null;
+        }
+
         var generatedItem = Instantiate(_itemPrefab, location, rotation);
         var item = generatedItem.GetComponent<Item>();
-        item.ItemTypeCode = ItemTypeCode;
 
         var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
         itemNetworkObject.SpawnWithOwnership(ownerID, destroyWithScene: true);
@@ -123,18 +145,22 @@ public class ItemGeneratorOld : NetworkBehaviour
     private void GenerateItem_ServerRpc(ServerRpcParams rpcReceiveParams = default)
     {
         var itemNetworkObject = SpawnItemWithOwnership(rpcReceiveParams.Receive.SenderClientId, Vector3.zero, Quaternion.identity);
+        if(itemNetworkObject == null)
+        {
+            return;
+        }
+
         GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, ItemTypeCode, rpcReceiveParams.ReturnRpcToSender());
     }
 
     [ClientRpc]
-    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, int itemTypeCode, ClientRpcParams clientRpcParams = default)
+    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, ulong itemTypeCode, ClientRpcParams clientRpcParams = default)
     {
         GameObject itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
 
         if (itemGenerated != null)
         {
             var itemScript = itemGenerated.GetComponent<Item>();
-            itemScript.ItemTypeCode = itemTypeCode;
             _itemAction?.Invoke(itemScript);
             _itemAction = null;
         }

@@ -8,17 +8,19 @@ using UnityEngine;
 [SelectionBase]
 public class Item : NetworkBehaviour
 {
-    public const int NO_ITEMTYPE_CODE = int.MinValue;
+    public const ulong NO_ITEMTYPE_CODE = ulong.MinValue;
 
     private NetworkObject _networkObject;
 
     private ItemVisuals _itemVisuals = null;
 
+    // public string Name;
+    // public Sprite Image;
+
     [HideInInspector]
     public bool IsOnThrow;
 
-    [HideInInspector]
-    public int ItemTypeCode;
+    public ulong ItemTypeCode => NetworkObject.PrefabHash;
 
     public int EffectType;
 

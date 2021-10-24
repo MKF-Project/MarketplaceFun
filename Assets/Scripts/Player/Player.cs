@@ -20,7 +20,7 @@ public class Player : NetworkBehaviour
     private Transform _heldItemPosition;
 
     [HideInInspector]
-    public NetworkVariableInt HeldItemType { get; private set; } = new NetworkVariableInt(
+    public NetworkVariableULong HeldItemType { get; private set; } = new NetworkVariableULong(
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
@@ -100,7 +100,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private void onHeldItemChange(int previousItemType, int newItemType)
+    private void onHeldItemChange(ulong previousItemType, ulong newItemType)
     {
         if(previousItemType != Item.NO_ITEMTYPE_CODE)
         {

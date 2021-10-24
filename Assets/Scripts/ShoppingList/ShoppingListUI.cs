@@ -8,7 +8,7 @@ public class ShoppingListUI : MonoBehaviour
 {
 
     //public List<Image> UIItemsList;
-    public Dictionary<int, GameObject> UIItemsDictionary;
+    public Dictionary<ulong, GameObject> UIItemsDictionary;
 
 
     private void Awake()
@@ -18,7 +18,7 @@ public class ShoppingListUI : MonoBehaviour
 
     private void Start()
     {
-        UIItemsDictionary = new Dictionary<int, GameObject>();
+        UIItemsDictionary = new Dictionary<ulong, GameObject>();
         //FillUIItems();
     }
 
@@ -44,7 +44,7 @@ public class ShoppingListUI : MonoBehaviour
 
     public void EraseItems()
     {
-        UIItemsDictionary = new Dictionary<int, GameObject>();
+        UIItemsDictionary = new Dictionary<ulong, GameObject>();
         foreach (Image image in GetComponentsInChildren<Image>())
         {
             image.sprite = null;
@@ -52,7 +52,7 @@ public class ShoppingListUI : MonoBehaviour
         }
     }
 
-    public void CheckItem(int itemCode)
+    public void CheckItem(ulong itemCode)
     {
         GameObject itemUI = UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();
@@ -60,7 +60,7 @@ public class ShoppingListUI : MonoBehaviour
         imageCheckUI.enabled = true;
     }
 
-    public void UncheckItem(int itemCode)
+    public void UncheckItem(ulong itemCode)
     {
         GameObject itemUI = UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();

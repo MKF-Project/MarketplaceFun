@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using MLAPI;
-using MLAPI.Messaging;
 using MLAPI.Configuration;
 
 public class NetworkItemManager : MonoBehaviour

@@ -11,9 +11,7 @@ public class Item : NetworkBehaviour
     public const ulong NO_ITEMTYPE_CODE = ulong.MinValue;
 
     [SerializeField]
-    private GameObject _itemPrefab = null;
-    public GameObject Prefab { get; private set; }
-
+    public GameObject Prefab => NetworkItemManager.NetworkItemPrefabs[ItemTypeCode];
     public Sprite UISticker;
 
     private ItemVisuals _itemVisuals = null;
@@ -46,9 +44,9 @@ public class Item : NetworkBehaviour
     // Because before this the object doesn't have an networkId
     public override void NetworkStart()
     {
+        _networkObject = GetComponent<NetworkObject>();
         IsOnThrow = false;
         EffectType = 0;
-        _networkObject = GetComponent<NetworkObject>();
         RegisterItem();
     }
 
@@ -92,6 +90,21 @@ public class Item : NetworkBehaviour
         }
     }
 
+    public static NetworkObject SpawnItemWithOwnership(ulong prefabHash, ulong ownerID, Vector3 location, Quaternion rotation)
+    {
+        if(!NetworkController.IsServer)
+        {
+            return null;
+        }
+
+        var generatedItem = Instantiate(NetworkItemManager.NetworkItemPrefabs[prefabHash], location, rotation);
+
+        var itemNetworkObject = generatedItem.GetComponent<NetworkObject>();
+        itemNetworkObject.SpawnWithOwnership(ownerID, destroyWithScene: true);
+
+        return itemNetworkObject;
+    }
+
     private void TriggerDestroyItem()
     {
         IsOnThrow = false;
@@ -104,6 +117,7 @@ public class Item : NetworkBehaviour
         DestroyItem_ServerRpc();
     }
 
+    // RPCs
     [ServerRpc]
     public void DestroyItem_ServerRpc()
     {

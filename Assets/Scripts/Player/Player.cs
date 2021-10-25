@@ -178,7 +178,7 @@ public class Player : NetworkBehaviour
             var spawnPosition = _heldItemPosition.position + itemVisuals.handPositionOffset;
             var spawnRotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
 
-            _currentGenerator?.SpawnItemAsOwner(spawnPosition, spawnRotation, positionItem);
+            _currentGenerator?.GeneratePlayerHeldItem(spawnPosition, spawnRotation, positionItem);
         }
     }
 

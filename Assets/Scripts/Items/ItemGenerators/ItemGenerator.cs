@@ -46,7 +46,7 @@ public abstract class ItemGenerator: NetworkBehaviour
     }
 
     // Spawn
-    public void SpawnItemAsOwner(Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)
+    public void GeneratePlayerHeldItem(Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)
     {
         if(!NetworkController.IsClient || _currentPlayer == null)
         {
@@ -54,7 +54,7 @@ public abstract class ItemGenerator: NetworkBehaviour
         }
 
         _afterSpawn = afterSpawn;
-        SpawnItem_ServerRpc(_currentPlayer.HeldItemType.Value, position, rotation);
+        GenerateItem_ServerRpc(_currentPlayer.HeldItemType.Value, position, rotation);
 
         _currentPlayer._currentGenerator = null;
         _currentPlayer = null;
@@ -62,7 +62,7 @@ public abstract class ItemGenerator: NetworkBehaviour
 
     // RPCs
     [ServerRpc(RequireOwnership = false)]
-    private void SpawnItem_ServerRpc(ulong prefabHash, Vector3 position, Quaternion rotation, ServerRpcParams rpcReceiveParams = default)
+    private void GenerateItem_ServerRpc(ulong prefabHash, Vector3 position, Quaternion rotation, ServerRpcParams rpcReceiveParams = default)
     {
         var itemNetworkObject = Item.SpawnItemWithOwnership(prefabHash, rpcReceiveParams.Receive.SenderClientId, position, rotation);
         if(itemNetworkObject == null)
@@ -70,11 +70,11 @@ public abstract class ItemGenerator: NetworkBehaviour
             return;
         }
 
-        SpawnItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, rpcReceiveParams.ReturnRpcToSender());
+        GenerateItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, rpcReceiveParams.ReturnRpcToSender());
     }
 
     [ClientRpc]
-    private void SpawnItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
+    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
     {
         var itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
 

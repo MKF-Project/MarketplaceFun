@@ -71,7 +71,7 @@ public class Shelf : MonoBehaviour
 
         if(player.TryGetComponent<Player>(out _playerBuffer))
         {
-            _playerBuffer.HeldItemType.Value = ItemGenerator.TakeItem();
+            ItemGenerator.GiveItemToPlayer(_playerBuffer);
         }
     }
 }

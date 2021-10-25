@@ -50,8 +50,9 @@ public class SameRandomGenerator : ItemGenerator
         }
     }
 
-    public override ulong TakeItem()
+    public override void GiveItemToPlayer(Player player)
     {
-        return IsDepleted? Item.NO_ITEMTYPE_CODE : ItemPool[_randomIndex.Value];
+        base.GiveItemToPlayer(player);
+        player.HeldItemType.Value = IsDepleted? Item.NO_ITEMTYPE_CODE : ItemPool[_randomIndex.Value];
     }
 }

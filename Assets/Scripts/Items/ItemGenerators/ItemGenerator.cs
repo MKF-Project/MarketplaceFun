@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using MLAPI;
+using MLAPI.Messaging;
 
 public abstract class ItemGenerator: NetworkBehaviour
 {
+    // Selecting Item
+
     [SerializeField]
     protected List<GameObject> _itemPool = null;
     protected NetworkObject _netObjectBuffer = null;
@@ -14,7 +18,15 @@ public abstract class ItemGenerator: NetworkBehaviour
     public abstract bool IsDepleted { get; }
     public virtual bool IsStocked => !IsDepleted;
 
-    public abstract ulong TakeItem();
+    // Spawning Item
+    protected Action<Item> _afterSpawn = null;
+    protected Player _currentPlayer = null;
+
+    public virtual void GiveItemToPlayer(Player player)
+    {
+        _currentPlayer = player;
+        _currentPlayer._currentGenerator = this;
+    }
 
     protected virtual void Awake()
     {
@@ -33,4 +45,43 @@ public abstract class ItemGenerator: NetworkBehaviour
         }
     }
 
+    // Spawn
+    public void SpawnItemAsOwner(Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)
+    {
+        if(!NetworkController.IsClient || _currentPlayer == null)
+        {
+            return;
+        }
+
+        _afterSpawn = afterSpawn;
+        SpawnItem_ServerRpc(_currentPlayer.HeldItemType.Value, position, rotation);
+
+        _currentPlayer._currentGenerator = null;
+        _currentPlayer = null;
+    }
+
+    // RPCs
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnItem_ServerRpc(ulong prefabHash, Vector3 position, Quaternion rotation, ServerRpcParams rpcReceiveParams = default)
+    {
+        var itemNetworkObject = Item.SpawnItemWithOwnership(prefabHash, rpcReceiveParams.Receive.SenderClientId, position, rotation);
+        if(itemNetworkObject == null)
+        {
+            return;
+        }
+
+        SpawnItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, rpcReceiveParams.ReturnRpcToSender());
+    }
+
+    [ClientRpc]
+    private void SpawnItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
+    {
+        var itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
+
+        if(itemGenerated != null)
+        {
+            _afterSpawn?.Invoke(itemGenerated.GetComponent<Item>());
+            _afterSpawn = null;
+        }
+    }
 }

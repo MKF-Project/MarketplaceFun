@@ -18,6 +18,7 @@ public class Player : NetworkBehaviour
 
     // Held Item Vars
     private Transform _heldItemPosition;
+    internal ItemGenerator _currentGenerator = null;
 
     [HideInInspector]
     public NetworkVariableULong HeldItemType { get; private set; } = new NetworkVariableULong(
@@ -177,7 +178,7 @@ public class Player : NetworkBehaviour
             var spawnPosition = _heldItemPosition.position + itemVisuals.handPositionOffset;
             var spawnRotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
 
-            NetworkItemManager.SpawnItemAsOwner(HeldItemType.Value, spawnPosition, spawnRotation, positionItem);
+            _currentGenerator?.SpawnItemAsOwner(spawnPosition, spawnRotation, positionItem);
         }
     }
 

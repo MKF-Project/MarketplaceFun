@@ -129,18 +129,6 @@ public class NetworkItemManager : MonoBehaviour
         return SpawnedItemList[StringifyKey(prefabHash, id)];
     }
 
-    // Spawn
-    public static void SpawnItemAsOwner(ulong prefabHash, Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)
-    {
-        if(!NetworkController.IsClient)
-        {
-            return;
-        }
-
-        _afterSpawn = afterSpawn;
-        _instance.SpawnItem_ServerRpc(prefabHash, position, rotation);
-    }
-
     // This one is intended to be used when a player disconnects while holding an item
     // The item should be created server-side after the player disconnects
     public static void SpawnOwnerlessItem(ulong prefabHash, Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)
@@ -154,28 +142,5 @@ public class NetworkItemManager : MonoBehaviour
         afterSpawn?.Invoke(itemNetworkObject.GetComponent<Item>());
     }
 
-    // RPCs
-    [ServerRpc(RequireOwnership = false)]
-    private void SpawnItem_ServerRpc(ulong prefabHash, Vector3 position, Quaternion rotation, ServerRpcParams rpcReceiveParams = default)
-    {
-        var itemNetworkObject = Item.SpawnItemWithOwnership(prefabHash, rpcReceiveParams.Receive.SenderClientId, Vector3.zero, Quaternion.identity);
-        if(itemNetworkObject == null)
-        {
-            return;
-        }
 
-        SpawnItem_ClientRpc(itemNetworkObject.PrefabHash, itemNetworkObject.NetworkObjectId, rpcReceiveParams.ReturnRpcToSender());
-    }
-
-    [ClientRpc]
-    private void SpawnItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
-    {
-        var itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
-
-        if(itemGenerated != null)
-        {
-            _afterSpawn?.Invoke(itemGenerated.GetComponent<Item>());
-            _afterSpawn = null;
-        }
-    }
 }

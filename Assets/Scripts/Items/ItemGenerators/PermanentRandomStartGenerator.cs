@@ -7,7 +7,7 @@ using MLAPI.NetworkVariable;
 
 // Picks a random Item from the list at the start of the game
 // The random item chosen will NOT change after it has been defined.
-public class SameRandomGenerator : ItemGenerator
+public class PermanentRandomStartGenerator : ItemGenerator
 {
     // Intended to be used for debugging in the editor.
     // Does not affect final build

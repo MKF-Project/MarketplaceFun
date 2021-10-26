@@ -11,9 +11,11 @@ public abstract class ItemGenerator : NetworkBehaviour
     // Generation Events
     public delegate void OnDepletedDelegate();
     public event OnDepletedDelegate OnDepleted;
+    protected void InvokeOnDepleted() => OnDepleted?.Invoke();
 
     public delegate void OnRestockedDelegate(ulong itemID);
     public event OnRestockedDelegate OnRestocked;
+    protected void InvokeOnRestocked(ulong itemID) => OnRestocked?.Invoke(itemID);
 
     // Selecting Item
     [SerializeField]

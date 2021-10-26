@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
 public enum ShelfType
 {
@@ -12,12 +13,36 @@ public enum ShelfType
     Display  = 4
 }
 
-public class Shelf : MonoBehaviour
+public class Shelf : NetworkBehaviour
 {
     private const string ITEM_GROUP_VISUALS_NAME = "ItemGroupVisuals";
 
     public ShelfType Type;
-    public ItemGenerator ItemGenerator;
+
+    [SerializeField]
+    private ItemGenerator _itemGenerator = null;
+
+    private ItemGenerator _itemGeneratorInternal = null;
+    public ItemGenerator ItemGenerator
+    {
+        get => _itemGeneratorInternal;
+        set
+        {
+            if(_itemGeneratorInternal != null)
+            {
+                _itemGeneratorInternal.OnRestocked -= RestockItem;
+                _itemGeneratorInternal.OnDepleted -= ClearShelf;
+            }
+
+            if(value != null)
+            {
+                value.OnRestocked += RestockItem;
+                value.OnDepleted += ClearShelf;
+            }
+
+            _itemGeneratorInternal = value;
+        }
+    }
 
     private Player _playerBuffer;
 
@@ -42,13 +67,14 @@ public class Shelf : MonoBehaviour
         _interactScript.OnLookExit  += HideButtonPrompt;
         _interactScript.OnInteract  += GiveItemToPlayer;
 
-        if(ItemGenerator == null)
+        // Don't subscribe to ItemGenerator events if the inspector var is not defined
+        // or if we already defined the generator through some other script
+        if(_itemGenerator == null || ItemGenerator != null)
         {
             return;
         }
 
-        ItemGenerator.OnRestocked += RestockItem;
-        ItemGenerator.OnDepleted  += ClearShelf;
+        ItemGenerator = _itemGenerator;
     }
 
     private void OnDestroy()

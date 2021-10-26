@@ -731,6 +731,11 @@ PrefabInstance:
       propertyPath: ItemGenerator
       value: 
       objectReference: {fileID: 348215828}
+    - target: {fileID: -1648794478866889231, guid: 4dbce06cba4171b49a293ebef3f60b54,
+        type: 3}
+      propertyPath: _itemGenerator
+      value: 
+      objectReference: {fileID: 348215828}
     - target: {fileID: 199116856117143378, guid: 4dbce06cba4171b49a293ebef3f60b54,
         type: 3}
       propertyPath: m_Name
@@ -803,6 +808,11 @@ PrefabInstance:
     - target: {fileID: -1648794478866889231, guid: 4dbce06cba4171b49a293ebef3f60b54,
         type: 3}
       propertyPath: ItemGenerator
+      value: 
+      objectReference: {fileID: 986542941}
+    - target: {fileID: -1648794478866889231, guid: 4dbce06cba4171b49a293ebef3f60b54,
+        type: 3}
+      propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 986542941}
     - target: {fileID: 199116856117143378, guid: 4dbce06cba4171b49a293ebef3f60b54,
@@ -962,6 +972,11 @@ PrefabInstance:
     - target: {fileID: -1648794478866889231, guid: 4dbce06cba4171b49a293ebef3f60b54,
         type: 3}
       propertyPath: ItemGenerator
+      value: 
+      objectReference: {fileID: 348215828}
+    - target: {fileID: -1648794478866889231, guid: 4dbce06cba4171b49a293ebef3f60b54,
+        type: 3}
+      propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 348215828}
     - target: {fileID: 199116856117143378, guid: 4dbce06cba4171b49a293ebef3f60b54,
@@ -2684,6 +2699,11 @@ PrefabInstance:
     - target: {fileID: -1648794478866889231, guid: 4dbce06cba4171b49a293ebef3f60b54,
         type: 3}
       propertyPath: ItemGenerator
+      value: 
+      objectReference: {fileID: 986542941}
+    - target: {fileID: -1648794478866889231, guid: 4dbce06cba4171b49a293ebef3f60b54,
+        type: 3}
+      propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 986542941}
     - target: {fileID: 199116856117143378, guid: 4dbce06cba4171b49a293ebef3f60b54,

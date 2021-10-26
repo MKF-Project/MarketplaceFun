@@ -54,7 +54,7 @@ public abstract class ItemGenerator : NetworkBehaviour
         }
     }
 
-    public override void NetworkStart()
+    protected virtual void Start()
     {
         if(IsStocked)
         {

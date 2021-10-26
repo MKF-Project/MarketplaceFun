@@ -34,8 +34,6 @@ public class RandomCycleGenerator : ItemGenerator
 
     public override void NetworkStart()
     {
-        base.NetworkStart();
-
         _randomIndex.OnValueChanged = OnItemShuffle;
     }
 

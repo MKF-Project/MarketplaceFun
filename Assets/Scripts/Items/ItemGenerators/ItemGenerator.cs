@@ -6,15 +6,22 @@ using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
 
-public abstract class ItemGenerator: NetworkBehaviour
+public abstract class ItemGenerator : NetworkBehaviour
 {
-    // Selecting Item
+    // Generation Events
+    public delegate void OnDepletedDelegate();
+    public event OnDepletedDelegate OnDepleted;
 
+    public delegate void OnRestockedDelegate(ulong itemID);
+    public event OnRestockedDelegate OnRestocked;
+
+    // Selecting Item
     [SerializeField]
     protected List<GameObject> _itemPool = null;
     protected NetworkObject _netObjectBuffer = null;
     public List<ulong> ItemPool { get; protected set; }
 
+    public abstract ulong ItemInStock { get; }
     public abstract bool IsDepleted { get; }
     public virtual bool IsStocked => !IsDepleted;
 
@@ -45,6 +52,14 @@ public abstract class ItemGenerator: NetworkBehaviour
         }
     }
 
+    public override void NetworkStart()
+    {
+        if(IsStocked)
+        {
+            OnRestocked?.Invoke(ItemInStock);
+        }
+    }
+
     // Spawn
     public void GeneratePlayerHeldItem(Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)
     {
@@ -62,7 +77,7 @@ public abstract class ItemGenerator: NetworkBehaviour
 
     // RPCs
     [ServerRpc(RequireOwnership = false)]
-    private void GenerateItem_ServerRpc(ulong prefabHash, Vector3 position, Quaternion rotation, ServerRpcParams rpcReceiveParams = default)
+    protected void GenerateItem_ServerRpc(ulong prefabHash, Vector3 position, Quaternion rotation, ServerRpcParams rpcReceiveParams = default)
     {
         var itemNetworkObject = Item.SpawnItemWithOwnership(prefabHash, rpcReceiveParams.Receive.SenderClientId, position, rotation);
         if(itemNetworkObject == null)
@@ -74,7 +89,7 @@ public abstract class ItemGenerator: NetworkBehaviour
     }
 
     [ClientRpc]
-    private void GenerateItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
+    protected void GenerateItem_ClientRpc(ulong prefabHash, ulong id, ClientRpcParams clientRpcParams = default)
     {
         var itemGenerated = NetworkItemManager.GetNetworkItem(prefabHash, id);
 

@@ -65,6 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 066a8d7b4bb38314990404184b1f75ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
   ItemGenerator: {fileID: 0}
 --- !u!65 &4880705967885311016
 BoxCollider:
@@ -104,7 +105,7 @@ GameObject:
   - component: {fileID: 5808826009163823561}
   - component: {fileID: 4223557925802812956}
   m_Layer: 27
-  m_Name: Model
+  m_Name: ShelfVisuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,7 +183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2359814895232977763}
   m_Layer: 0
-  m_Name: ItemGroup
+  m_Name: ItemGroupVisuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

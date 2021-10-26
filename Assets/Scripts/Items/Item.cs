@@ -5,17 +5,25 @@ using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
 
+[Serializable]
+public struct ShelfItemGroup
+{
+    public ShelfType ShelfType;
+    public GameObject ItemGroupPrefab;
+}
+
 [SelectionBase]
 public class Item : NetworkBehaviour
 {
     public const ulong NO_ITEMTYPE_CODE = ulong.MinValue;
 
-    [SerializeField]
     public GameObject Prefab => NetworkItemManager.NetworkItemPrefabs[ItemTypeCode];
+
     public Sprite UISticker;
 
-    private ItemVisuals _itemVisuals = null;
+    public List<ShelfItemGroup> ShelfItemGroups;
 
+    private ItemVisuals _itemVisuals = null;
     private NetworkObject _networkObject;
 
     [HideInInspector]
@@ -23,6 +31,7 @@ public class Item : NetworkBehaviour
 
     public ulong ItemTypeCode => NetworkObject.PrefabHash;
 
+    [Header("Effect")]
     public int EffectType;
 
     public ItemVisuals ItemVisuals
@@ -67,9 +76,9 @@ public class Item : NetworkBehaviour
 
     private void Update()
     {
-        if (IsOnThrow)
+        if(IsOnThrow)
         {
-            if (gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude <= 0.1)
+            if(gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude <= 0.1)
             {
                 TriggerDestroyItem();
             }
@@ -78,16 +87,29 @@ public class Item : NetworkBehaviour
 
     public void OnCollisionEnter(Collision other)
     {
-        if (IsOnThrow)
+        if(IsOnThrow)
         {
             GameObject hitObject = other.gameObject;
-            if (hitObject.CompareTag("Player"))
+            if(hitObject.CompareTag("Player"))
             {
                 takeEffect = hitObject.GetComponent<TakeEffect>();
                 takeEffect.OnTakeEffect(0);
                 TriggerDestroyItem();
             }
         }
+    }
+
+    public GameObject GetShelfItemGroup(ShelfType shelfType)
+    {
+        for(int i = 0; i < ShelfItemGroups.Count; i++)
+        {
+            if(ShelfItemGroups[i].ShelfType == shelfType)
+            {
+                return ShelfItemGroups[i].ItemGroupPrefab;
+            }
+        }
+
+        return null;
     }
 
     public static NetworkObject SpawnItemWithOwnership(ulong prefabHash, ulong ownerID, Vector3 location, Quaternion rotation)

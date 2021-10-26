@@ -10,6 +10,7 @@ public class NetworkItemManager : MonoBehaviour
 {
     // Prefabs
     public static Dictionary<ulong, GameObject> NetworkItemPrefabs { get; private set; } = null;
+    private static Item _itemBuffer;
 
     [SerializeField]
     private List<GameObject> _registeredItems = new List<GameObject>();
@@ -86,11 +87,14 @@ public class NetworkItemManager : MonoBehaviour
         });
     }
 
+    public static Item GetItemPrefabScript(ulong itemID)
+    {
+        return NetworkItemPrefabs.TryGetValue(itemID, out var itemPrefab)? itemPrefab.TryGetComponent<Item>(out _itemBuffer)? _itemBuffer : null : null;
+    }
+
     /* Spawning */
     public static void RegisterItem(ulong prefabHash, ulong id, GameObject item)
     {
-
-
         string stringifiedKey = StringifyKey(prefabHash, id);
         if (!SpawnedItemList.ContainsKey(stringifiedKey))
         {

@@ -18,6 +18,8 @@ public class Player : NetworkBehaviour
 
     // Held Item Vars
     private Transform _heldItemPosition;
+    private ItemVisuals _heldItemVisuals = null;
+
     internal ItemGenerator _currentGenerator = null;
 
     [HideInInspector]
@@ -100,16 +102,16 @@ public class Player : NetworkBehaviour
         if(newItemType != Item.NO_ITEMTYPE_CODE)
         {
             var itemPrefab = NetworkItemManager.NetworkItemPrefabs[newItemType];
-            var itemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
+            _heldItemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
 
-            if(itemVisuals != null)
+            if(_heldItemVisuals != null)
             {
                 // Place visual item on player's hand
-                var generatedItem = Instantiate(itemVisuals.gameObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
+                var generatedItem = Instantiate(_heldItemVisuals.gameObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
 
                 generatedItem.transform.localPosition = Vector3.zero;
                 generatedItem.transform.localRotation = Quaternion.identity;
-                generatedItem.transform.localScale = itemVisuals.transform.localScale;
+                generatedItem.transform.localScale = _heldItemVisuals.transform.localScale;
 
                 generatedItem.GetComponent<ItemVisuals>()?.EnableHandVisuals();
 
@@ -131,6 +133,7 @@ public class Player : NetworkBehaviour
         else
         {
             HeldItem = null;
+            _heldItemVisuals = null;
         }
     }
 

@@ -28,6 +28,7 @@ public class SameRandomGenerator : ItemGenerator
         0
     );
 
+    public override ulong ItemInStock => ItemPool[_randomIndex.Value];
     public override bool IsDepleted => false;
 
     protected override void Awake()
@@ -53,6 +54,6 @@ public class SameRandomGenerator : ItemGenerator
     public override void GiveItemToPlayer(Player player)
     {
         base.GiveItemToPlayer(player);
-        player.HeldItemType.Value = IsDepleted? Item.NO_ITEMTYPE_CODE : ItemPool[_randomIndex.Value];
+        player.HeldItemType.Value = ItemPool[_randomIndex.Value];
     }
 }

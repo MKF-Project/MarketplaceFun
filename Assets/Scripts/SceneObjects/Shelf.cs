@@ -32,12 +32,14 @@ public class Shelf : NetworkBehaviour
             {
                 _itemGeneratorInternal.OnRestocked -= RestockItem;
                 _itemGeneratorInternal.OnDepleted -= ClearShelf;
+                _itemGeneratorInternal.UnregisterShelf(this);
             }
 
             if(value != null)
             {
                 value.OnRestocked += RestockItem;
                 value.OnDepleted += ClearShelf;
+                value.RegisterShelf(this);
             }
 
             _itemGeneratorInternal = value;
@@ -88,13 +90,7 @@ public class Shelf : NetworkBehaviour
         _interactScript.OnLookExit  -= HideButtonPrompt;
         _interactScript.OnInteract  -= GiveItemToPlayer;
 
-        if(ItemGenerator == null)
-        {
-            return;
-        }
-
-        ItemGenerator.OnRestocked -= RestockItem;
-        ItemGenerator.OnDepleted  -= ClearShelf;
+        ItemGenerator = null;
     }
 
     private void ShowButtonPrompt(GameObject player)

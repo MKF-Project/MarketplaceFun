@@ -31,12 +31,6 @@ public abstract class ItemGenerator : NetworkBehaviour
     protected Action<Item> _afterSpawn = null;
     protected Player _currentPlayer = null;
 
-    public virtual void GiveItemToPlayer(Player player)
-    {
-        _currentPlayer = player;
-        _currentPlayer._currentGenerator = this;
-    }
-
     protected virtual void Awake()
     {
         ItemPool = new List<ulong>(_itemPool.Count);
@@ -62,7 +56,37 @@ public abstract class ItemGenerator : NetworkBehaviour
         }
     }
 
+    // Initialization
+
+    // By default, an item generator does not need to know which
+    // shelves are registered to it, so this method does nothing.
+    // But in some cases we might want to keep track of each of the
+    // shelves that use this ItemGenerator
+    // (if we wanted to, for example, Spawn a different item for each shelf under this generator)
+    public virtual void RegisterShelf(Shelf shelf)
+    {
+        #if UNITY_EDITOR
+            Debug.Log($"[ItemGenerator]: {shelf.name} registered to {gameObject.name}");
+        #endif
+    }
+
+    // As with the RegisterShelf method, this does nothing by default.
+    // Use this if you need to know when a Shelf stops
+    // making use of this ItemGenerator.
+    public virtual void UnregisterShelf(Shelf shelf)
+    {
+        #if UNITY_EDITOR
+            Debug.Log($"[ItemGenerator]: {shelf.name} unregistered from {gameObject.name}");
+        #endif
+    }
+
     // Spawn
+    public virtual void GiveItemToPlayer(Player player)
+    {
+        _currentPlayer = player;
+        _currentPlayer._currentGenerator = this;
+    }
+
     public void GeneratePlayerHeldItem(Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)
     {
         if(!NetworkController.IsClient || _currentPlayer == null)

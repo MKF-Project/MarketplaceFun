@@ -50,10 +50,4 @@ public class PermanentRandomStartGenerator : ItemGenerator
             _randomIndex.Value = value;
         }
     }
-
-    public override void GiveItemToPlayer(Player player)
-    {
-        base.GiveItemToPlayer(player);
-        player.HeldItemType.Value = ItemPool[_randomIndex.Value];
-    }
 }

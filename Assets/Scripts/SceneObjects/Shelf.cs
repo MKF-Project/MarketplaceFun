@@ -35,14 +35,13 @@ public class Shelf : NetworkBehaviour
                 _itemGeneratorInternal.UnregisterShelf(this);
             }
 
+            _itemGeneratorInternal = value;
             if(value != null)
             {
                 value.OnRestocked += RestockItem;
                 value.OnDepleted += ClearShelf;
                 value.RegisterShelf(this);
             }
-
-            _itemGeneratorInternal = value;
         }
     }
 

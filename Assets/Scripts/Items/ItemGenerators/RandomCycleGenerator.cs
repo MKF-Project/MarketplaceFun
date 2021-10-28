@@ -41,7 +41,6 @@ public class RandomCycleGenerator : ItemGenerator
     {
         base.GiveItemToPlayer(player);
 
-        player.HeldItemType.Value = ItemPool[_randomIndex.Value];
         UpdateRandomIndex_ServerRpc();
     }
 

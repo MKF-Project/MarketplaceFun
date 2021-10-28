@@ -5018,6 +5018,9 @@ MonoBehaviour:
     - Prefab: {fileID: 5717460636556089509, guid: 41f3b9189b305a840825abf84dbcdf48,
         type: 3}
       PlayerPrefab: 0
+    - Prefab: {fileID: 5717460636556089509, guid: 7634bfc89822e614a95d90d29794f2ae,
+        type: 3}
+      PlayerPrefab: 0
     - Prefab: {fileID: 1467091572927595630, guid: 79ba415021884264ea9d5cac04ab3676,
         type: 3}
       PlayerPrefab: 0

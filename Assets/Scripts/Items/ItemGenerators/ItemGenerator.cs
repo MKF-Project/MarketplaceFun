@@ -85,6 +85,8 @@ public abstract class ItemGenerator : NetworkBehaviour
     {
         _currentPlayer = player;
         _currentPlayer._currentGenerator = this;
+
+        player.HeldItemType.Value = ItemInStock;
     }
 
     public void GeneratePlayerHeldItem(Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)

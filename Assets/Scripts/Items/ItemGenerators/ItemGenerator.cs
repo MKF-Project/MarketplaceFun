@@ -57,6 +57,18 @@ public abstract class ItemGenerator : NetworkBehaviour
     }
 
     // Initialization
+    /** -- ORDER OF EVENTS --
+     *
+     * 1. ItemGenerator/Shelf Awake() (No set order between them)
+     * 2. Register Shelves (During NetworkStart)
+     * 3. First Item Stock on ItemGenerator.Start()
+     *
+     * Notes:
+     * - Make sure NOT to register a shelf before ItemGenerator.Awake()
+     *   (To be certain, no sooner than NetworkStart())
+     * - If you think a shelf might be attached to a generator after Start(),
+     *   remember to check the current stock manually.
+     */
 
     // By default, an item generator does not need to know which
     // shelves are registered to it, so this method does nothing.

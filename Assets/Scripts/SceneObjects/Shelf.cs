@@ -32,7 +32,10 @@ public class Shelf : NetworkBehaviour
             {
                 _itemGeneratorInternal.OnRestocked -= RestockItem;
                 _itemGeneratorInternal.OnDepleted -= ClearShelf;
+
                 _itemGeneratorInternal.UnregisterShelf(this);
+                // Don't do anything with the old generator after Unregistering from it,
+                // we can't guarantee that it hasn't already been destroyed afterwards
             }
 
             _itemGeneratorInternal = value;
@@ -40,7 +43,10 @@ public class Shelf : NetworkBehaviour
             {
                 value.OnRestocked += RestockItem;
                 value.OnDepleted += ClearShelf;
+
                 value.RegisterShelf(this);
+                // Don't do anything after Register, since the new Generator might
+                // have changed this reference after this point
             }
         }
     }
@@ -54,6 +60,8 @@ public class Shelf : NetworkBehaviour
 
     private GameObject _itemGroupVisuals;
 
+    // Note: Check comments on ItemGenerator for an overview of the
+    // order of events between ItemGenerator and Shelf
     private void Awake()
     {
         _interactScript = gameObject.GetComponentInChildren<Interactable>();
@@ -67,7 +75,10 @@ public class Shelf : NetworkBehaviour
         _interactScript.OnLookEnter += ShowButtonPrompt;
         _interactScript.OnLookExit  += HideButtonPrompt;
         _interactScript.OnInteract  += GiveItemToPlayer;
+    }
 
+    public override void NetworkStart()
+    {
         // Don't subscribe to ItemGenerator events if the inspector var is not defined
         // or if we already defined the generator through some other script
         if(_itemGenerator == null || ItemGenerator != null)

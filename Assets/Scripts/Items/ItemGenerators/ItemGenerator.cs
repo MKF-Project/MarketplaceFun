@@ -33,6 +33,15 @@ public abstract class ItemGenerator : NetworkBehaviour
 
     protected virtual void Awake()
     {
+        if(_itemPool == null)
+        {
+            #if UNITY_EDITOR
+                Debug.LogError($"[{gameObject.name}/{nameof(ItemGenerator)}]: Itempool is not populated. You probably forgot to fill it with items, or you are using an ItemGenerator script directly instead of one within a GameObject on the scene");
+            #endif
+            ItemPool = new List<ulong>();
+            return;
+        }
+
         ItemPool = new List<ulong>(_itemPool.Count);
         for(int i = 0; i < _itemPool.Count; i++)
         {

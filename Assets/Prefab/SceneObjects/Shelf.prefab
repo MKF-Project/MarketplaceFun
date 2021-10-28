@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
-  ItemGenerator: {fileID: 0}
+  _itemGenerator: {fileID: 0}
 --- !u!65 &4880705967885311016
 BoxCollider:
   m_ObjectHideFlags: 0

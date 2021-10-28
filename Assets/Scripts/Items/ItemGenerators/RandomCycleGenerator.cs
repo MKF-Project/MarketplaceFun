@@ -5,8 +5,8 @@ using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 
-// Picks a random Item from the list at the start of the game
-// The random item chosen will NOT change after it has been defined.
+// Every time a Player interacts with one of the shelves that use this generator,
+// Select one a new item from it's list Randomly. May sometimes select the same item.
 public class RandomCycleGenerator : ItemGenerator
 {
     private NetworkVariableInt _randomIndex = new NetworkVariableInt(

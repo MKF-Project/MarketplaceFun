@@ -26,19 +26,30 @@ public class Freezer : Shelf
     public float TimeSkippedPerClick;
 
     private GameObject _freezerDoor;
+    private Quaternion _startingRotation;
     private float _lastInteraction;
     private float _timeStuck;
+    private bool _isClosing = false;
 
     protected override void Awake()
     {
         base.Awake();
 
         _freezerDoor = transform.Find(DOOR_NAME).gameObject;
+        _startingRotation = _freezerDoor.transform.localRotation;
 
         _timeStuck = DoorStuckDuration;
         _lastInteraction = -_timeStuck;
 
         IsOpen.OnValueChanged = OpenDoor;
+    }
+
+    private void Update()
+    {
+        if(_isClosing)
+        {
+            _freezerDoor.transform.Rotate(0, (-90 * Time.deltaTime) / CloseDoorDuration, 0, Space.Self);
+        }
     }
 
     protected override void ShowButtonPrompt(GameObject player)
@@ -72,11 +83,14 @@ public class Freezer : Shelf
         if(after)
         {
             _freezerDoor.transform.Rotate(0, 90, 0, Space.Self);
+            // VFXs...
+
+            StartCoroutine(CloseDoor());
         }
 
         else
         {
-            _freezerDoor.transform.Rotate(0, -90, 0, Space.Self);
+            _freezerDoor.transform.localRotation = _startingRotation;
         }
     }
 
@@ -84,12 +98,14 @@ public class Freezer : Shelf
     {
         yield return new WaitForSeconds(StayOpenDuration);
 
-        // Start Closing animation
-
+        _isClosing = true;
         yield return new WaitForSeconds(CloseDoorDuration);
 
-        IsOpen.Value = false;
-
+        _isClosing = false;
+        if(IsServer)
+        {
+            IsOpen.Value = false;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -103,12 +119,12 @@ public class Freezer : Shelf
 
             // OPEN
             IsOpen.Value = true;
-            StartCoroutine(CloseDoor());
         }
 
         else
         {
             _timeStuck -= TimeSkippedPerClick;
+            print($"Open attempt. time = {_timeStuck}");
 
             // UI SIGNAL / DOOR SHAKE
             DoorShake_ClientRpc();
@@ -118,6 +134,6 @@ public class Freezer : Shelf
     [ClientRpc]
     private void DoorShake_ClientRpc()
     {
-
+        print("Shake Door");
     }
 }

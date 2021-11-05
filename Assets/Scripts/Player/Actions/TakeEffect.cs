@@ -4,7 +4,7 @@ using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
 
-public class TakeEffect : NetworkBehaviour
+public class TakeEffect : ScorableAction
 {
     private Animator _animator;
 
@@ -12,6 +12,7 @@ public class TakeEffect : NetworkBehaviour
 
     private bool _isTakingEffect;
 
+    private ScoreType _scoreType;
 
     // Start is called before the first frame update
     void Awake()
@@ -20,22 +21,23 @@ public class TakeEffect : NetworkBehaviour
         _isTakingEffect = false;
     }
 
-    public void OnTakeEffect(int effectCode)
+    public void OnTakeEffect(int effectCode, ulong throwerId)
     {
         switch (effectCode)
         {
             case  0:
-                NormalEffect_ServerRpc();
+                NormalEffect_ServerRpc(throwerId);
                 break;
 
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void NormalEffect_ServerRpc()
+    public void NormalEffect_ServerRpc(ulong throwerId)
     {
         if (!_isTakingEffect)
         {
+            NetworkManager.ConnectedClients[throwerId].PlayerObject.GetComponent<PlayerScore>().ScoreAction(_scoreType);
             _isTakingEffect = true;
             NormalEffect_ClientRpc();
         }
@@ -65,4 +67,12 @@ public class TakeEffect : NetworkBehaviour
     {
         _isTakingEffect = false;
     }
+
+    
+    public override void SetScore(ScoreType scoreType)
+    {
+        _scoreType = scoreType;
+    }
+    
+    
 }

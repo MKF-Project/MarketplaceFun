@@ -37,8 +37,9 @@ public class Item : NetworkBehaviour
 
     public TakeEffect takeEffect;
 
-    // Object needs to be registered not before NetworkStart, like Awake
-    // Because before this the object doesn't have an networkId
+    public ulong ThrowerId;
+    //Object needs to be registered not before NetworkStart, like Awake
+    //Because before this the object doesn't have an networkId
     public override void NetworkStart()
     {
         IsOnThrow = false;
@@ -81,7 +82,7 @@ public class Item : NetworkBehaviour
             if (hitObject.CompareTag("Player"))
             {
                 takeEffect = hitObject.GetComponent<TakeEffect>();
-                takeEffect.OnTakeEffect(0);
+                takeEffect.OnTakeEffect(0, ThrowerId);
                 TriggerDestroyItem();
             }
         }

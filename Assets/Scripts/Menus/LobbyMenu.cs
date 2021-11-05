@@ -10,6 +10,9 @@ using MLAPI.NetworkVariable;
 public class LobbyMenu : NetworkBehaviour
 {
     // Events
+    public delegate void OnEnterLobbyDelegate();
+    public static event OnEnterLobbyDelegate OnEnterLobby;
+    
     public delegate void OnStartMatchDelegate();
     public static event OnStartMatchDelegate OnStartMatch;
 
@@ -45,8 +48,8 @@ public class LobbyMenu : NetworkBehaviour
 
     private void openLobbyMenu(bool isHost)
     {
-
         this.toggleMenuDelayed();
+        OnEnterLobby?.Invoke();
     }
 
 

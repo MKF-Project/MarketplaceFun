@@ -8,6 +8,9 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="CameraScript.cs" t="Include" />
+          <e p="Helpers" t="Include">
+            <e p="NetworkObjectSpawner.cs" t="Include" />
+          </e>
           <e p="InMatchCanvas" t="Include">
             <e p="AimCanvas.cs" t="Include" />
             <e p="MatchMessages.cs" t="Include" />
@@ -19,9 +22,11 @@
             <e p="ItemGenerator.cs" t="Include" />
             <e p="ItemType.cs" t="Include" />
             <e p="ItemTypeList.cs" t="Include" />
+            <e p="ItemVisuals.cs" t="Include" />
           </e>
           <e p="Managers" t="Include">
             <e p="ColorManager.cs" t="Include" />
+            <e p="MatchManager.cs" t="Include" />
           </e>
           <e p="Menus" t="Include">
             <e p="Auxiliary" t="Include">
@@ -44,6 +49,7 @@
           </e>
           <e p="Player" t="Include">
             <e p="Actions" t="Include">
+              <e p="CheckOut.cs" t="Include" />
               <e p="TakeEffect.cs" t="Include" />
             </e>
             <e p="Controls" t="Include">
@@ -63,10 +69,14 @@
             <e p="Player.cs" t="Include" />
             <e p="PlayerManager.cs" t="Include" />
             <e p="Put.cs" t="Include" />
+            <e p="Score" t="Include">
+              <e p="PlayerScore.cs" t="Include" />
+            </e>
             <e p="Throw.cs" t="Include" />
           </e>
           <e p="SceneManager.cs" t="Include" />
           <e p="SceneObjects" t="Include">
+            <e p="Barrier.cs" t="Include" />
             <e p="Cashier.cs" t="Include" />
             <e p="Shelf.cs" t="Include" />
             <e p="ShoppingCart" t="Include">
@@ -76,9 +86,16 @@
             <e p="Target.cs" t="Include" />
           </e>
           <e p="Score" t="Include">
+            <e p="ScoreActions" t="Include">
+              <e p="ScorableAction.cs" t="Include" />
+              <e p="ScoreList.cs" t="Include" />
+              <e p="ScoreType.cs" t="Include" />
+            </e>
+            <e p="ScoreAuditor.cs" t="Include" />
             <e p="ScoreCanvas.cs" t="Include" />
             <e p="ScoreController.cs" t="Include" />
             <e p="ScoreNetwork.cs" t="Include" />
+            <e p="ScorePoints.cs" t="Include" />
           </e>
           <e p="ShoppingList" t="Include">
             <e p="SerializedShoppingList.cs" t="Include" />
@@ -86,6 +103,7 @@
             <e p="ShoppingListItem.cs" t="Include" />
             <e p="ShoppingListUI.cs" t="Include" />
           </e>
+          <e p="SpawnController.cs" t="Include" />
           <e p="Utils.cs" t="Include" />
         </e>
       </e>

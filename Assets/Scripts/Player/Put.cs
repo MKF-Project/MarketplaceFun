@@ -33,7 +33,7 @@ public class Put : NetworkBehaviour
             {
                 if (_shoppingList.IsListChecked())
                 {
-                    _player.ListComplete();
+                    //_player.ListComplete();
                 }
 
                 _player.DropItem();

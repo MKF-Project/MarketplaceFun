@@ -6,11 +6,10 @@ using UnityEngine.UI;
 public class ScoreCanvas : MonoBehaviour
 {
 
-
     private void Awake()
     {
         GameObject.FindGameObjectsWithTag("ShoppingListUI")[0].GetComponent<ShoppingListUI>().EraseItems();
-        if (ScoreController.Instance.IAmWinner)
+        if (true)//ScoreController.Instance.IAmWinner)
         {
             ShowWin();
         }

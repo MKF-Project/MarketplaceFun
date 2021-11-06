@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
@@ -22,6 +23,7 @@ public class Freezer : Shelf
 
     // UI
     private const string ANIM_DOOR_STUCK = "DoorStuck";
+    private const string FILL_CIRCLE_PATH = "InteractObject/InteractCanvas/FillCircle";
 
     [HideInInspector]
     public NetworkVariable<FreezerDoorState> DoorState = new NetworkVariable<FreezerDoorState>
@@ -43,8 +45,10 @@ public class Freezer : Shelf
     [SerializeField] private float DoorStuckDuration;
     [SerializeField] private float TimeSkippedPerClick;
     private Animator _animator;
-    private float _lastInteraction;
+    private Image _fillCircle;
+    // private float _lastInteraction;
     private float _stuckTimeLeft;
+    private float _setStuckTime;
     private bool _isClosing = false;
 
     protected override void Awake()
@@ -53,8 +57,13 @@ public class Freezer : Shelf
 
         _animator = GetComponent<Animator>();
 
+        _fillCircle = transform.Find(FILL_CIRCLE_PATH).GetComponent<Image>();
+        _fillCircle.enabled = false;
+        _fillCircle.fillAmount = 0;
+
         _stuckTimeLeft = DoorStuckDuration;
-        _lastInteraction = -_stuckTimeLeft;
+        _setStuckTime = -DoorStuckDuration;
+        // _lastInteraction = -_stuckTimeLeft;
 
         DoorState.OnValueChanged = HandleDoorState;
     }
@@ -62,10 +71,15 @@ public class Freezer : Shelf
     private void Update()
     {
         // Unset stuck from freezer door if it has waited enough time
-        if(IsServer && DoorState.Value == FreezerDoorState.Stuck && Time.time - _lastInteraction > _stuckTimeLeft)
+        if(DoorState.Value == FreezerDoorState.Stuck)
         {
-            _stuckTimeLeft = DoorStuckDuration;
-            DoorState.Value = FreezerDoorState.Closed;
+            var secondsStuck = Time.time - _setStuckTime;
+            _fillCircle.fillAmount = secondsStuck / _stuckTimeLeft;
+
+            if(IsServer && secondsStuck > _stuckTimeLeft)
+            {
+                DoorState.Value = FreezerDoorState.Closed;
+            }
         }
     }
 
@@ -104,20 +118,34 @@ public class Freezer : Shelf
 
     private void HandleDoorState(FreezerDoorState before, FreezerDoorState after)
     {
+        _fillCircle.fillAmount = 0;
+
         switch(after)
         {
             case FreezerDoorState.Closed:
+                _stuckTimeLeft = DoorStuckDuration;
+
                 _animator.SetBool(ANIM_DOOR_STUCK, false);
+
+                _fillCircle.enabled = false;
                 break;
 
             case FreezerDoorState.Open:
+                _stuckTimeLeft = DoorStuckDuration;
+
                 _animator.SetBool(ANIM_DOOR_STUCK, false);
                 _animator.SetTrigger(ANIM_DOOR_OPEN);
+
+                _fillCircle.enabled = false;
+
                 StartCoroutine(CloseDoor());
                 break;
 
             case FreezerDoorState.Stuck:
                 _animator.SetBool(ANIM_DOOR_STUCK, true);
+
+                _fillCircle.enabled = true;
+                _setStuckTime = Time.time;
                 break;
         }
     }
@@ -138,6 +166,7 @@ public class Freezer : Shelf
         if(IsServer)
         {
             DoorState.Value = FreezerDoorState.Stuck;
+            _setStuckTime = Time.time;
         }
     }
 
@@ -146,25 +175,22 @@ public class Freezer : Shelf
     {
         if(DoorState.Value == FreezerDoorState.Closed)
         {
-            _lastInteraction = Time.time;
-
             DoorState.Value = FreezerDoorState.Open;
         }
 
         else if(DoorState.Value == FreezerDoorState.Stuck)
         {
-            _stuckTimeLeft -= TimeSkippedPerClick;
-
-            print($"Open attempt. time = {_stuckTimeLeft}");
-
-            // UI SIGNAL / DOOR SHAKE
-            DoorShake_ClientRpc();
+            FailedAttemptDoorOpen_ClientRpc();
         }
     }
 
     [ClientRpc]
-    private void DoorShake_ClientRpc()
+    private void FailedAttemptDoorOpen_ClientRpc()
     {
+        _stuckTimeLeft -= TimeSkippedPerClick;
+        print($"Open attempt. time = {_stuckTimeLeft}");
+
+        // UI SIGNAL / DOOR SHAKE
         _animator.SetTrigger(ANIM_DOOR_SHAKE);
     }
 }

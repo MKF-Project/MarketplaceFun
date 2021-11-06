@@ -51,8 +51,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 1
   _itemGenerator: {fileID: 0}
-  IsOpen:
-    m_InternalValue: 0
   StayOpenDuration: 2
   CloseDoorDuration: 2
   DoorStuckDuration: 10
@@ -423,6 +421,11 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 3356180859147035515, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5764352470918858684, guid: fee8405d92c31f74dab45dbad02fddf3,
         type: 3}
       propertyPath: m_Name
@@ -437,6 +440,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 7495407682964969629, guid: fee8405d92c31f74dab45dbad02fddf3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fee8405d92c31f74dab45dbad02fddf3, type: 3}

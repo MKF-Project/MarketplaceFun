@@ -5,22 +5,33 @@ using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 
+public enum FreezerDoorState
+{
+    Closed,
+    Open,
+    Stuck
+}
+
 [SelectionBase]
 public class Freezer : Shelf
 {
+    // Door Movement
     private const string ANIM_DOOR_OPEN = "OpenDoor";
     private const string ANIM_DOOR_CLOSE = "CloseDoor";
     private const string ANIM_DOOR_SHAKE = "ShakeDoor";
 
+    // UI
+    private const string ANIM_DOOR_STUCK = "DoorStuck";
+
     [HideInInspector]
-    public NetworkVariableBool IsOpen = new NetworkVariableBool
+    public NetworkVariable<FreezerDoorState> DoorState = new NetworkVariable<FreezerDoorState>
     (
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
             WritePermission = NetworkVariablePermission.ServerOnly
         },
-        false
+        FreezerDoorState.Closed
     );
 
     // These might be runtime changeable in the future, but if so, this would require
@@ -33,7 +44,7 @@ public class Freezer : Shelf
     [SerializeField] private float TimeSkippedPerClick;
     private Animator _animator;
     private float _lastInteraction;
-    private float _timeStuck;
+    private float _stuckTimeLeft;
     private bool _isClosing = false;
 
     protected override void Awake()
@@ -42,15 +53,28 @@ public class Freezer : Shelf
 
         _animator = GetComponent<Animator>();
 
-        _timeStuck = DoorStuckDuration;
-        _lastInteraction = -_timeStuck;
+        _stuckTimeLeft = DoorStuckDuration;
+        _lastInteraction = -_stuckTimeLeft;
 
-        IsOpen.OnValueChanged = OpenDoor;
+        DoorState.OnValueChanged = HandleDoorState;
+    }
+
+    private void Update()
+    {
+        // Unset stuck from freezer door if it has waited enough time
+        if(IsServer && DoorState.Value == FreezerDoorState.Stuck && Time.time - _lastInteraction > _stuckTimeLeft)
+        {
+            _stuckTimeLeft = DoorStuckDuration;
+            DoorState.Value = FreezerDoorState.Closed;
+        }
     }
 
     protected override void ShowButtonPrompt(GameObject player)
     {
-        if(IsOpen.Value)
+        // If the door is open, we defer to the default Shelf script
+        // which decides wether or not to show UI based on
+        // item availability in the generator
+        if(DoorState.Value == FreezerDoorState.Open)
         {
             base.ShowButtonPrompt(player);
         }
@@ -63,23 +87,38 @@ public class Freezer : Shelf
 
     protected override void InteractWithShelf(GameObject player)
     {
-        if(IsOpen.Value)
+        // Defer to base shelf script when the time comes
+        // to request a generated item
+        if(DoorState.Value == FreezerDoorState.Open)
         {
             base.InteractWithShelf(player);
         }
 
+        // Otherwise, if the door is closed
+        // we first request it to be opened
         else if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
         {
             RequestDoorOpen_ServerRpc();
         }
     }
 
-    private void OpenDoor(bool before, bool after)
+    private void HandleDoorState(FreezerDoorState before, FreezerDoorState after)
     {
-        if(after)
+        switch(after)
         {
-            _animator.SetTrigger(ANIM_DOOR_OPEN);
-            StartCoroutine(CloseDoor());
+            case FreezerDoorState.Closed:
+                _animator.SetBool(ANIM_DOOR_STUCK, false);
+                break;
+
+            case FreezerDoorState.Open:
+                _animator.SetBool(ANIM_DOOR_STUCK, false);
+                _animator.SetTrigger(ANIM_DOOR_OPEN);
+                StartCoroutine(CloseDoor());
+                break;
+
+            case FreezerDoorState.Stuck:
+                _animator.SetBool(ANIM_DOOR_STUCK, true);
+                break;
         }
     }
 
@@ -98,27 +137,25 @@ public class Freezer : Shelf
 
         if(IsServer)
         {
-            IsOpen.Value = false;
+            DoorState.Value = FreezerDoorState.Stuck;
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void RequestDoorOpen_ServerRpc()
     {
-        // Can open freezer without waiting
-        if(Time.time - _lastInteraction > _timeStuck)
+        if(DoorState.Value == FreezerDoorState.Closed)
         {
-            _timeStuck = DoorStuckDuration;
             _lastInteraction = Time.time;
 
-            // OPEN
-            IsOpen.Value = true;
+            DoorState.Value = FreezerDoorState.Open;
         }
 
-        else
+        else if(DoorState.Value == FreezerDoorState.Stuck)
         {
-            _timeStuck -= TimeSkippedPerClick;
-            print($"Open attempt. time = {_timeStuck}");
+            _stuckTimeLeft -= TimeSkippedPerClick;
+
+            print($"Open attempt. time = {_stuckTimeLeft}");
 
             // UI SIGNAL / DOOR SHAKE
             DoorShake_ClientRpc();

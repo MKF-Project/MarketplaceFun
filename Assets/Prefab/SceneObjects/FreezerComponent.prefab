@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3328204990732231192}
   - component: {fileID: 2122095892856110326}
   - component: {fileID: 3328204990732231190}
+  - component: {fileID: 2401940205234522657}
   m_Layer: 27
   m_Name: FreezerComponent
   m_TagString: Untagged
@@ -73,6 +74,25 @@ MonoBehaviour:
   PrefabHashGenerator: FreezerComponent
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
+--- !u!95 &2401940205234522657
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3328204990732231188}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3b43f97c7ccbb59449803e9738c704ab, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5359953190950930242
 GameObject:
   m_ObjectHideFlags: 0

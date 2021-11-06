@@ -5,9 +5,12 @@ using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 
+[SelectionBase]
 public class Freezer : Shelf
 {
-    private const string DOOR_NAME = "Door";
+    private const string ANIM_DOOR_OPEN = "OpenDoor";
+    private const string ANIM_DOOR_CLOSE = "CloseDoor";
+    private const string ANIM_DOOR_SHAKE = "ShakeDoor";
 
     [HideInInspector]
     public NetworkVariableBool IsOpen = new NetworkVariableBool
@@ -20,13 +23,15 @@ public class Freezer : Shelf
         false
     );
 
-    public float StayOpenDuration;
-    public float CloseDoorDuration;
-    public float DoorStuckDuration;
-    public float TimeSkippedPerClick;
-
-    private GameObject _freezerDoor;
-    private Quaternion _startingRotation;
+    // These might be runtime changeable in the future, but if so, this would require
+    // networking and NetworkVariables. so for the time being these are
+    // private, so that they aren't used in other scrripts without the proper
+    // networking framework.
+    [SerializeField] private float StayOpenDuration;
+    [SerializeField] private float CloseDoorDuration;
+    [SerializeField] private float DoorStuckDuration;
+    [SerializeField] private float TimeSkippedPerClick;
+    private Animator _animator;
     private float _lastInteraction;
     private float _timeStuck;
     private bool _isClosing = false;
@@ -35,21 +40,12 @@ public class Freezer : Shelf
     {
         base.Awake();
 
-        _freezerDoor = transform.Find(DOOR_NAME).gameObject;
-        _startingRotation = _freezerDoor.transform.localRotation;
+        _animator = GetComponent<Animator>();
 
         _timeStuck = DoorStuckDuration;
         _lastInteraction = -_timeStuck;
 
         IsOpen.OnValueChanged = OpenDoor;
-    }
-
-    private void Update()
-    {
-        if(_isClosing)
-        {
-            _freezerDoor.transform.Rotate(0, (-90 * Time.deltaTime) / CloseDoorDuration, 0, Space.Self);
-        }
     }
 
     protected override void ShowButtonPrompt(GameObject player)
@@ -82,15 +78,8 @@ public class Freezer : Shelf
     {
         if(after)
         {
-            _freezerDoor.transform.Rotate(0, 90, 0, Space.Self);
-            // VFXs...
-
+            _animator.SetTrigger(ANIM_DOOR_OPEN);
             StartCoroutine(CloseDoor());
-        }
-
-        else
-        {
-            _freezerDoor.transform.localRotation = _startingRotation;
         }
     }
 
@@ -98,10 +87,15 @@ public class Freezer : Shelf
     {
         yield return new WaitForSeconds(StayOpenDuration);
 
-        _isClosing = true;
+        // Match the animator speed with the desired close duration
+        _animator.speed = 1f / CloseDoorDuration;
+        _animator.SetTrigger(ANIM_DOOR_CLOSE);
+
         yield return new WaitForSeconds(CloseDoorDuration);
 
-        _isClosing = false;
+        // Reset animator speed afterwards
+        _animator.speed = 1f;
+
         if(IsServer)
         {
             IsOpen.Value = false;
@@ -134,6 +128,6 @@ public class Freezer : Shelf
     [ClientRpc]
     private void DoorShake_ClientRpc()
     {
-        print("Shake Door");
+        _animator.SetTrigger(ANIM_DOOR_SHAKE);
     }
 }

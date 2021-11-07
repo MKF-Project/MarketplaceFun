@@ -14,6 +14,11 @@ public abstract class PlayerControls : NetworkBehaviour
     protected const string CAMERA_POSITION_NAME = "CameraPosition";
     public const float MINIMUM_INTERACTION_COOLDOWN = 0.1f;
 
+    // Animator consts
+    protected const string PLAYER_MODEL_TAG = "PlayerModel";
+    protected const string PARAMETER_X = "Velocidade_X";
+    protected const string PARAMETER_Z = "Velocidade_Z";
+
     // This is the maximum speed the player is allowed to turn,
     // regardless of other factors. Keep this at a high value to allow fast mouse movement
     private const float MAX_ANGULAR_VELOCITY = 25;
@@ -55,6 +60,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
     // Components
     protected Rigidbody _rigidBody;
+    protected Animator _playerModelAnimator;
     protected GameObject _currentLookingObject = null;
     protected Player _playerScript = null;
 
@@ -126,6 +132,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _rigidBody = gameObject.GetComponent<Rigidbody>();
 
+        gameObject.FindChildWithTag(PLAYER_MODEL_TAG).TryGetComponent<Animator>(out _playerModelAnimator);
+
         _playerScript = gameObject.GetComponent<Player>();
 
         _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
@@ -135,6 +143,11 @@ public abstract class PlayerControls : NetworkBehaviour
             if(_rigidBody == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Rigidbody not Found!");
+            }
+
+            if(_playerModelAnimator == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Animator not Found!");
             }
 
             if(_cameraPosition == null)
@@ -413,6 +426,9 @@ public abstract class PlayerControls : NetworkBehaviour
         }
 
         _currentDirection = direction;
+
+        _playerModelAnimator.SetFloat(PARAMETER_X, direction.x * (_currentSpeed / MoveSpeed));
+        _playerModelAnimator.SetFloat(PARAMETER_Z, direction.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Look(Vector2 direction)
@@ -443,6 +459,9 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _isWalking = !_isWalking;
         _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
+
+        _playerModelAnimator.SetFloat(PARAMETER_X, _currentDirection.x * (_currentSpeed / MoveSpeed));
+        _playerModelAnimator.SetFloat(PARAMETER_Z, _currentDirection.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Interact()

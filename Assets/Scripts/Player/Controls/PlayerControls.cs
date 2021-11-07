@@ -15,9 +15,11 @@ public abstract class PlayerControls : NetworkBehaviour
     public const float MINIMUM_INTERACTION_COOLDOWN = 0.1f;
 
     // Animator consts
-    protected const string PLAYER_MODEL_TAG = "PlayerModel";
-    protected const string PARAMETER_X = "Velocidade_X";
-    protected const string PARAMETER_Z = "Velocidade_Z";
+    protected const string ANIM_HOLD_ITEM_STATE = "Movimentacao_Com_Item";
+    protected const string ANIM_PARAMETER_X = "Velocidade_X";
+    protected const string ANIM_PARAMETER_Z = "Velocidade_Z";
+    protected const string ANIM_ITEM_IN_HAND = "Item_na_mao";
+    protected const string ANIM_THROW = "Atirar_Item";
 
     // This is the maximum speed the player is allowed to turn,
     // regardless of other factors. Keep this at a high value to allow fast mouse movement
@@ -62,6 +64,7 @@ public abstract class PlayerControls : NetworkBehaviour
     protected Rigidbody _rigidBody;
     protected Animator _playerModelAnimator;
     protected GameObject _currentLookingObject = null;
+    protected GameObject _onInteractLookingObject = null;
     protected Player _playerScript = null;
 
     protected GameObject _cameraPosition;
@@ -132,7 +135,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _rigidBody = gameObject.GetComponent<Rigidbody>();
 
-        gameObject.FindChildWithTag(PLAYER_MODEL_TAG).TryGetComponent<Animator>(out _playerModelAnimator);
+        gameObject.TryGetComponent<Animator>(out _playerModelAnimator);
 
         _playerScript = gameObject.GetComponent<Player>();
 
@@ -277,6 +280,12 @@ public abstract class PlayerControls : NetworkBehaviour
                 _currentLookingObject = null;
             }
             return;
+        }
+
+
+        if(!_playerScript.IsHoldingItem && _playerModelAnimator.GetCurrentAnimatorStateInfo(0).IsName(ANIM_HOLD_ITEM_STATE))
+        {
+            _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
         }
 
         // Wait before interaction
@@ -427,8 +436,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _currentDirection = direction;
 
-        _playerModelAnimator.SetFloat(PARAMETER_X, direction.x * (_currentSpeed / MoveSpeed));
-        _playerModelAnimator.SetFloat(PARAMETER_Z, direction.y * (_currentSpeed / MoveSpeed));
+        _playerModelAnimator.SetFloat(ANIM_PARAMETER_X, direction.x * (_currentSpeed / MoveSpeed));
+        _playerModelAnimator.SetFloat(ANIM_PARAMETER_Z, direction.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Look(Vector2 direction)
@@ -460,8 +469,8 @@ public abstract class PlayerControls : NetworkBehaviour
         _isWalking = !_isWalking;
         _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
 
-        _playerModelAnimator.SetFloat(PARAMETER_X, _currentDirection.x * (_currentSpeed / MoveSpeed));
-        _playerModelAnimator.SetFloat(PARAMETER_Z, _currentDirection.y * (_currentSpeed / MoveSpeed));
+        _playerModelAnimator.SetFloat(ANIM_PARAMETER_X, _currentDirection.x * (_currentSpeed / MoveSpeed));
+        _playerModelAnimator.SetFloat(ANIM_PARAMETER_Z, _currentDirection.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Interact()
@@ -473,9 +482,20 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
+        _onInteractLookingObject = _currentLookingObject;
+        if(_onInteractLookingObject != null)
+        {
+            _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, true);
+        }
+    }
+
+    private void ExecuteGrab()
+    {
         _lastInteractionTime = Time.time;
 
-        _currentLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
+        _onInteractLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
+        _onInteractLookingObject = null;
+
         HasInteractedThisFrame = true;
     }
 
@@ -487,10 +507,16 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
+        _playerModelAnimator.SetTrigger(ANIM_THROW);
+    }
+
+    private void ExecuteThrow()
+    {
+        _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after
         _playerScript.ThrowItem((item) => _currentLookingObject = null);
-
     }
 
     public virtual void Drop()
@@ -500,6 +526,8 @@ public abstract class PlayerControls : NetworkBehaviour
         {
             return;
         }
+
+        _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
 
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after

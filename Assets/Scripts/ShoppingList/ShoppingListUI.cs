@@ -8,17 +8,23 @@ public class ShoppingListUI : MonoBehaviour
 {
 
     //public List<Image> UIItemsList;
-    public Dictionary<int, GameObject> UIItemsDictionary;
+    public Dictionary<ulong, GameObject> UIItemsDictionary;
 
+    [SerializeField]
+    private Sprite StartingCheckedImage;
+    public static Sprite CheckedImage { get; private set; }
+
+    private Item _itemScriptPlacement = null;
 
     private void Awake()
     {
+        CheckedImage = StartingCheckedImage;
         DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        UIItemsDictionary = new Dictionary<int, GameObject>();
+        UIItemsDictionary = new Dictionary<ulong, GameObject>();
         //FillUIItems();
     }
 
@@ -35,16 +41,20 @@ public class ShoppingListUI : MonoBehaviour
         {
             GameObject itemUI = transform.GetChild(i).gameObject;
             Image itemImageUI = itemUI.GetComponent<Image>();
-            itemImageUI.sprite = ItemTypeList.ItemList[shoppingListItem.ItemCode].Image;
+
+            NetworkItemManager.NetworkItemPrefabs[shoppingListItem.ItemCode].TryGetComponent<Item>(out _itemScriptPlacement);
+            itemImageUI.sprite = _itemScriptPlacement.UISticker;
+
             itemImageUI.enabled = true;
             UIItemsDictionary.Add(shoppingListItem.ItemCode, itemUI);
+
             i++;
         }
     }
 
     public void EraseItems()
     {
-        UIItemsDictionary = new Dictionary<int, GameObject>();
+        UIItemsDictionary = new Dictionary<ulong, GameObject>();
         foreach (Image image in GetComponentsInChildren<Image>())
         {
             image.sprite = null;
@@ -52,15 +62,15 @@ public class ShoppingListUI : MonoBehaviour
         }
     }
 
-    public void CheckItem(int itemCode)
+    public void CheckItem(ulong itemCode)
     {
         GameObject itemUI = UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();
-        imageCheckUI.sprite = ItemTypeList.CheckedImage;
+        imageCheckUI.sprite = CheckedImage;
         imageCheckUI.enabled = true;
     }
 
-    public void UncheckItem(int itemCode)
+    public void UncheckItem(ulong itemCode)
     {
         GameObject itemUI = UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();

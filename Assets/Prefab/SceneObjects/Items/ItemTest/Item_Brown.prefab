@@ -127,8 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d929cf1db6a7414ebd93b8ee0de361f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemPrefab: {fileID: 4678254042487678087}
+  UISticker: {fileID: 6246745314625155968, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
+    type: 3}
   IsOnThrow: 0
-  ItemTypeCode: 8
   EffectType: 0
   takeEffect: {fileID: 0}
 --- !u!114 &3106622920885788500

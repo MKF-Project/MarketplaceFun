@@ -18,9 +18,12 @@ public class Player : NetworkBehaviour
 
     // Held Item Vars
     private Transform _heldItemPosition;
+    private ItemVisuals _heldItemVisuals = null;
+
+    internal ItemGenerator _currentGenerator = null;
 
     [HideInInspector]
-    public NetworkVariableInt HeldItemType { get; private set; } = new NetworkVariableInt(
+    public NetworkVariableULong HeldItemType { get; private set; } = new NetworkVariableULong(
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
@@ -29,20 +32,8 @@ public class Player : NetworkBehaviour
         Item.NO_ITEMTYPE_CODE
     );
 
-    private ItemGenerator _heldItemGenerator = null;
-    [HideInInspector]
-    public ItemGenerator HeldItemGenerator
-    {
-        get => _heldItemGenerator;
-        set
-        {
-            _heldItemGenerator = value;
-            HeldItemType.Value = value != null? value.ItemTypeCode : Item.NO_ITEMTYPE_CODE;
-        }
-    }
-
     public GameObject HeldItem { get; private set; } = null;
-    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE && HeldItemGenerator != null;
+    public bool IsHoldingItem => HeldItemType.Value != Item.NO_ITEMTYPE_CODE;
 
     [HideInInspector]
     public bool IsDrivingCart;
@@ -85,7 +76,7 @@ public class Player : NetworkBehaviour
         IsDrivingCart = false;
         IsListComplete = false;
 
-        HeldItemType.OnValueChanged = onHeldItemChange;
+        HeldItemType.OnValueChanged = OnHeldItemChange;
     }
 
     public delegate void OnBeforeDestroyDelegate(Player player);
@@ -96,11 +87,11 @@ public class Player : NetworkBehaviour
 
         if(IsServer && HeldItemType.Value != Item.NO_ITEMTYPE_CODE)
         {
-            HeldItemGenerator?.GenerateOwnerlessItem(_heldItemPosition.position, _heldItemPosition.rotation);
+            NetworkItemManager.SpawnOwnerlessItem(HeldItemType.Value, _heldItemPosition.position, _heldItemPosition.rotation);
         }
     }
 
-    private void onHeldItemChange(int previousItemType, int newItemType)
+    private void OnHeldItemChange(ulong previousItemType, ulong newItemType)
     {
         if(previousItemType != Item.NO_ITEMTYPE_CODE)
         {
@@ -110,17 +101,17 @@ public class Player : NetworkBehaviour
 
         if(newItemType != Item.NO_ITEMTYPE_CODE)
         {
-            var itemPrefab = ItemTypeList.ItemList[newItemType].ItemPrefab;
-            var itemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
+            var itemPrefab = NetworkItemManager.NetworkItemPrefabs[newItemType];
+            _heldItemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
 
-            if(itemVisuals != null)
+            if(_heldItemVisuals != null)
             {
                 // Place visual item on player's hand
-                var generatedItem = Instantiate(itemVisuals.gameObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
+                var generatedItem = Instantiate(_heldItemVisuals.gameObject, Vector3.zero, Quaternion.identity, _heldItemPosition);
 
                 generatedItem.transform.localPosition = Vector3.zero;
                 generatedItem.transform.localRotation = Quaternion.identity;
-                generatedItem.transform.localScale = itemVisuals.transform.localScale;
+                generatedItem.transform.localScale = _heldItemVisuals.transform.localScale;
 
                 generatedItem.GetComponent<ItemVisuals>()?.EnableHandVisuals();
 
@@ -136,22 +127,23 @@ public class Player : NetworkBehaviour
             // should therefore update others that it is holding no item
             else if(IsOwner)
             {
-                HeldItemGenerator = null;
+                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
             }
         }
         else
         {
             HeldItem = null;
+            _heldItemVisuals = null;
         }
     }
 
     // This method is intended to be used when there's a need to update the
     // ItemGenerator without modifying HeldItemType, for example when updating
     // the server-side generator for another player (in case they disconnect)
-    internal void UpdateItemGenerator(ItemGenerator generator)
-    {
-        _heldItemGenerator = generator;
-    }
+    // internal void UpdateItemGenerator(ItemGeneratorOld generator)
+    // {
+    //     _heldItemGenerator = generator;
+    // }
 
     public void ThrowItem(Action<Item> itemAction = null)
     {
@@ -165,6 +157,8 @@ public class Player : NetworkBehaviour
     {
         if(IsHoldingItem)
         {
+            var itemVisuals = _heldItemPosition.GetComponentInChildren<ItemVisuals>();
+
             void positionItem(Item generatedItem)
             {
                 if(!generatedItem.IsOwner)
@@ -172,11 +166,10 @@ public class Player : NetworkBehaviour
                     return;
                 }
 
-                var itemVisuals = _heldItemPosition.GetComponentInChildren<ItemVisuals>();
-
+                // We update position and rotation after it has been released
+                // to account for the player movement
                 generatedItem.transform.position = _heldItemPosition.position + itemVisuals.handPositionOffset;
-                generatedItem.transform.rotation = _heldItemPosition.rotation;
-                generatedItem.transform.eulerAngles += itemVisuals.handRotationOffset;
+                generatedItem.transform.rotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
 
                 HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
 
@@ -185,7 +178,10 @@ public class Player : NetworkBehaviour
                 itemAction?.Invoke(generatedItem);
             }
 
-            HeldItemGenerator.GenerateItem(positionItem);
+            var spawnPosition = _heldItemPosition.position + itemVisuals.handPositionOffset;
+            var spawnRotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
+
+            _currentGenerator?.GeneratePlayerHeldItem(spawnPosition, spawnRotation, positionItem);
         }
     }
 

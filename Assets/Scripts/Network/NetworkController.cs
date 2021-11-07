@@ -97,9 +97,13 @@ public class NetworkController : MonoBehaviour
 
     private void Awake()
     {
-        if(_instance != null && _instance != this)
+        if(_instance != null)
         {
+            // NetworkController is the primary script on this GameObject
+            // so it's allowed to Destroy the entire object,
+            // rather than just this script itself
             Destroy(gameObject);
+
             return;
         }
 
@@ -120,11 +124,6 @@ public class NetworkController : MonoBehaviour
         LoadingMenu.OnCancel += disconnect;
         LobbyMenu.OnCancelMatch += disconnect;
         ExitMenu.OnLeaveMatch += disconnect;
-
-        if(_instance != this)
-        {
-            DestroyImmediate(gameObject);
-        }
     }
 
     private void OnDestroy()

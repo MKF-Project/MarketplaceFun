@@ -75,6 +75,26 @@ public static class Utils
         return !list.Any(predicate);
     }
 
+    // DontDestroyOnLoad
+    public static void EnsureObjectDontDestroy(this GameObject gameobject)
+    {
+        // DontDestroy Scene's build index is always -1
+        const int DontDestroySceneBuildIndex = -1;
+        if(gameobject.scene.buildIndex == DontDestroySceneBuildIndex)
+        {
+            // We don't need to do anything if the Object
+            // is already on the DontDestroy scene
+            return;
+        }
+
+        // We make sure that this GameObject will be place on the
+        // DontDestroyOnLoad Scene by first placing it on the top
+        // of the hierarchy tree. Unity gives Warnings when moving
+        // child objects to this Scene
+        gameobject.transform.SetParent(null);
+        GameObject.DontDestroyOnLoad(gameobject);
+    }
+
     // Destroy
     public static void DestroyAllChildren(this Transform root)
     {

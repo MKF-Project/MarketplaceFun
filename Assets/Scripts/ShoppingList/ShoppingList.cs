@@ -10,7 +10,7 @@ using Random = System.Random;
 
 public class ShoppingList : NetworkBehaviour
 {
-    public Dictionary<int, ShoppingListItem> ItemDictionary;
+    public Dictionary<ulong, ShoppingListItem> ItemDictionary;
     //public List<ShoppingListItem> ItemList;
     public ShoppingListUI ShoppingListUi;
 
@@ -22,7 +22,7 @@ public class ShoppingList : NetworkBehaviour
     void Start()
     {
         _quantityChecked = 0;
-        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
 
         if (IsOwner)
         {
@@ -53,26 +53,25 @@ public class ShoppingList : NetworkBehaviour
 
     public void GenerateList_OnMatchLoaded(string _sceneName)
     {
-        GenerateList(5, ItemTypeList.ItemList.ToList());
+        GenerateList(5, NetworkItemManager.NetworkItemPrefabs.Keys.ToList());
     }
 
 
     //Only on server
-    public void GenerateList(int numberOfItems, List<ItemType> allItemsList)
+    public void GenerateList(int numberOfItems, List<ulong> itemListKeys)
     {
-        Random random = new Random(_randomSeed);
+        var random = new Random(_randomSeed);
 
         while (numberOfItems > 0)
         {
+            int randomIndex = random.Next(0, itemListKeys.Count);
 
-            int randomIndex = random.Next(0, allItemsList.Count);
-
-            ShoppingListItem shoppingListItem = new ShoppingListItem(allItemsList[randomIndex].Code);
+            ShoppingListItem shoppingListItem = new ShoppingListItem(itemListKeys[randomIndex]);
 
             //Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
 
-            ItemDictionary.Add(allItemsList[randomIndex].Code, shoppingListItem);
-            allItemsList.RemoveAt(randomIndex);
+            ItemDictionary.Add(itemListKeys[randomIndex], shoppingListItem);
+            itemListKeys.RemoveAt(randomIndex);
             numberOfItems--;
         }
 
@@ -104,25 +103,20 @@ public class ShoppingList : NetworkBehaviour
 
     public void EraseListServer(ulong playerId)
     {
-        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
     }
 
     public void EraseListClient(bool wasHost, bool connectionWasLost)
     {
-        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
         if (IsOwner)
         {
             ShoppingListUi.EraseItems();
         }
     }
 
-    public bool CheckItem(int itemCode)
+    public bool CheckItem(ulong itemCode)
     {
-        if (!IsOnList(itemCode))
-        {
-            return false;
-        }
-
         if(!ItemDictionary.ContainsKey(itemCode))
         {
             return false;
@@ -142,7 +136,7 @@ public class ShoppingList : NetworkBehaviour
         return true;
     }
 
-    public void UncheckItem(int itemCode)
+    public void UncheckItem(ulong itemCode)
     {
         if(!ItemDictionary.ContainsKey(itemCode))
         {
@@ -157,11 +151,6 @@ public class ShoppingList : NetworkBehaviour
         _quantityChecked--;
     }
 
-    public bool IsOnList(int itemCode)
-    {
-        return ItemDictionary.ContainsKey(itemCode);
-    }
-
 
     public bool IsListChecked()
     {
@@ -173,16 +162,16 @@ public class ShoppingList : NetworkBehaviour
         return false;
     }
 
-    public void PrintList()
-    {
+    // public void PrintList()
+    // {
 
-        String msg = "";
-        foreach (ShoppingListItem item in ItemDictionary.Values)
-        {
-            msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
-        }
-        MatchMessages.Instance.EditMessage(msg, 10f);
-        MatchMessages.Instance.ShowMessage();
-    }
+    //     String msg = "";
+    //     foreach (ShoppingListItem item in ItemDictionary.Values)
+    //     {
+    //         msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
+    //     }
+    //     MatchMessages.Instance.EditMessage(msg, 10f);
+    //     MatchMessages.Instance.ShowMessage();
+    // }
 
 }

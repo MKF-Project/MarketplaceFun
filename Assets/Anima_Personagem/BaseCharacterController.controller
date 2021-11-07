@@ -9,7 +9,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Item na mao
+    m_ConditionEvent: Item_na_mao
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5704746632524866265}
@@ -73,8 +73,8 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Velocidade X
     m_Mirror: 0
-  m_BlendParameter: Velocidade X
-  m_BlendParameterY: Velocidade Z
+  m_BlendParameter: Velocidade_X
+  m_BlendParameterY: Velocidade_Z
   m_MinThreshold: 0
   m_MaxThreshold: 0.8
   m_UseAutomaticThresholds: 1
@@ -138,10 +138,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Item na mao
+    m_ConditionEvent: Item_na_mao
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Pegar Item
+    m_ConditionEvent: Pegar_Item
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -141288197030652789}
@@ -193,7 +193,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Atirar Item
+    m_ConditionEvent: Atirar_Item
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 527419215638330437}
@@ -235,7 +235,7 @@ AnimatorState:
   m_Motion: {fileID: -956892497565386981}
   m_Tag: 
   m_SpeedParameter: 
-  m_MirrorParameter: Item na mao
+  m_MirrorParameter: Item_na_mao
   m_CycleOffsetParameter: 
   m_TimeParameter: 
 --- !u!1101 &-3744886010479756444
@@ -247,7 +247,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Recebeu golpe
+    m_ConditionEvent: Recebeu_golpe
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1232946642756944656}
@@ -448,8 +448,8 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Velocidade X
     m_Mirror: 0
-  m_BlendParameter: Velocidade X
-  m_BlendParameterY: Velocidade Z
+  m_BlendParameter: Velocidade_X
+  m_BlendParameterY: Velocidade_Z
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
@@ -464,7 +464,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Pular Com Item
+    m_ConditionEvent: Pular_Com_Item
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5966909917348115512}
@@ -516,55 +516,55 @@ AnimatorController:
   m_Name: BaseCharacterController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Velocidade X
+  - m_Name: Velocidade_X
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Velocidade Z
+  - m_Name: Velocidade_Z
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Recebeu golpe
+  - m_Name: Recebeu_golpe
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Atirar Item
+  - m_Name: Atirar_Item
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Pegou carrinho
+  - m_Name: Pegou_carrinho
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Item na mao
+  - m_Name: Item_na_mao
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Pegar Item
+  - m_Name: Pegar_Item
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Pular Sem Item
+  - m_Name: Pular_Sem_Item
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Pular Com Item
+  - m_Name: Pular_Com_Item
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -631,7 +631,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Pular Sem Item
+    m_ConditionEvent: Pular_Sem_Item
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1279891364747197283}
@@ -683,7 +683,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Pegou carrinho
+    m_ConditionEvent: Pegou_carrinho
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5704746632524866265}
@@ -708,7 +708,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Pegou carrinho
+    m_ConditionEvent: Pegou_carrinho
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2032062835132309462}
@@ -808,7 +808,10 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: Item_na_mao
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2036844803934883282}
   m_Solo: 0
@@ -818,7 +821,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.8469388
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1

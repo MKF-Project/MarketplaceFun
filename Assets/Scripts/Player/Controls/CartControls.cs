@@ -48,6 +48,8 @@ public class CartControls : PlayerControls
 
         _cameraPosition.transform.localRotation = _initialCameraLocalRotation;
         _currentLookAngle = Vector2.zero;
+
+        _playerModelAnimator.SetBool(ANIM_HAS_CART, true);
     }
 
     public override void Interact()

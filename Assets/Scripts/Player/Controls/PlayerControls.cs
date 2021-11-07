@@ -18,6 +18,8 @@ public abstract class PlayerControls : NetworkBehaviour
     protected const string ANIM_HOLD_ITEM_STATE = "Movimentacao_Com_Item";
     protected const string ANIM_PARAMETER_X = "Velocidade_X";
     protected const string ANIM_PARAMETER_Z = "Velocidade_Z";
+    protected const string ANIM_INTERACT = "Interagiu";
+    protected const string ANIM_HAS_CART = "Pegou_carrinho";
     protected const string ANIM_ITEM_IN_HAND = "Item_na_mao";
     protected const string ANIM_THROW = "Atirar_Item";
 
@@ -485,7 +487,7 @@ public abstract class PlayerControls : NetworkBehaviour
         _onInteractLookingObject = _currentLookingObject;
         if(_onInteractLookingObject != null)
         {
-            _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, true);
+            _playerModelAnimator.SetTrigger(ANIM_INTERACT);
         }
     }
 
@@ -495,6 +497,11 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _onInteractLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
         _onInteractLookingObject = null;
+
+        if(_playerScript.IsHoldingItem)
+        {
+            _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, true);
+        }
 
         HasInteractedThisFrame = true;
     }

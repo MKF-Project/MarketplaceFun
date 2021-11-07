@@ -42,6 +42,8 @@ public class FreeMovementControls : PlayerControls
 
         _cameraPosition.transform.localRotation = _initialCameraLocalRotation;
         _targetVerticalRotation = 0;
+
+        _playerModelAnimator.SetBool(ANIM_HAS_CART, false);
     }
 
     protected override void OnDisable()

@@ -9,7 +9,8 @@ using MLAPI.NetworkVariable;
 // Select one a new item from it's list Randomly. May sometimes select the same item.
 public class RandomCycleGenerator : ItemGenerator
 {
-    private NetworkVariableInt _randomIndex = new NetworkVariableInt(
+    private NetworkVariableInt _randomIndex = new NetworkVariableInt
+    (
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,

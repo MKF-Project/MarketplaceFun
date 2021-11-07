@@ -15,7 +15,7 @@ public enum ShelfType
 
 public class Shelf : NetworkBehaviour
 {
-    private const string ITEM_GROUP_VISUALS_NAME = "ItemGroupVisuals";
+    protected const string ITEM_GROUP_VISUALS_NAME = "ItemGroupVisuals";
 
     public ShelfType Type;
 
@@ -51,18 +51,18 @@ public class Shelf : NetworkBehaviour
         }
     }
 
-    private Player _playerBuffer;
+    protected Player _playerBuffer;
 
-    private ulong _lastItemStocked = Item.NO_ITEMTYPE_CODE;
+    protected ulong _lastItemStocked = Item.NO_ITEMTYPE_CODE;
 
-    private Action<Item> _itemAction = null;
-    private Interactable _interactScript = null;
+    protected Action<Item> _itemAction = null;
+    protected Interactable _interactScript = null;
 
-    private GameObject _itemGroupVisuals;
+    protected GameObject _itemGroupVisuals;
 
     // Note: Check comments on ItemGenerator for an overview of the
     // order of events between ItemGenerator and Shelf
-    private void Awake()
+    protected virtual void Awake()
     {
         _interactScript = gameObject.GetComponentInChildren<Interactable>();
         _itemGroupVisuals = transform.Find(ITEM_GROUP_VISUALS_NAME).gameObject;
@@ -74,7 +74,7 @@ public class Shelf : NetworkBehaviour
 
         _interactScript.OnLookEnter += ShowButtonPrompt;
         _interactScript.OnLookExit  += HideButtonPrompt;
-        _interactScript.OnInteract  += GiveItemToPlayer;
+        _interactScript.OnInteract  += InteractWithShelf;
     }
 
     public override void NetworkStart()
@@ -89,7 +89,7 @@ public class Shelf : NetworkBehaviour
         ItemGenerator = _itemGenerator;
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         if(_interactScript == null)
         {
@@ -98,44 +98,43 @@ public class Shelf : NetworkBehaviour
 
         _interactScript.OnLookEnter -= ShowButtonPrompt;
         _interactScript.OnLookExit  -= HideButtonPrompt;
-        _interactScript.OnInteract  -= GiveItemToPlayer;
+        _interactScript.OnInteract  -= InteractWithShelf;
 
         ItemGenerator = null;
     }
 
-    private void ShowButtonPrompt(GameObject player)
+    protected virtual void ShowButtonPrompt(GameObject player)
     {
-        if(ItemGenerator.IsDepleted)
+        if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {
             return;
         }
 
-        var playerScript = player.GetComponent<Player>();
-        if(playerScript != null && !playerScript.IsHoldingItem)
+        if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
         {
             _interactScript.InteractUI.SetActive(true);
         }
     }
 
-    private void HideButtonPrompt(GameObject player)
+    protected virtual void HideButtonPrompt(GameObject player)
     {
         _interactScript.InteractUI.SetActive(false);
     }
 
-    private void GiveItemToPlayer(GameObject player)
+    protected virtual void InteractWithShelf(GameObject player)
     {
-        if(ItemGenerator.IsDepleted)
+        if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {
             return;
         }
 
-        if(player.TryGetComponent<Player>(out _playerBuffer))
+        if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
         {
             ItemGenerator.GiveItemToPlayer(_playerBuffer);
         }
     }
 
-    private void RestockItem(ulong itemID)
+    protected virtual void RestockItem(ulong itemID)
     {
         if(itemID != _lastItemStocked)
         {
@@ -164,7 +163,7 @@ public class Shelf : NetworkBehaviour
         _itemGroupVisuals.SetActive(true);
     }
 
-    private void ClearShelf()
+    protected virtual void ClearShelf()
     {
         _itemGroupVisuals.SetActive(false);
     }

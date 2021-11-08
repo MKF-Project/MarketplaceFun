@@ -75,7 +75,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
     // Components
     protected Rigidbody _rigidBody;
-    protected Animator _playerModelAnimator;
+    protected NetworkAnimator _playerNetAnimator;
     protected GameObject _currentLookingObject = null;
     protected GameObject _onInteractLookingObject = null;
     protected Player _playerScript = null;
@@ -148,7 +148,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _rigidBody = gameObject.GetComponent<Rigidbody>();
 
-        gameObject.TryGetComponent<Animator>(out _playerModelAnimator);
+        gameObject.TryGetComponent<NetworkAnimator>(out _playerNetAnimator);
 
         _playerScript = gameObject.GetComponent<Player>();
 
@@ -161,9 +161,9 @@ public abstract class PlayerControls : NetworkBehaviour
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Rigidbody not Found!");
             }
 
-            if(_playerModelAnimator == null)
+            if(_playerNetAnimator == null)
             {
-                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Animator not Found!");
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player NetworkAnimator not Found!");
             }
 
             if(_cameraPosition == null)
@@ -296,9 +296,9 @@ public abstract class PlayerControls : NetworkBehaviour
         }
 
 
-        if(!_playerScript.IsHoldingItem && _playerModelAnimator.GetCurrentAnimatorStateInfo(0).shortNameHash == ANIM_HOLD_ITEM_STATE)
+        if(!_playerScript.IsHoldingItem && _playerNetAnimator.GetCurrentAnimatorStateInfo(0).shortNameHash == ANIM_HOLD_ITEM_STATE)
         {
-            _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+            _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
         }
 
         // Wait before interaction
@@ -404,10 +404,10 @@ public abstract class PlayerControls : NetworkBehaviour
                     StopCoroutine(nameof(clearGrounded));
 
                     isGrounded = true;
-                    var currentAnimatorState = _playerModelAnimator.GetCurrentAnimatorStateInfo(0);
+                    var currentAnimatorState = _playerNetAnimator.GetCurrentAnimatorStateInfo(0);
                     if(currentAnimatorState.shortNameHash == ANIM_FALLING_STATE || currentAnimatorState.shortNameHash == ANIM_ITEM_FALLING_STATE)
                     {
-                        _playerModelAnimator.SetTrigger(ANIM_LAND);
+                        _playerNetAnimator.SetTrigger(ANIM_LAND);
                     }
 
                     // Jump away from current surface (NYI)
@@ -437,10 +437,10 @@ public abstract class PlayerControls : NetworkBehaviour
         yield return Utils.FixedUpdateWait;
 
         isGrounded = false;
-        var nextState = _playerModelAnimator.GetNextAnimatorStateInfo(0);
+        var nextState = _playerNetAnimator.GetNextAnimatorStateInfo(0);
         if(!(nextState.shortNameHash == ANIM_JUMP_STATE || nextState.shortNameHash == ANIM_ITEM_JUMP_STATE))
         {
-            _playerModelAnimator.SetTrigger(ANIM_FALLING);
+            _playerNetAnimator.SetTrigger(ANIM_FALLING);
         }
     }
 
@@ -460,8 +460,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _currentDirection = direction;
 
-        _playerModelAnimator.SetFloat(ANIM_PARAMETER_X, direction.x * (_currentSpeed / MoveSpeed));
-        _playerModelAnimator.SetFloat(ANIM_PARAMETER_Z, direction.y * (_currentSpeed / MoveSpeed));
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_X, direction.x * (_currentSpeed / MoveSpeed));
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_Z, direction.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Look(Vector2 direction)
@@ -493,8 +493,8 @@ public abstract class PlayerControls : NetworkBehaviour
         _isWalking = !_isWalking;
         _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
 
-        _playerModelAnimator.SetFloat(ANIM_PARAMETER_X, _currentDirection.x * (_currentSpeed / MoveSpeed));
-        _playerModelAnimator.SetFloat(ANIM_PARAMETER_Z, _currentDirection.y * (_currentSpeed / MoveSpeed));
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_X, _currentDirection.x * (_currentSpeed / MoveSpeed));
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_Z, _currentDirection.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Interact()
@@ -509,7 +509,7 @@ public abstract class PlayerControls : NetworkBehaviour
         _onInteractLookingObject = _currentLookingObject;
         if(_onInteractLookingObject != null)
         {
-            _playerModelAnimator.SetTrigger(ANIM_INTERACT);
+            _playerNetAnimator.SetTrigger(ANIM_INTERACT);
         }
     }
 
@@ -522,7 +522,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
         if(_playerScript.IsHoldingItem)
         {
-            _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, true);
+            _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, true);
         }
 
         HasInteractedThisFrame = true;
@@ -536,12 +536,12 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        _playerModelAnimator.SetTrigger(ANIM_THROW);
+        _playerNetAnimator.SetTrigger(ANIM_THROW);
     }
 
     private void ExecuteThrow()
     {
-        _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+        _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
 
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after
@@ -556,7 +556,7 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+        _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
 
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after

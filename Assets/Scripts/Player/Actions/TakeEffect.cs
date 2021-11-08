@@ -44,7 +44,11 @@ public class TakeEffect : NetworkBehaviour
     [ClientRpc]
     public void NormalEffect_ClientRpc()
     {
-        InputController.FreezePlayerControls();
+        // Only freeze the controls for the player who actually got hit
+        if(IsOwner)
+        {
+            InputController.FreezePlayerControls();
+        }
         _animator.SetTrigger(RECEIVE_HIT);
     }
 

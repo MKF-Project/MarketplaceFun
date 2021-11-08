@@ -15,9 +15,18 @@ public abstract class PlayerControls : NetworkBehaviour
     public const float MINIMUM_INTERACTION_COOLDOWN = 0.1f;
 
     // Animator consts
-    protected const string ANIM_HOLD_ITEM_STATE = "Movimentacao_Com_Item";
+    protected const string ANIM_RUN_STATE = "Correndo_Sem_Item";
+    protected const string ANIM_HOLD_ITEM_STATE = "Correndo_Com_Item";
+
     protected const string ANIM_PARAMETER_X = "Velocidade_X";
     protected const string ANIM_PARAMETER_Z = "Velocidade_Z";
+
+    protected const string ANIM_JUMP_STATE = "Pulo";
+    protected const string ANIM_JUMP = "Pular";
+    protected const string ANIM_FALLING_STATE = "Caindo";
+    protected const string ANIM_FALLING = "Caindo";
+    protected const string ANIM_LAND = "Pisa_No_Chao";
+
     protected const string ANIM_INTERACT = "Interagiu";
     protected const string ANIM_HAS_CART = "Pegou_carrinho";
     protected const string ANIM_ITEM_IN_HAND = "Item_na_mao";
@@ -393,6 +402,10 @@ public abstract class PlayerControls : NetworkBehaviour
                     StopCoroutine(nameof(clearGrounded));
 
                     isGrounded = true;
+                    if(_playerModelAnimator.GetCurrentAnimatorStateInfo(0).IsName(ANIM_FALLING_STATE))
+                    {
+                        _playerModelAnimator.SetTrigger(ANIM_LAND);
+                    }
 
                     // Jump away from current surface (NYI)
                     // jumpNormal = contact.normal;
@@ -419,7 +432,12 @@ public abstract class PlayerControls : NetworkBehaviour
     private IEnumerator clearGrounded()
     {
         yield return Utils.FixedUpdateWait;
+
         isGrounded = false;
+        if(!_playerModelAnimator.GetNextAnimatorStateInfo(0).IsName(ANIM_JUMP_STATE))
+        {
+            _playerModelAnimator.SetTrigger(ANIM_FALLING);
+        }
     }
 
     private IEnumerator clearWallCollision()

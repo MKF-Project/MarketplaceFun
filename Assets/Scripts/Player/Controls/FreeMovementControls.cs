@@ -78,6 +78,7 @@ public class FreeMovementControls : PlayerControls
         else if(_shouldJump)
         {
             _isJumping = true;
+            _playerModelAnimator.SetTrigger(ANIM_JUMP);
         }
 
         // Calculate desired velocity

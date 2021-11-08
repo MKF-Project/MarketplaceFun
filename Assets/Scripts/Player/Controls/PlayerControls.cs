@@ -15,24 +15,24 @@ public abstract class PlayerControls : NetworkBehaviour
     public const float MINIMUM_INTERACTION_COOLDOWN = 0.1f;
 
     // Animator consts
-    protected const string ANIM_RUN_STATE = "Correndo_Sem_Item";
-    protected const string ANIM_HOLD_ITEM_STATE = "Correndo_Com_Item";
+    protected static readonly int ANIM_RUN_STATE          = Animator.StringToHash("Correndo_Sem_Item");
+    protected static readonly int ANIM_HOLD_ITEM_STATE    = Animator.StringToHash("Correndo_Com_Item");
 
-    protected const string ANIM_PARAMETER_X = "Velocidade_X";
-    protected const string ANIM_PARAMETER_Z = "Velocidade_Z";
+    protected static readonly int ANIM_PARAMETER_X        = Animator.StringToHash("Velocidade_X");
+    protected static readonly int ANIM_PARAMETER_Z        = Animator.StringToHash("Velocidade_Z");
 
-    protected const string ANIM_JUMP_STATE = "Pulo";
-    protected const string ANIM_ITEM_JUMP_STATE = "Pulo_Com_Item";
-    protected const string ANIM_JUMP = "Pular";
-    protected const string ANIM_FALLING_STATE = "Caindo";
-    protected const string ANIM_ITEM_FALLING_STATE = "Caindo_Com_Item";
-    protected const string ANIM_FALLING = "Caindo";
-    protected const string ANIM_LAND = "Pisa_No_Chao";
+    protected static readonly int ANIM_JUMP_STATE         = Animator.StringToHash("Pulo");
+    protected static readonly int ANIM_ITEM_JUMP_STATE    = Animator.StringToHash("Pulo_Com_Item");
+    protected static readonly int ANIM_JUMP               = Animator.StringToHash("Pular");
+    protected static readonly int ANIM_FALLING_STATE      = Animator.StringToHash("Caindo");
+    protected static readonly int ANIM_ITEM_FALLING_STATE = Animator.StringToHash("Caindo_Com_Item");
+    protected static readonly int ANIM_FALLING            = Animator.StringToHash("Caindo");
+    protected static readonly int ANIM_LAND               = Animator.StringToHash("Pisa_No_Chao");
 
-    protected const string ANIM_INTERACT = "Interagiu";
-    protected const string ANIM_HAS_CART = "Pegou_carrinho";
-    protected const string ANIM_ITEM_IN_HAND = "Item_na_mao";
-    protected const string ANIM_THROW = "Atirar_Item";
+    protected static readonly int ANIM_INTERACT           = Animator.StringToHash("Interagiu");
+    protected static readonly int ANIM_HAS_CART           = Animator.StringToHash("Pegou_carrinho");
+    protected static readonly int ANIM_ITEM_IN_HAND       = Animator.StringToHash("Item_na_mao");
+    protected static readonly int ANIM_THROW              = Animator.StringToHash("Atirar_Item");
 
     // This is the maximum speed the player is allowed to turn,
     // regardless of other factors. Keep this at a high value to allow fast mouse movement
@@ -296,7 +296,7 @@ public abstract class PlayerControls : NetworkBehaviour
         }
 
 
-        if(!_playerScript.IsHoldingItem && _playerModelAnimator.GetCurrentAnimatorStateInfo(0).IsName(ANIM_HOLD_ITEM_STATE))
+        if(!_playerScript.IsHoldingItem && _playerModelAnimator.GetCurrentAnimatorStateInfo(0).shortNameHash == ANIM_HOLD_ITEM_STATE)
         {
             _playerModelAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
         }
@@ -405,7 +405,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
                     isGrounded = true;
                     var currentAnimatorState = _playerModelAnimator.GetCurrentAnimatorStateInfo(0);
-                    if(currentAnimatorState.IsName(ANIM_FALLING_STATE) || currentAnimatorState.IsName(ANIM_ITEM_FALLING_STATE))
+                    if(currentAnimatorState.shortNameHash == ANIM_FALLING_STATE || currentAnimatorState.shortNameHash == ANIM_ITEM_FALLING_STATE)
                     {
                         _playerModelAnimator.SetTrigger(ANIM_LAND);
                     }
@@ -438,7 +438,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
         isGrounded = false;
         var nextState = _playerModelAnimator.GetNextAnimatorStateInfo(0);
-        if(!(nextState.IsName(ANIM_JUMP_STATE) || nextState.IsName(ANIM_ITEM_JUMP_STATE)))
+        if(!(nextState.shortNameHash == ANIM_JUMP_STATE || nextState.shortNameHash == ANIM_ITEM_JUMP_STATE))
         {
             _playerModelAnimator.SetTrigger(ANIM_FALLING);
         }

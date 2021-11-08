@@ -309,6 +309,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-5904350294160549455
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Caindo
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: ac3a235433a6dac498d547bce1ea0061, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &-5704746632524866265
 AnimatorState:
   serializedVersion: 5
@@ -1212,19 +1238,22 @@ AnimatorStateMachine:
     m_Position: {x: 0, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3751958589416365981}
-    m_Position: {x: 610, y: 510, z: 0}
+    m_Position: {x: 470, y: 830, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 638405151374381066}
-    m_Position: {x: 791.0246, y: 610.24646, z: 0}
+    m_Position: {x: 840, y: 790, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1077467127048987223}
-    m_Position: {x: 801.0246, y: 620.24646, z: 0}
+    m_Position: {x: 810, y: 710, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1085252308623830441}
-    m_Position: {x: 811.0246, y: 630.24646, z: 0}
+    m_Position: {x: 810, y: 850, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1968134460447582921}
-    m_Position: {x: 821.0246, y: 640.24646, z: 0}
+    m_Position: {x: 1020, y: 660, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -5904350294160549455}
+    m_Position: {x: 810, y: 570, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -3744886010479756444}

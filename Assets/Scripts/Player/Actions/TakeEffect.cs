@@ -8,7 +8,7 @@ public class TakeEffect : NetworkBehaviour
 {
     private Animator _animator;
 
-    private static readonly int ReceiveHit = Animator.StringToHash("ReceiveHit");
+    private static readonly int RECEIVE_HIT = Animator.StringToHash("Recebeu_Golpe");
 
     private bool _isTakingEffect;
 
@@ -22,9 +22,9 @@ public class TakeEffect : NetworkBehaviour
 
     public void OnTakeEffect(int effectCode)
     {
-        switch (effectCode)
+        switch(effectCode)
         {
-            case  0:
+            case 0:
                 NormalEffect_ServerRpc();
                 break;
 
@@ -34,7 +34,7 @@ public class TakeEffect : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void NormalEffect_ServerRpc()
     {
-        if (!_isTakingEffect)
+        if(!_isTakingEffect)
         {
             _isTakingEffect = true;
             NormalEffect_ClientRpc();
@@ -44,20 +44,17 @@ public class TakeEffect : NetworkBehaviour
     [ClientRpc]
     public void NormalEffect_ClientRpc()
     {
-        _animator.SetTrigger(ReceiveHit);
-        if (IsOwner)
-        {
-            InputController.FreezePlayerControls();
-
-            StartCoroutine(nameof(ActivateMoves));
-        }
+        InputController.FreezePlayerControls();
+        _animator.SetTrigger(RECEIVE_HIT);
     }
 
-    private IEnumerator ActivateMoves()
+    private void EnableMovement()
     {
-        yield return new WaitForSeconds(2.5f);
-        InputController.UnfreezePlayerControls();
-        NoTakingEffect_ServerRpc();
+        if(IsOwner)
+        {
+            InputController.UnfreezePlayerControls();
+            NoTakingEffect_ServerRpc();
+        }
     }
 
     [ServerRpc]

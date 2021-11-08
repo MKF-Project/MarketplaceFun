@@ -22,8 +22,10 @@ public abstract class PlayerControls : NetworkBehaviour
     protected const string ANIM_PARAMETER_Z = "Velocidade_Z";
 
     protected const string ANIM_JUMP_STATE = "Pulo";
+    protected const string ANIM_ITEM_JUMP_STATE = "Pulo_Com_Item";
     protected const string ANIM_JUMP = "Pular";
     protected const string ANIM_FALLING_STATE = "Caindo";
+    protected const string ANIM_ITEM_FALLING_STATE = "Caindo_Com_Item";
     protected const string ANIM_FALLING = "Caindo";
     protected const string ANIM_LAND = "Pisa_No_Chao";
 
@@ -402,7 +404,8 @@ public abstract class PlayerControls : NetworkBehaviour
                     StopCoroutine(nameof(clearGrounded));
 
                     isGrounded = true;
-                    if(_playerModelAnimator.GetCurrentAnimatorStateInfo(0).IsName(ANIM_FALLING_STATE))
+                    var currentAnimatorState = _playerModelAnimator.GetCurrentAnimatorStateInfo(0);
+                    if(currentAnimatorState.IsName(ANIM_FALLING_STATE) || currentAnimatorState.IsName(ANIM_ITEM_FALLING_STATE))
                     {
                         _playerModelAnimator.SetTrigger(ANIM_LAND);
                     }
@@ -434,7 +437,8 @@ public abstract class PlayerControls : NetworkBehaviour
         yield return Utils.FixedUpdateWait;
 
         isGrounded = false;
-        if(!_playerModelAnimator.GetNextAnimatorStateInfo(0).IsName(ANIM_JUMP_STATE))
+        var nextState = _playerModelAnimator.GetNextAnimatorStateInfo(0);
+        if(!(nextState.IsName(ANIM_JUMP_STATE) || nextState.IsName(ANIM_ITEM_JUMP_STATE)))
         {
             _playerModelAnimator.SetTrigger(ANIM_FALLING);
         }

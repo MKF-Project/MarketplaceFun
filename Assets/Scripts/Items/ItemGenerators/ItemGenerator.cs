@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,15 @@ using MLAPI.Messaging;
 
 public abstract class ItemGenerator : NetworkBehaviour
 {
+    // List Generation
+    public delegate void OnGeneratablesDefinedDelegate(IEnumerable<ulong> generatables);
+    public static event OnGeneratablesDefinedDelegate OnGeneratablesDefined;
+
+    private static bool _hasDefinedGeneratables = false;
+    public static HashSet<ulong> Generatables { get; private set; } = new HashSet<ulong>();
+
+    private static bool _isLongLivedGenEventSet = false;
+
     // Generation Events
     public delegate void OnDepletedDelegate();
     public event OnDepletedDelegate OnDepleted;
@@ -27,12 +36,44 @@ public abstract class ItemGenerator : NetworkBehaviour
     public abstract bool IsDepleted { get; }
     public virtual bool IsStocked => !IsDepleted;
 
+    // Populated on Server. Defines which items from the pool this generator
+    // can actually generate during the match. Used to create shopping lists.
+    // Must have been set by the time NetworkStart happens.
+    public List<ulong> GeneratableItems => IsServer? _generatableItems : null;
+    protected List<ulong> _generatableItems = null;
+
     // Spawning Item
     protected Action<Item> _afterSpawn = null;
     protected Player _currentPlayer = null;
 
+    private static void PopulateGeneratables()
+    {
+        var generatorInstances = GameObject.FindObjectsOfType<ItemGenerator>();
+        for(int i = 0; i < generatorInstances.Length; i++)
+        {
+            generatorInstances[i].GeneratableItems?.ForEach(itemID => Generatables.Add(itemID));
+        }
+
+        _hasDefinedGeneratables = true;
+        OnGeneratablesDefined?.Invoke(Generatables);
+    }
+
+    private static void ClearGeneratables(string sceneName)
+    {
+        _hasDefinedGeneratables = false;
+        Generatables.Clear();
+    }
+
     protected virtual void Awake()
     {
+        // We set the event once per game start,
+        // and keep it there until the game quits
+        if(!_isLongLivedGenEventSet)
+        {
+            _isLongLivedGenEventSet = true;
+            SceneManager.OnMatchLoaded += ClearGeneratables;
+        }
+
         if(_itemPool == null)
         {
             #if UNITY_EDITOR
@@ -54,6 +95,14 @@ public abstract class ItemGenerator : NetworkBehaviour
             }
 
             ItemPool.Add(_netObjectBuffer.PrefabHash);
+        }
+    }
+
+    public override void NetworkStart()
+    {
+        if(IsServer && !_hasDefinedGeneratables)
+        {
+            PopulateGeneratables();
         }
     }
 

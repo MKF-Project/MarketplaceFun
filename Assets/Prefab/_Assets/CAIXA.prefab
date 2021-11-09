@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 1328492730974668079}
   - component: {fileID: 7321000385371572943}
   - component: {fileID: 7351927313447306834}
+  - component: {fileID: 5270376123562246240}
   m_Layer: 0
   m_Name: FaixaSEG05
   m_TagString: Untagged
@@ -160,6 +161,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &5270376123562246240
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461330824047802028}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 0.010000261, z: 0.05000004}
+  m_Center: {x: -0.41752306, y: -2.7822843, z: 0.7311295}
 --- !u!1 &1189303649093012866
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +320,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1189303650640401225}
+  - component: {fileID: 248101930763711866}
+  - component: {fileID: 6612913215968074298}
   m_Layer: 0
   m_Name: CAIXA
   m_TagString: Untagged
@@ -331,6 +347,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &248101930763711866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189303650640401224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24723a6dd8fb6d48abcdb9a3ea4967c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &6612913215968074298
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189303650640401224}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1, z: 2}
+  m_Center: {x: -2.6, y: 0, z: -2}
 --- !u!1 &1189303650681887618
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,6 +584,7 @@ GameObject:
   - component: {fileID: 7766225118249093097}
   - component: {fileID: 4674089495477543809}
   - component: {fileID: 1029342771191289183}
+  - component: {fileID: 5218599716006166365}
   m_Layer: 0
   m_Name: FaixaSEG06
   m_TagString: Untagged
@@ -611,6 +653,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &5218599716006166365
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005576337824666879}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 0.010000261, z: 0.05000004}
+  m_Center: {x: -0.41752303, y: -3.8942118, z: 0.7311295}
 --- !u!1 &2221586315065868689
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,6 +677,7 @@ GameObject:
   - component: {fileID: 727412426221276672}
   - component: {fileID: 1362189217337994736}
   - component: {fileID: 514885344137992012}
+  - component: {fileID: 5750309406952234597}
   m_Layer: 0
   m_Name: FaixaSEG02
   m_TagString: Untagged
@@ -690,6 +746,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &5750309406952234597
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2221586315065868689}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9999999, y: 0.010000228, z: 0.050000004}
+  m_Center: {x: -2.2261815, y: 2.5735466, z: 0.7311296}
 --- !u!1 &3263454871702011047
 GameObject:
   m_ObjectHideFlags: 0
@@ -781,6 +850,7 @@ GameObject:
   - component: {fileID: 6779602303196289373}
   - component: {fileID: 782193209707715829}
   - component: {fileID: 2696410060384387486}
+  - component: {fileID: 6522452216269994607}
   m_Layer: 0
   m_Name: FaixaSEG03
   m_TagString: Untagged
@@ -849,6 +919,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &6522452216269994607
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3319438908422555101}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.010000228, z: 0.050000004}
+  m_Center: {x: -3.3383405, y: 2.5735466, z: 0.7311296}
 --- !u!1 &3607299203551943401
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,6 +1022,7 @@ GameObject:
   - component: {fileID: 254621381712081394}
   - component: {fileID: 5085594689017807824}
   - component: {fileID: 5070798710064766176}
+  - component: {fileID: 630802023394067166}
   m_Layer: 0
   m_Name: CAIXA_EstruturaPrincipal
   m_TagString: Untagged
@@ -1013,6 +1097,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &630802023394067166
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5205739613132638345}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5550007, y: 3.5499997, z: 2.0000002}
+  m_Center: {x: 0.77750033, y: -1.7749994, z: 1.0000001}
 --- !u!1 &5578925075864484946
 GameObject:
   m_ObjectHideFlags: 0
@@ -1188,6 +1285,7 @@ GameObject:
   - component: {fileID: 6922682786586795608}
   - component: {fileID: 972160864382732088}
   - component: {fileID: 2136289916280574620}
+  - component: {fileID: 1247371525643051825}
   m_Layer: 0
   m_Name: FaixaSEG04
   m_TagString: Untagged
@@ -1256,6 +1354,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &1247371525643051825
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6516925141043938955}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.4878396, y: 0.010000275, z: 0.050000057}
+  m_Center: {x: -1.7736026, y: -3.8942118, z: 0.73112947}
 --- !u!1 &6714176603974178780
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,6 +1618,7 @@ GameObject:
   - component: {fileID: 5720418061159491515}
   - component: {fileID: 6810554707723066501}
   - component: {fileID: 4179182860453123842}
+  - component: {fileID: 6159876315260667072}
   m_Layer: 0
   m_Name: FaixaSEG01
   m_TagString: Untagged
@@ -1575,6 +1687,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &6159876315260667072
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7333685569533556229}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9999999, y: 0.0099999895, z: 0.050000004}
+  m_Center: {x: -2.2261815, y: 0.9736581, z: 0.7311296}
 --- !u!1 &7403202815252266596
 GameObject:
   m_ObjectHideFlags: 0

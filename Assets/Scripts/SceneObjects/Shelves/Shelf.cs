@@ -20,7 +20,7 @@ public class Shelf : NetworkBehaviour
     public ShelfType Type;
 
     [SerializeField]
-    private ItemGenerator _itemGenerator = null;
+    internal ItemGenerator _itemGenerator = null;
 
     private ItemGenerator _itemGeneratorInternal = null;
     public ItemGenerator ItemGenerator
@@ -166,5 +166,15 @@ public class Shelf : NetworkBehaviour
     protected virtual void ClearShelf()
     {
         _itemGroupVisuals.SetActive(false);
+    }
+
+    // Editor Utils
+    private void OnDrawGizmosSelected()
+    {
+        if(_itemGenerator != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, _itemGenerator.transform.position);
+        }
     }
 }

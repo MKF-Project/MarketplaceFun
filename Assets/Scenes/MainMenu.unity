@@ -4046,7 +4046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9309193b66b7a74fa5b5c76724bf191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingCheckedImage: {fileID: 21300000, guid: 43b2ecaba15759743bd4bb0e65f0bfb6,
+  StartingCheckedImage: {fileID: 21300000, guid: be9aa9dec5397e046a082908df9edccb,
     type: 3}
 --- !u!114 &1021269135
 MonoBehaviour:

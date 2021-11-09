@@ -23,7 +23,7 @@ public class ShoppingCartItem : NetworkBehaviour
 
     private int _nextIndex = 0;
 
-    private int[] _itemCodes;
+    private ulong[] _itemCodes;
     private bool[] _occupiedPositions;
     private List<GameObject> _itemPositions;
 
@@ -35,7 +35,7 @@ public class ShoppingCartItem : NetworkBehaviour
     {
         // Items
         _itemPositions = gameObject.FindChildrenWithTag(ITEM_POSITIONS_TAG);
-        _itemCodes = new int[_itemPositions.Count];
+        _itemCodes = new ulong[_itemPositions.Count];
         _occupiedPositions = new bool[_itemPositions.Count];
 
         _ownerID.OnValueChanged += onOwnershipChanged;
@@ -120,7 +120,7 @@ public class ShoppingCartItem : NetworkBehaviour
         }
     }
 
-    private void setNextItem(int itemTypeCode)
+    private void setNextItem(ulong itemTypeCode)
     {
         // Destroy previous model
         _itemPositions[_nextIndex].transform.DestroyAllChildren();
@@ -150,7 +150,7 @@ public class ShoppingCartItem : NetworkBehaviour
         _itemCodes[_nextIndex] = itemTypeCode;
 
         // Create new mesh
-        var itemPrefab = ItemTypeList.ItemList[itemTypeCode].ItemPrefab;
+        var itemPrefab = NetworkItemManager.NetworkItemPrefabs[itemTypeCode];
         var itemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
 
         if(itemVisuals != null)
@@ -178,7 +178,7 @@ public class ShoppingCartItem : NetworkBehaviour
             int colorNumber = NetworkManager.ConnectedClients[playerID].PlayerObject.GetComponent<PlayerInfo>().PlayerData.Color;
             UpdateCartColor(colorNumber);
             setCartColor_ClientRpc(colorNumber);
-            
+
             _ownerID.Value = playerID;
         }
     }
@@ -213,7 +213,7 @@ public class ShoppingCartItem : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void setNextItem_ClientRpc(int itemTypeCode)
+    private void setNextItem_ClientRpc(ulong itemTypeCode)
     {
         if(!IsServer)
         {

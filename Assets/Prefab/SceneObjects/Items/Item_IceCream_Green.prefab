@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &746067063231800433
+--- !u!1 &3533355799499506963
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,45 +8,76 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3611384925061839766}
-  - component: {fileID: 5286210321620275734}
-  - component: {fileID: 2771469738025292766}
+  - component: {fileID: 3533355799499506962}
   m_Layer: 0
-  m_Name: IceCream
+  m_Name: ITEM_SORVETE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3611384925061839766
+--- !u!4 &3533355799499506962
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746067063231800433}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.07327801, z: 0}
-  m_LocalScale: {x: 0.097704, y: 0.09770401, z: 0.09770401}
-  m_Children: []
+  m_GameObject: {fileID: 3533355799499506963}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.157, y: 1.157, z: 1.157}
+  m_Children:
+  - {fileID: 6985969299890834871}
   m_Father: {fileID: 8990440053411173854}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &5286210321620275734
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6392720508689388112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6985969299890834871}
+  - component: {fileID: 1995504905676907575}
+  - component: {fileID: 8402358384220431871}
+  m_Layer: 0
+  m_Name: sorvete
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6985969299890834871
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6392720508689388112}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3533355799499506962}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1995504905676907575
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746067063231800433}
-  m_Mesh: {fileID: 2735636600925398006, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
---- !u!23 &2771469738025292766
+  m_GameObject: {fileID: 6392720508689388112}
+  m_Mesh: {fileID: 2735636600925398006, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+--- !u!23 &8402358384220431871
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746067063231800433}
+  m_GameObject: {fileID: 6392720508689388112}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -58,10 +89,10 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6629797300637803691, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
-  - {fileID: -3522955778539423533, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
-  - {fileID: -8274133419916619345, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
-  - {fileID: -2813467912831258332, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
+  - {fileID: -6629797300637803691, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+  - {fileID: -3522955778539423533, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+  - {fileID: -8274133419916619345, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+  - {fileID: -2813467912831258332, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -177,7 +208,7 @@ PrefabInstance:
         type: 3}
       propertyPath: ShelfItemGroups.Array.data[0].ItemGroupPrefab
       value: 
-      objectReference: {fileID: 1633187484545460029, guid: a7e4f9eb664df5a4689a2ff1fef8bdd2,
+      objectReference: {fileID: 501165144411780796, guid: 36dcd4dea653d1d4a8e3f5148b8d5ca6,
         type: 3}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

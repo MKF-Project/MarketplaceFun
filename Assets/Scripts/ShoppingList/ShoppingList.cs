@@ -105,7 +105,7 @@ public class ShoppingList : NetworkBehaviour
 
     public void EraseSelfList()
     {
-        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
         if (IsOwner)
         {
             ShoppingListUi.EraseItems();

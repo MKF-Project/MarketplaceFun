@@ -9,16 +9,18 @@ public class Cashier : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == SHOPPING_CART_TAG)
+        if (other.gameObject.CompareTag(SHOPPING_CART_TAG))
         {
             Player player = other.GetComponent<ShoppingCartItem>().Owner;
             if (player != null && player == NetworkController.SelfPlayer)
             {
-                if (player.IsListComplete)
+                ShoppingList playerShoppingList = player.gameObject.GetComponent<ShoppingList>();
+                if (playerShoppingList.IsListChecked())
                 {
-                    MatchMessages.Instance.EditMessage("You Win");
-                    MatchMessages.Instance.ShowMessage();
-                    ScoreController.Instance.IWin();
+                    CheckOut checkOut = player.gameObject.GetComponent<CheckOut>();
+                    checkOut.PlayerCheckOut();
+                    //MatchMessages.Instance.EditMessage("You Win");
+                    //MatchMessages.Instance.ShowMessage();
                 }
                 else
                 {

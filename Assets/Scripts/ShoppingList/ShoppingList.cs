@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = System.Random;
 
 public class ShoppingList : NetworkBehaviour
@@ -39,6 +37,8 @@ public class ShoppingList : NetworkBehaviour
             SceneManager.OnMatchLoaded += GenerateList_OnMatchLoaded;
             NetworkController.OnOtherClientDisconnected += EraseListServer;
         }
+
+        MatchManager.OnMatchExit += EraseSelfList;
     }
 
 
@@ -49,6 +49,8 @@ public class ShoppingList : NetworkBehaviour
         NetworkController.OnDisconnected -= EraseListClient;
         SceneManager.OnMatchLoaded -= GenerateList_OnMatchLoaded;
         NetworkController.OnOtherClientDisconnected -= EraseListServer;
+        MatchManager.OnMatchExit -= EraseSelfList;
+
     }
 
     public void GenerateList_OnMatchLoaded(string _sceneName)
@@ -99,6 +101,16 @@ public class ShoppingList : NetworkBehaviour
             Debug.Log("Im owner: " + GetComponent<NetworkObject>().OwnerClientId);
             ShoppingListUi.FillUIItems(itemList);
         }
+    }
+
+    public void EraseSelfList()
+    {
+        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        if (IsOwner)
+        {
+            ShoppingListUi.EraseItems();
+        }
+        _quantityChecked = 0;
     }
 
     public void EraseListServer(ulong playerId)

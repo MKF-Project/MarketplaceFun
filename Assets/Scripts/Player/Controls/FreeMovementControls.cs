@@ -42,6 +42,8 @@ public class FreeMovementControls : PlayerControls
 
         _cameraPosition.transform.localRotation = _initialCameraLocalRotation;
         _targetVerticalRotation = 0;
+
+        _playerNetAnimator.SetBool(ANIM_HAS_CART, false);
     }
 
     protected override void OnDisable()
@@ -76,6 +78,7 @@ public class FreeMovementControls : PlayerControls
         else if(_shouldJump)
         {
             _isJumping = true;
+            _playerNetAnimator.SetTrigger(ANIM_JUMP);
         }
 
         // Calculate desired velocity

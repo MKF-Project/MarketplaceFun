@@ -7,8 +7,6 @@ using UnityScene = UnityEngine.SceneManagement;
 
 public class SceneManager : MonoBehaviour
 {
-
-
     // Events
     public delegate void OnMainMenuLostConnectionDelegate();
     public static event OnMainMenuLostConnectionDelegate OnMainMenuLostConnection;
@@ -29,7 +27,9 @@ public class SceneManager : MonoBehaviour
     public static event OnSceneLoadedDelegate OnSceneLoaded;
 
 
-    public String MatchScene;
+    public  String MatchScene;
+
+    public static String MatchSceneTag;
 
     private const string _selfTag = "SceneManager";
 
@@ -45,6 +45,7 @@ public class SceneManager : MonoBehaviour
     {
         Object.DontDestroyOnLoad(gameObject);
 
+        MatchSceneTag = MatchScene;
         LobbyMenu.OnStartMatch += loadMatch;
 
         NetworkController.OnDisconnected += returnToMainMenu;

@@ -14,6 +14,15 @@ TagManager:
   - ShoppingListUI
   - PlayerPositionController
   - ShoppingCart
+  - MatchCanvas
+  - ScoreController
+  - MatchManager
+  - TextPoints
+  - ScoreCanvas
+  - ButtonReady
+  - ButtonStart
+  - WinCanvas
+  - PlayerModel
   layers:
   - Default
   - TransparentFX

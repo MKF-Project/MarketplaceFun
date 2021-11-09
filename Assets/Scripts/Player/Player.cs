@@ -9,7 +9,7 @@ using MLAPI.NetworkVariable;
 [SelectionBase]
 public class Player : NetworkBehaviour
 {
-    public bool IsListComplete;
+    //public bool IsListComplete;
 
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
@@ -74,9 +74,10 @@ public class Player : NetworkBehaviour
         #endif
 
         IsDrivingCart = false;
-        IsListComplete = false;
+        //IsListComplete = false;
 
-        HeldItemType.OnValueChanged = OnHeldItemChange;
+        HeldItemType.OnValueChanged = onHeldItemChange;
+        MatchManager.OnMatchExit += PlayerReset;
     }
 
     public delegate void OnBeforeDestroyDelegate(Player player);
@@ -89,6 +90,8 @@ public class Player : NetworkBehaviour
         {
             NetworkItemManager.SpawnOwnerlessItem(HeldItemType.Value, _heldItemPosition.position, _heldItemPosition.rotation);
         }
+        MatchManager.OnMatchExit -= PlayerReset;
+
     }
 
     private void OnHeldItemChange(ulong previousItemType, ulong newItemType)
@@ -185,12 +188,14 @@ public class Player : NetworkBehaviour
         }
     }
 
+    /*
     public void ListComplete()
     {
         MatchMessages.Instance.EditMessage("Your list is complete");
         MatchMessages.Instance.ShowMessage();
         IsListComplete = true;
     }
+    */
 
     public void Teleport(Vector3 position, Vector3 eulerAngles = default)
     {
@@ -206,5 +211,21 @@ public class Player : NetworkBehaviour
             var newRotation = eulerAngles + _rigidbody.rotation.eulerAngles;
             _rigidbody.rotation = Quaternion.Euler(newRotation);
         }
+    }
+
+    public void PlayerReset()
+    {
+        if (IsDrivingCart)
+        {
+            GetComponent<CartControls>().DetachShoppingCart();
+        }
+
+        HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+
+        HeldItemGenerator = null;
+
+        HeldItem = null;
+        
+        IsDrivingCart = false;
     }
 }

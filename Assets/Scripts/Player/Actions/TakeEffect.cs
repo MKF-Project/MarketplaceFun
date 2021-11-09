@@ -1,63 +1,67 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
 
-public class TakeEffect : NetworkBehaviour
+public class TakeEffect : ScorableAction
 {
     private Animator _animator;
 
-    private static readonly int ReceiveHit = Animator.StringToHash("ReceiveHit");
+    private static readonly int RECEIVE_HIT = Animator.StringToHash("Recebeu_Golpe");
 
     private bool _isTakingEffect;
-
-
+    
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _animator = GetComponentInChildren<Animator>();
         _isTakingEffect = false;
     }
 
-    public void OnTakeEffect(int effectCode)
+    public void OnTakeEffect(int effectCode, ulong throwerId)
     {
-        switch (effectCode)
+        switch(effectCode)
         {
             case  0:
-                NormalEffect_ServerRpc();
+                NormalEffect_ServerRpc(throwerId);
                 break;
 
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void NormalEffect_ServerRpc()
+    public void NormalEffect_ServerRpc(ulong throwerId)
     {
-        if (!_isTakingEffect)
+        if(!_isTakingEffect)
         {
+            NetworkManager.ConnectedClients[throwerId].PlayerObject.GetComponent<PlayerScore>().ScoreAction(_scoreType);
             _isTakingEffect = true;
             NormalEffect_ClientRpc();
+            
         }
     }
 
     [ClientRpc]
     public void NormalEffect_ClientRpc()
     {
-        _animator.SetTrigger(ReceiveHit);
-        if (IsOwner)
+        // Only freeze the controls for the player who actually got hit
+        if(IsOwner)
         {
             InputController.FreezePlayerControls();
-
-            StartCoroutine(nameof(ActivateMoves));
         }
+        _animator.SetTrigger(RECEIVE_HIT);
     }
 
-    private IEnumerator ActivateMoves()
+    private void EnableMovement()
     {
-        yield return new WaitForSeconds(2.5f);
-        InputController.UnfreezePlayerControls();
-        NoTakingEffect_ServerRpc();
+        if(IsOwner)
+        {
+            InputController.UnfreezePlayerControls();
+            NoTakingEffect_ServerRpc();
+        }
     }
 
     [ServerRpc]
@@ -65,4 +69,8 @@ public class TakeEffect : NetworkBehaviour
     {
         _isTakingEffect = false;
     }
+
+    
+    
+    
 }

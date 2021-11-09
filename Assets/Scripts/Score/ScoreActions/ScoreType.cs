@@ -1,19 +1,21 @@
 ﻿using System;
+using UnityEngine;
 
 [Serializable]
 public struct ScoreType
 {
     public String Type;
     public int Points;
-    public int Code;
+    [HideInInspector]
+    public int Id;
     public ScorableAction ScorableAction;
     
     
-    public ScoreType(String type, int points, int code, ScorableAction scorableAction)
+    public ScoreType(String type, int points, int id, ScorableAction scorableAction)
     {
         Points = points;
         Type = type;
-        Code = code;
+        Id = id;
         ScorableAction = scorableAction;
     }
 

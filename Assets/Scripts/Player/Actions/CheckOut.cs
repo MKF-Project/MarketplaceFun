@@ -1,36 +1,54 @@
 using System;
 using System.Text.RegularExpressions;
 using MLAPI;
+using MLAPI.Messaging;
+using UnityEditor;
 using UnityEngine;
 
 public class CheckOut : ScorableAction
 {
-
+    private bool _alreadyCheckOut;
+    
     private const string MATCH_MANAGER_TAG = "MatchManager";
-    private MatchManager _matchManager;
     private PlayerScore _playerScore;
     
-    private ScoreType _scoreType;
-    
-
-    private void Awake()
+    protected override void Awake()
     {
-        _matchManager = GameObject.FindGameObjectWithTag(MATCH_MANAGER_TAG).GetComponent<MatchManager>();
+        base.Awake();
         _playerScore = GetComponent<PlayerScore>();
-            
+        _alreadyCheckOut = false;
+        MatchManager.OnMatchExit += ResetPlayer;
     }
 
-    public override void SetScore(ScoreType scoreType)
+    private void OnDestroy()
     {
-        _scoreType = scoreType;
+        MatchManager.OnMatchExit -= ResetPlayer;
     }
 
     public void PlayerCheckOut()
     {
-        if (IsOwner)
+        if (IsOwner & !_alreadyCheckOut)
         {
-            _matchManager.CheckOutPlayer_ServerRpc(NetworkManager.LocalClientId);
-            _playerScore.ScoreAction(_scoreType);
+            MatchManager matchManager = GameObject.FindGameObjectWithTag(MATCH_MANAGER_TAG).GetComponent<MatchManager>();
+            matchManager.CheckOutPlayer_ServerRpc(NetworkManager.LocalClientId);
         }
+    }
+
+    //Method to confirm if checkout was success in server
+    public void ConfirmCheckOut()
+    {
+        _alreadyCheckOut = true;
+        ScoreCheckOut_ServerRpc();
+    }
+
+    [ServerRpc]
+    public void ScoreCheckOut_ServerRpc()
+    {
+        _playerScore.ScoreAction(_scoreType);
+    }
+
+    public void ResetPlayer()
+    {
+        _alreadyCheckOut = false;
     }
 }

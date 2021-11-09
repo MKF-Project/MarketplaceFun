@@ -86,6 +86,7 @@ public class Player : NetworkBehaviour
         //IsListComplete = false;
 
         HeldItemType.OnValueChanged = onHeldItemChange;
+        MatchManager.OnMatchExit += PlayerReset;
     }
 
     public delegate void OnBeforeDestroyDelegate(Player player);
@@ -98,6 +99,8 @@ public class Player : NetworkBehaviour
         {
             HeldItemGenerator?.GenerateOwnerlessItem(_heldItemPosition.position, _heldItemPosition.rotation);
         }
+        MatchManager.OnMatchExit -= PlayerReset;
+
     }
 
     private void onHeldItemChange(int previousItemType, int newItemType)
@@ -212,5 +215,21 @@ public class Player : NetworkBehaviour
             var newRotation = eulerAngles + _rigidbody.rotation.eulerAngles;
             _rigidbody.rotation = Quaternion.Euler(newRotation);
         }
+    }
+
+    public void PlayerReset()
+    {
+        if (IsDrivingCart)
+        {
+            GetComponent<CartControls>().DetachShoppingCart();
+        }
+
+        HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+
+        HeldItemGenerator = null;
+
+        HeldItem = null;
+        
+        IsDrivingCart = false;
     }
 }

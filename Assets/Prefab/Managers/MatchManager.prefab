@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f7e46794305de4f8dfc50b96070402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MatchTime: 3
+  ListCompletedPlayers: 
+  MatchTime: 1.2
 --- !u!114 &102949860476260892
 MonoBehaviour:
   m_ObjectHideFlags: 0

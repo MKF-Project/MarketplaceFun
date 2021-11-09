@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MatchManager : NetworkBehaviour
 {
     //Player Complete Lists
-    private ulong[] ListCompletedPlayers;
-    private int _freeIndex;
+    [HideInInspector]
+    public List<ulong> ListCompletedPlayers;
     
     //Time variables
     public float MatchTime;
@@ -19,18 +20,24 @@ public class MatchManager : NetworkBehaviour
     private bool _timeStarted;
     private bool _matchEnded;
     
-    // Spawn Events
-    public delegate void OnMatchStartDelegate();
-    public static event OnMatchStartDelegate OnMatchStart;
+    private NetworkVariableFloat networkTimeSpent = new NetworkVariableFloat(
+        new NetworkVariableSettings
+        {
+            ReadPermission = NetworkVariablePermission.Everyone,
+            WritePermission = NetworkVariablePermission.ServerOnly
+        }
+    );
+
+    private ScoreController _scoreController;
+    private const string SCORE_CONTROLLER_TAG = "ScoreController";
+    private const string SCORE_SCENE_NAME = "ScoreScene";
+
+
     
-    public delegate void OnMatchEndDelegate();
-    public static event OnMatchEndDelegate OnMatchEnd;
+    public delegate void OnMatchExitDelegate();
+    public static event OnMatchExitDelegate OnMatchExit;
 
 
-    public void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void Start()
     {
@@ -42,10 +49,16 @@ public class MatchManager : NetworkBehaviour
         SpawnController.OnSpawnOpened += InitiateStartTime;
         if (IsServer)
         {
-            ListCompletedPlayers = new ulong[4];
-            _freeIndex = 0;
+            ListCompletedPlayers = new List<ulong>(4);
+            _scoreController = GameObject.FindGameObjectWithTag(SCORE_CONTROLLER_TAG).GetComponent<ScoreController>();
         }
-        
+
+        networkTimeSpent.OnValueChanged = DisplayTime;
+
+    }
+    private void OnDestroy()
+    {
+        SpawnController.OnSpawnOpened -= InitiateStartTime;
     }
     
 
@@ -54,32 +67,40 @@ public class MatchManager : NetworkBehaviour
         SpawnController.OnSpawnOpened -= InitiateStartTime;
         _startTime = Time.time;
         _timeStarted = true;
-        OnMatchStart?.Invoke();
     }
 
     private void Update()
     {
-        if (_timeStarted)
+        if (IsServer)
         {
-            float timeSpent = Time.time - _startTime;
-            int minutesLeft = (int) (MatchTime - timeSpent) / 60;
-            int secondsLeft = (int) (MatchTime - timeSpent) % 60;
-            String minutesLeftText = minutesLeft > 9 ? "" + minutesLeft : "0" + minutesLeft;
-            String secondsLeftText = secondsLeft > 9 ? "" + secondsLeft : "0" + secondsLeft;
-
-            _clockText.text = "" + minutesLeftText + ":" + secondsLeftText;
-            if (minutesLeft <= 0 && secondsLeft <= 0)
+            if (_timeStarted)
             {
-                EndMatch();
+                float timeSpent = Time.time - _startTime;
+                int secondsLeft = (int) (MatchTime - timeSpent) % 60;
+                int networkSeconds = (int) (MatchTime - networkTimeSpent.Value) % 60;
+                if (!secondsLeft.Equals(networkSeconds))
+                {
+                    networkTimeSpent.Value = timeSpent;
+                }
             }
-            
         }
     }
 
-    private void OnDestroy()
+    public void DisplayTime(float pre, float timeSpent)
     {
-        SpawnController.OnSpawnOpened -= InitiateStartTime;
+        int minutesLeft = (int) (MatchTime - timeSpent) / 60;
+        int secondsLeft = (int) (MatchTime - timeSpent) % 60;
+        String minutesLeftText = minutesLeft > 9 ? "" + minutesLeft : "0" + minutesLeft;
+        String secondsLeftText = secondsLeft > 9 ? "" + secondsLeft : "0" + secondsLeft;
+
+        _clockText.text = "" + minutesLeftText + ":" + secondsLeftText;
+        if (minutesLeft <= 0 && secondsLeft <= 0)
+        {
+            EndMatch();
+        }
     }
+
+    
 
     private void EndMatch()
     {
@@ -87,12 +108,14 @@ public class MatchManager : NetworkBehaviour
         {
             _timeStarted = false;
             _matchEnded = true;
-            OnMatchEnd?.Invoke();
+            OnMatchExit?.Invoke();
             _clockText.text = "";
 
             if (IsServer)
             {
                 EndMatch_ClientRpc();
+                _scoreController.EndMatch();
+                NetworkController.switchNetworkScene(SCORE_SCENE_NAME);
                 //Use ScoreAuditor
                 //Change to ScoreScene
             }
@@ -108,24 +131,45 @@ public class MatchManager : NetworkBehaviour
         EndMatch();
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void CheckOutPlayer_ServerRpc(ulong playerId)
     {
         if (!_matchEnded)
         {
-            ListCompletedPlayers[_freeIndex] = playerId;
-            _freeIndex++;
-            WarnPlayerCheckOut_ClientRpc(playerId);
+            if (!VerifyPlayerAlreadyComplete(playerId))
+            {
+                ListCompletedPlayers.Add(playerId);
+                WarnPlayerCheckOut_ClientRpc(playerId);
+            }
         }
+    }
+
+    private bool VerifyPlayerAlreadyComplete(ulong playerId)
+    {
+        foreach (ulong completedId in ListCompletedPlayers)
+        {
+            if (completedId == playerId)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     [ClientRpc]
     public void WarnPlayerCheckOut_ClientRpc(ulong playerId)
     {
-        String playerNickname = NetworkManager.ConnectedClients[playerId].PlayerObject.GetComponent<PlayerInfo>().PlayerData.Nickname;
+        GameObject playerGameObject = NetworkManager.ConnectedClients[playerId].PlayerObject.gameObject;
+        String playerNickname = playerGameObject.GetComponent<PlayerInfo>().PlayerData.Nickname;
         MatchMessages.Instance.EditMessage("Player " + playerNickname + " Checked Out");
         MatchMessages.Instance.ShowMessage();
+        if (NetworkManager.LocalClientId == playerId)
+        {
+            playerGameObject.GetComponent<CheckOut>().ConfirmCheckOut();
+        }
     }
-
+    
+    
 
 }

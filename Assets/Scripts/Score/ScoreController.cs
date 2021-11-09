@@ -1,35 +1,43 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using MLAPI;
 using UnityEngine;
 
-public class ScoreController : NetworkBehaviour
+public class ScoreController : MonoBehaviour
 {
 
     //This class is used to guard the score information from each player
     //for the hole tournament, there for it is only instantiated on the Server
     private Dictionary<ulong, ScorePoints> _playerPoints;
+
+    private ScoreAuditor _scoreAuditor;
+
+    public int PointsToWin;
+    
     void Awake()
     {
-        if (!IsServer)
+        if (!NetworkController.IsServer)
         {
             Destroy(gameObject);
         }
 
         _playerPoints = new Dictionary<ulong, ScorePoints>();
         DontDestroyOnLoad(gameObject);
-        InitiatePlayerPoints(NetworkManager.LocalClientId);
+        InitiatePlayerPoints(NetworkController.SelfID);
 
-        NetworkManager.OnClientConnectedCallback += InitiatePlayerPoints;
-        NetworkManager.OnClientDisconnectCallback += RemovePlayer;
+        _scoreAuditor = GetComponent<ScoreAuditor>();
+        
+        NetworkController.OnOtherClientConnected += InitiatePlayerPoints;
+        NetworkController.OnOtherClientDisconnected += RemovePlayer;
+
     }
 
     private void OnDestroy()
     {
-        NetworkManager.OnClientConnectedCallback -= InitiatePlayerPoints;
-        NetworkManager.OnClientDisconnectCallback -= RemovePlayer;
-
+        NetworkController.OnOtherClientConnected += InitiatePlayerPoints;
+        NetworkController.OnOtherClientDisconnected += RemovePlayer;
     }
 
     public void InitiatePlayerPoints(ulong playerId)
@@ -76,7 +84,60 @@ public class ScoreController : NetworkBehaviour
         }
     }
 
+    public SerializedScorePointList GetSerializedScore()
+    {
+        SerializedScorePointList serializedScorePointList = new SerializedScorePointList(_playerPoints.Values.ToArray());
+        return serializedScorePointList;
+    }
 
 
+    public void EndMatch()
+    {
+        _scoreAuditor.Audit();
+    }
+
+    public bool VerifyWinner()
+    {
+        foreach (ScorePoints scorePoints in _playerPoints.Values)
+        {
+            if (scorePoints.Points > PointsToWin)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public List<ulong> GetWinnerList()
+    {
+        ScorePoints winnerScorePoints = new ScorePoints(0);
+        List<ulong> winnersIdList = new List<ulong>();
+        
+        foreach (ScorePoints scorePoints in _playerPoints.Values)
+        {
+            if (scorePoints.Points > PointsToWin)
+            {
+                if (scorePoints.Points == winnerScorePoints.Points)
+                {
+                    winnersIdList.Add(scorePoints.PlayerId);
+                }
+
+                if (scorePoints.Points > winnerScorePoints.Points)
+                {
+                    winnersIdList = new List<ulong> {scorePoints.PlayerId};
+                    winnerScorePoints = scorePoints;
+                }
+            }
+        }
+
+        return winnersIdList;
+    }
+
+    public SerializedWinnersList GetSerializedWinnersList()
+    {
+        SerializedWinnersList serializedWinnersList = new SerializedWinnersList(GetWinnerList().ToArray());
+        return serializedWinnersList;
+    }
 
 }

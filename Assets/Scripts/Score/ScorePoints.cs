@@ -1,8 +1,8 @@
+using MLAPI.Serialization;
 
-
-public struct ScorePoints
+public struct ScorePoints : INetworkSerializable
 {
-    public ulong PlayerId { get; private set; }
+    public ulong PlayerId;
     public int Points;
     public int LostCounter;
 
@@ -11,6 +11,14 @@ public struct ScorePoints
         PlayerId = playerId;
         Points = 0;
         LostCounter = 0;
+    }
+    
+    public void NetworkSerialize(NetworkSerializer serializer)
+    {
+        serializer.Serialize(ref PlayerId);
+        serializer.Serialize(ref Points);
+        serializer.Serialize(ref LostCounter);
+
     }
 
 }

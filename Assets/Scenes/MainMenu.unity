@@ -5114,6 +5114,7 @@ MonoBehaviour:
     - _Beta
     - ArtScene
     - ScoreScene
+    - WinScene
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
@@ -5173,9 +5174,6 @@ MonoBehaviour:
     - Prefab: {fileID: 4771570655203383561, guid: 1378575c07ac99b49bef56b9c6cd4687,
         type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 2638715899084533076, guid: 3442149694f0849409a7088f7d3d3844,
-        type: 3}
-      PlayerPrefab: 0
     - Prefab: {fileID: 776817132323081258, guid: 5af4e74264f89ad4f97f2d00a011f9f4,
         type: 3}
       PlayerPrefab: 0
@@ -5185,7 +5183,10 @@ MonoBehaviour:
     - Prefab: {fileID: 3153268531660502166, guid: b62791d34dc061c4a919fe09ea87ff19,
         type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 853662642801154524, guid: a200469bfe96f904eb1973004d72ce50,
+    - Prefab: {fileID: 6734883656228109558, guid: 02b2da95d92a92649802f037c77e9710,
+        type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 4963215985506777751, guid: 6aafc0541f3948040b2496211038b75c,
         type: 3}
       PlayerPrefab: 0
     PlayerPrefabHash:
@@ -6007,7 +6008,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c303ce1debbe1c4d848e4e2fbda9219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerList: {fileID: 0}
   _startGame: {fileID: 691198543}
   Nickname1: {fileID: 0}
   Nickname2: {fileID: 0}
@@ -6268,7 +6268,7 @@ GameObject:
   - component: {fileID: 1679518249}
   - component: {fileID: 1679518250}
   m_Layer: 0
-  m_Name: ScoreList
+  m_Name: ScoreConfig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6303,8 +6303,13 @@ MonoBehaviour:
   StartingScoreTypeList:
   - Type: EnemyHit
     Points: 1
-    Code: 0
+    Id: 0
     ScorableAction: {fileID: 162437846829725900, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
+      type: 3}
+  - Type: CompleteList
+    Points: 5
+    Id: 0
+    ScorableAction: {fileID: 492374440104628429, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
       type: 3}
 --- !u!1 &1709056815
 GameObject:
@@ -8303,7 +8308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2027518781}
   m_Layer: 0
-  m_Name: ---LISTS---
+  m_Name: ---CONFIGURATORS---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

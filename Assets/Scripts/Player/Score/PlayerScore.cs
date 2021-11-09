@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerScore: NetworkBehaviour
 {
-    public Dictionary<int, int> playerScoreList;
+    public Dictionary<int, int> PlayerScoreDictionary;
 
     private void Start()
     {
@@ -15,34 +15,34 @@ public class PlayerScore: NetworkBehaviour
             Destroy(this);
         }
 
-        playerScoreList = new Dictionary<int, int>();
+        PlayerScoreDictionary = new Dictionary<int, int>();
         waitTime = Time.time;
     }
 
     public void ScoreAction(ScoreType scoreType)
     {
-        InsertScore(scoreType.Code, scoreType.Points);
+        InsertScore(scoreType.Id, scoreType.Points);
     }
 
 
     private void InsertScore(int scoreCode, int scorePoints)
     {
-        if (playerScoreList.ContainsKey(scoreCode))
+        if (PlayerScoreDictionary.ContainsKey(scoreCode))
         {
-            int points = playerScoreList[scoreCode] + scorePoints;
-            playerScoreList.Remove(scoreCode);
-            playerScoreList.Add(scoreCode, points);
+            int points = PlayerScoreDictionary[scoreCode] + scorePoints;
+            PlayerScoreDictionary.Remove(scoreCode);
+            PlayerScoreDictionary.Add(scoreCode, points);
         }
         else
         {
-            playerScoreList.Add(scoreCode, scorePoints);
+            PlayerScoreDictionary.Add(scoreCode, scorePoints);
         }
     }
 
     [ServerRpc]
     public void ScoreAction_ServerRpc(int scoreCode)
     {
-        ScoreAction(ScoreList.ScoreTypeList[scoreCode]);
+        ScoreAction(ScoreConfig.ScoreTypeDictionary[scoreCode]);
     }
 
     private float waitTime;
@@ -58,10 +58,10 @@ public class PlayerScore: NetworkBehaviour
 
     public void Print()
     {
-        foreach (int key in playerScoreList.Keys)
+        foreach (var key in PlayerScoreDictionary.Keys)
         {
-            ScoreType scoreType = ScoreList.ScoreTypeList[key];
-            Debug.Log("Cliente: " + OwnerClientId + " - " + scoreType.Type + " " + scoreType.Code + ": " +  playerScoreList[key]);
+            ScoreType scoreType = ScoreConfig.ScoreTypeDictionary[key];
+            Debug.Log("Cliente: " + OwnerClientId + " - " + scoreType.Type + " " + scoreType.Id + ": " +  PlayerScoreDictionary[key]);
         }
     }
 }

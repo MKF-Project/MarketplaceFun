@@ -3,7 +3,15 @@ using System;
 using MLAPI;
 
 [Serializable]
-public abstract class ScorableAction : NetworkBehaviour
+public class ScorableAction : NetworkBehaviour
 {
-    public abstract void SetScore(ScoreType scoreType);
+    protected ScoreType _scoreType;
+
+    protected virtual void Awake()
+    {
+        ScoreConfig.FindByScorableAction(this, out _scoreType);
+    }
+
+
+    
 }

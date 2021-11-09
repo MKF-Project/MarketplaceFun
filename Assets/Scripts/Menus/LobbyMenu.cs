@@ -19,7 +19,7 @@ public class LobbyMenu : NetworkBehaviour
     public delegate void OnCancelMatchDelegate();
     public static event OnCancelMatchDelegate OnCancelMatch;
 
-    [SerializeField] private Text _playerList = null;
+    //[SerializeField] private Text _playerList = null;
     [SerializeField] private Button _startGame = null;
     
     [SerializeField] public GameObject Nickname1;

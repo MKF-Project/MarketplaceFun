@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2638715899084533076
+--- !u!1 &6734883656228109558
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,56 +8,56 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6269332153380476841}
-  - component: {fileID: 6751559670334778384}
-  - component: {fileID: 7700854030429371261}
+  - component: {fileID: 6734883656228109557}
+  - component: {fileID: 6734883656228109547}
+  - component: {fileID: 6734883656228109556}
   m_Layer: 0
-  m_Name: ScoreNetwork
+  m_Name: ScoreSceneManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6269332153380476841
+--- !u!4 &6734883656228109557
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2638715899084533076}
+  m_GameObject: {fileID: 6734883656228109558}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 799.2973, y: 788.5398, z: -9.920107}
+  m_LocalPosition: {x: 730.0464, y: 1000.55634, z: -144.5292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6751559670334778384
+--- !u!114 &6734883656228109547
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2638715899084533076}
+  m_GameObject: {fileID: 6734883656228109558}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac2ca123af3d3dd459e9df54bb8c72ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 635bd1b95d58d1c42aa4567129b2ab68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7700854030429371261
+--- !u!114 &6734883656228109556
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2638715899084533076}
+  m_GameObject: {fileID: 6734883656228109558}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkInstanceId: 0
-  PrefabHash: 16177637478034992345
-  PrefabHashGenerator: ScoreNetwork
+  PrefabHash: 3910616088415778464
+  PrefabHashGenerator: ScoreSceneManager
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0

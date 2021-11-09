@@ -17,6 +17,11 @@ TagManager:
   - MatchCanvas
   - ScoreController
   - MatchManager
+  - TextPoints
+  - ScoreCanvas
+  - ButtonReady
+  - ButtonStart
+  - WinCanvas
   layers:
   - Default
   - TransparentFX

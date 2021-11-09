@@ -8,6 +8,18 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="CameraScript.cs" t="Include" />
+          <e p="EndScenes" t="Include">
+            <e p="ScoreScene" t="Include">
+              <e p="ScoreCanvas.cs" t="Include" />
+              <e p="ScoreSceneManager.cs" t="Include" />
+              <e p="SerializedScorePointList.cs" t="Include" />
+            </e>
+            <e p="WinScene" t="Include">
+              <e p="SerializedWinnersList.cs" t="Include" />
+              <e p="WinCanvas.cs" t="Include" />
+              <e p="WinSceneManager.cs" t="Include" />
+            </e>
+          </e>
           <e p="Helpers" t="Include">
             <e p="NetworkObjectSpawner.cs" t="Include" />
           </e>
@@ -88,13 +100,11 @@
           <e p="Score" t="Include">
             <e p="ScoreActions" t="Include">
               <e p="ScorableAction.cs" t="Include" />
-              <e p="ScoreList.cs" t="Include" />
+              <e p="ScoreConfig.cs" t="Include" />
               <e p="ScoreType.cs" t="Include" />
             </e>
             <e p="ScoreAuditor.cs" t="Include" />
-            <e p="ScoreCanvas.cs" t="Include" />
             <e p="ScoreController.cs" t="Include" />
-            <e p="ScoreNetwork.cs" t="Include" />
             <e p="ScorePoints.cs" t="Include" />
           </e>
           <e p="ShoppingList" t="Include">

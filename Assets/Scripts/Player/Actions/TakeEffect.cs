@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
@@ -11,12 +12,11 @@ public class TakeEffect : ScorableAction
     private static readonly int ReceiveHit = Animator.StringToHash("ReceiveHit");
 
     private bool _isTakingEffect;
-
-    private ScoreType _scoreType;
-
+    
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _animator = GetComponentInChildren<Animator>();
         _isTakingEffect = false;
     }
@@ -40,6 +40,7 @@ public class TakeEffect : ScorableAction
             NetworkManager.ConnectedClients[throwerId].PlayerObject.GetComponent<PlayerScore>().ScoreAction(_scoreType);
             _isTakingEffect = true;
             NormalEffect_ClientRpc();
+            
         }
     }
 
@@ -69,10 +70,6 @@ public class TakeEffect : ScorableAction
     }
 
     
-    public override void SetScore(ScoreType scoreType)
-    {
-        _scoreType = scoreType;
-    }
     
     
 }

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6241834407455726269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6241834407455726210}
+  m_Layer: 0
+  m_Name: ITEM_LEITE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6241834407455726210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6241834407455726269}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.1083, y: 1.1083, z: 1.1083}
+  m_Children:
+  - {fileID: 2065293848760956522}
+  m_Father: {fileID: 8433228543868606014}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1009604215888865967
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13,7 +44,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.098, y: 0.195, z: 0.098}
   m_Center: {x: 0, y: 0.0975, z: 0}
---- !u!1 &4123428031009883723
+--- !u!1 &7889197252739790978
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -21,45 +52,45 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5254628985673042083}
-  - component: {fileID: 4121361919969306148}
-  - component: {fileID: 7532715482397255301}
+  - component: {fileID: 2065293848760956522}
+  - component: {fileID: 7887861492318918893}
+  - component: {fileID: 4381087897092020300}
   m_Layer: 0
-  m_Name: MilkCarton
+  m_Name: Caixa de Leite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5254628985673042083
+--- !u!4 &2065293848760956522
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4123428031009883723}
-  m_LocalRotation: {x: -0.00000019861236, y: -0.7071068, z: -0.7071068, w: 0.00000019861236}
-  m_LocalPosition: {x: 0, y: 0.04878987, z: 0}
-  m_LocalScale: {x: 0.04878985, y: 0.04878985, z: 0.04878985}
+  m_GameObject: {fileID: 7889197252739790978}
+  m_LocalRotation: {x: -0.00000013767877, y: 0.7071068, z: 0.70710677, w: 0.00000013767878}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 8433228543868606014}
+  m_Father: {fileID: 6241834407455726210}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: -179.99998}
---- !u!33 &4121361919969306148
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &7887861492318918893
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4123428031009883723}
-  m_Mesh: {fileID: 1626752489626804076, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
---- !u!23 &7532715482397255301
+  m_GameObject: {fileID: 7889197252739790978}
+  m_Mesh: {fileID: 1626752489626804076, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+--- !u!23 &4381087897092020300
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4123428031009883723}
+  m_GameObject: {fileID: 7889197252739790978}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -71,8 +102,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 9031939199424786015, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
-  - {fileID: 7013464176851437511, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
+  - {fileID: 9031939199424786015, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+  - {fileID: 7013464176851437511, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -170,7 +201,7 @@ PrefabInstance:
         type: 3}
       propertyPath: ShelfItemGroups.Array.data[0].ItemGroupPrefab
       value: 
-      objectReference: {fileID: 6422799303087399115, guid: ac93540ecf0d3e04faaf356df892c55c,
+      objectReference: {fileID: 4768902560555379, guid: 746b4f08fcffb6242bf917b07724200a,
         type: 3}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

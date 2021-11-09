@@ -10,8 +10,9 @@ using Random = System.Random;
 
 public class ShoppingList : NetworkBehaviour
 {
+    public const int ITEM_LIST_AMOUNT = 5;
+
     public Dictionary<ulong, ShoppingListItem> ItemDictionary;
-    //public List<ShoppingListItem> ItemList;
     public ShoppingListUI ShoppingListUi;
 
     private int _quantityChecked;
@@ -29,49 +30,49 @@ public class ShoppingList : NetworkBehaviour
             ShoppingListUi = GameObject.FindGameObjectsWithTag("ShoppingListUI")[0].GetComponent<ShoppingListUI>();
             Debug.Log("Colocou Owner");
             NetworkController.OnDisconnected += EraseListClient;
-
         }
 
         if (IsServer)
         {
             Debug.Log("Colocou Server");
             _randomSeed = (int) Time.time;
-            SceneManager.OnMatchLoaded += GenerateList_OnMatchLoaded;
             NetworkController.OnOtherClientDisconnected += EraseListServer;
+
+            ItemGenerator.OnGeneratablesDefined += GenerateList;
         }
     }
 
-
-
     private void OnDestroy()
     {
-        //Didn't verify IsOwner or IsClient(bug if verify)
+        // Don't verify IsOwner or IsClient (bug if verify)
         NetworkController.OnDisconnected -= EraseListClient;
-        SceneManager.OnMatchLoaded -= GenerateList_OnMatchLoaded;
         NetworkController.OnOtherClientDisconnected -= EraseListServer;
+
+        ItemGenerator.OnGeneratablesDefined -= GenerateList;
     }
 
-    public void GenerateList_OnMatchLoaded(string _sceneName)
+    // Only on server
+    public void GenerateList(IEnumerable<ulong> setOfPossibleItems)
     {
-        GenerateList(5, NetworkItemManager.NetworkItemPrefabs.Keys.ToList());
-    }
-
-
-    //Only on server
-    public void GenerateList(int numberOfItems, List<ulong> itemListKeys)
-    {
-        var random = new Random(_randomSeed);
-
-        while (numberOfItems > 0)
+        if(!IsServer)
         {
-            int randomIndex = random.Next(0, itemListKeys.Count);
+            return;
+        }
 
-            ShoppingListItem shoppingListItem = new ShoppingListItem(itemListKeys[randomIndex]);
+        var random = new Random(_randomSeed);
+        var itemList = new List<ulong>(setOfPossibleItems);
 
-            //Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
+        var numberOfItems = Mathf.Min(ITEM_LIST_AMOUNT, itemList.Count);
+        while(numberOfItems > 0)
+        {
+            int randomIndex = random.Next(0, itemList.Count);
 
-            ItemDictionary.Add(itemListKeys[randomIndex], shoppingListItem);
-            itemListKeys.RemoveAt(randomIndex);
+            ShoppingListItem shoppingListItem = new ShoppingListItem(itemList[randomIndex]);
+
+            // Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
+
+            ItemDictionary.Add(itemList[randomIndex], shoppingListItem);
+            itemList.RemoveAt(randomIndex);
             numberOfItems--;
         }
 
@@ -80,8 +81,8 @@ public class ShoppingList : NetworkBehaviour
 
     }
 
+    // Populate List on Client RPC
     [ClientRpc]
-    //Populate List on Client RPC
     public void ReceiveList_ClientRpc(SerializedShoppingList serializedShoppingList)
     {
 

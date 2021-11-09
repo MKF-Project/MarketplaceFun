@@ -76,7 +76,7 @@ public class Player : NetworkBehaviour
         IsDrivingCart = false;
         //IsListComplete = false;
 
-        HeldItemType.OnValueChanged = onHeldItemChange;
+        HeldItemType.OnValueChanged = OnHeldItemChange;
         MatchManager.OnMatchExit += PlayerReset;
     }
 
@@ -221,9 +221,7 @@ public class Player : NetworkBehaviour
         }
 
         HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
-
-        HeldItemGenerator = null;
-
+        
         HeldItem = null;
         
         IsDrivingCart = false;

@@ -23,6 +23,7 @@ TagManager:
   - ButtonStart
   - WinCanvas
   - PlayerModel
+  - DescriptivePointText
   layers:
   - Default
   - TransparentFX

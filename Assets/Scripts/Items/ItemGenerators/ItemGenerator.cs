@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -146,6 +146,20 @@ public abstract class ItemGenerator : NetworkBehaviour
         {
             _afterSpawn?.Invoke(itemGenerated.GetComponent<Item>());
             _afterSpawn = null;
+        }
+    }
+
+    // Editor Utils
+    private void OnDrawGizmosSelected()
+    {
+        var shelves = GameObject.FindObjectsOfType<Shelf>();
+        for(int i = 0; i < shelves.Length; i++)
+        {
+            if(shelves[i]._itemGenerator == this)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, shelves[i].transform.position);
+            }
         }
     }
 }

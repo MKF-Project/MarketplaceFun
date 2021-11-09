@@ -48,6 +48,9 @@ public class PermanentRandomStartGenerator : ItemGenerator
             var value = Random.Range(0, ItemPool.Count);
 
             _randomIndex.Value = value;
+
+            _generatableItems = new List<ulong>(1);
+            _generatableItems.Add(ItemInStock);
         }
     }
 }

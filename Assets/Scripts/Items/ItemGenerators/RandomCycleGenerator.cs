@@ -29,12 +29,14 @@ public class RandomCycleGenerator : ItemGenerator
         if(IsServer)
         {
             _randomIndex.Value = Random.Range(0, ItemPool.Count);
+            _generatableItems = ItemPool;
         }
-
     }
 
     public override void NetworkStart()
     {
+        base.NetworkStart();
+
         _randomIndex.OnValueChanged = OnItemShuffle;
     }
 

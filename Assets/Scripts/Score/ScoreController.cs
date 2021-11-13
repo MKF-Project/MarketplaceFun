@@ -1,33 +1,143 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using MLAPI;
 using UnityEngine;
 
 public class ScoreController : MonoBehaviour
 {
-    public static ScoreController Instance;
 
-    public bool IAmWinner { get; private set; }
+    //This class is used to guard the score information from each player
+    //for the hole tournament, there for it is only instantiated on the Server
+    private Dictionary<ulong, ScorePoints> _playerPoints;
 
-    // Start is called before the first frame update
+    private ScoreAuditor _scoreAuditor;
+
+    public int PointsToWin;
+    
     void Awake()
     {
+        if (!NetworkController.IsServer)
+        {
+            Destroy(gameObject);
+        }
+
+        _playerPoints = new Dictionary<ulong, ScorePoints>();
         DontDestroyOnLoad(gameObject);
-        Instance = this;
-        IAmWinner = false;
+        InitiatePlayerPoints(NetworkController.SelfID);
+
+        _scoreAuditor = GetComponent<ScoreAuditor>();
+        
+        NetworkController.OnOtherClientConnected += InitiatePlayerPoints;
+        NetworkController.OnOtherClientDisconnected += RemovePlayer;
+
     }
 
- 
-
-
-    // Update is called once per frame
-    public void IWin()
+    private void OnDestroy()
     {
-        IAmWinner = true;
-        ScoreNetwork.Instance.CallScoreServer();
+        NetworkController.OnOtherClientConnected += InitiatePlayerPoints;
+        NetworkController.OnOtherClientDisconnected += RemovePlayer;
     }
 
-    
+    public void InitiatePlayerPoints(ulong playerId)
+    {
+        ScorePoints scorePoints = new ScorePoints(playerId);
+        _playerPoints.Add(playerId, scorePoints);
+    }
 
+    public void RemovePlayer(ulong playerId)
+    {
+        if (_playerPoints.ContainsKey(playerId))
+        {
+            _playerPoints.Remove(playerId);
+        }
+    }
+
+    public void AddPointsToPlayer(ulong playerId, int points)
+    {
+        if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
+        {
+            scorePoints.Points += points;
+            _playerPoints.Remove(playerId);
+            _playerPoints.Add(playerId, scorePoints);
+        }
+    }
+
+    public void AddLostCounterToPlayer(ulong playerId)
+    {
+        if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
+        {
+            scorePoints.LostCounter += 1;
+            _playerPoints.Remove(playerId);
+            _playerPoints.Add(playerId, scorePoints);
+        }
+    }
+
+    public void ResetLostCounterToPlayer(ulong playerId)
+    {
+        if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
+        {
+            scorePoints.LostCounter = 0;
+            _playerPoints.Remove(playerId);
+            _playerPoints.Add(playerId, scorePoints);
+        }
+    }
+
+    public SerializedScorePointList GetSerializedScore()
+    {
+        SerializedScorePointList serializedScorePointList = new SerializedScorePointList(_playerPoints.Values.ToArray());
+        return serializedScorePointList;
+    }
+
+
+    public void EndMatch()
+    {
+        _scoreAuditor.Audit();
+    }
+
+    public bool VerifyWinner()
+    {
+        foreach (ScorePoints scorePoints in _playerPoints.Values)
+        {
+            if (scorePoints.Points > PointsToWin)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public List<ulong> GetWinnerList()
+    {
+        ScorePoints winnerScorePoints = new ScorePoints(0);
+        List<ulong> winnersIdList = new List<ulong>();
+        
+        foreach (ScorePoints scorePoints in _playerPoints.Values)
+        {
+            if (scorePoints.Points > PointsToWin)
+            {
+                if (scorePoints.Points == winnerScorePoints.Points)
+                {
+                    winnersIdList.Add(scorePoints.PlayerId);
+                }
+
+                if (scorePoints.Points > winnerScorePoints.Points)
+                {
+                    winnersIdList = new List<ulong> {scorePoints.PlayerId};
+                    winnerScorePoints = scorePoints;
+                }
+            }
+        }
+
+        return winnersIdList;
+    }
+
+    public SerializedWinnersList GetSerializedWinnersList()
+    {
+        SerializedWinnersList serializedWinnersList = new SerializedWinnersList(GetWinnerList().ToArray());
+        return serializedWinnersList;
+    }
 
 }

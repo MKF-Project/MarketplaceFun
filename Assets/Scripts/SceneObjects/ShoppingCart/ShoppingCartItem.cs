@@ -99,10 +99,12 @@ public class ShoppingCartItem : NetworkBehaviour
                 }
             }
 
+            /*
             if(shoppingList.IsListChecked())
             {
                 Owner.ListComplete();
             }
+            */
         }
     }
 
@@ -134,11 +136,14 @@ public class ShoppingCartItem : NetworkBehaviour
                 shoppingList.UncheckItem(_itemCodes[_nextIndex]);
             }
 
+            shoppingList.CheckItem(itemTypeCode);
             // Add item to player list and check if finished
+            /*
             if(shoppingList.CheckItem(itemTypeCode) && shoppingList.IsListChecked())
             {
                 Owner.ListComplete();
             }
+            */
         }
 
         _occupiedPositions[_nextIndex] = true;

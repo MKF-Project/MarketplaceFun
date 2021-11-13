@@ -66,6 +66,11 @@ public class CartControls : PlayerControls
         _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
     }
 
+    public void DetachShoppingCart()
+    {
+        _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
+    }
+
     private void updateMovement()
     {
         // Forward/Backward Movement

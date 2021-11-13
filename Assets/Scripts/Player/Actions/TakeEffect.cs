@@ -1,43 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
 
-public class TakeEffect : NetworkBehaviour
+public class TakeEffect : ScorableAction
 {
     private Animator _animator;
 
     private static readonly int RECEIVE_HIT = Animator.StringToHash("Recebeu_Golpe");
 
     private bool _isTakingEffect;
-
-
+    
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _animator = GetComponentInChildren<Animator>();
         _isTakingEffect = false;
     }
 
-    public void OnTakeEffect(int effectCode)
+    public void OnTakeEffect(int effectCode, ulong throwerId)
     {
         switch(effectCode)
         {
-            case 0:
-                NormalEffect_ServerRpc();
+            case  0:
+                NormalEffect_ServerRpc(throwerId);
                 break;
 
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void NormalEffect_ServerRpc()
+    public void NormalEffect_ServerRpc(ulong throwerId)
     {
         if(!_isTakingEffect)
         {
+            NetworkManager.ConnectedClients[throwerId].PlayerObject.GetComponent<PlayerScore>().ScoreAction(_scoreType);
             _isTakingEffect = true;
             NormalEffect_ClientRpc();
+            
         }
     }
 
@@ -66,4 +69,8 @@ public class TakeEffect : NetworkBehaviour
     {
         _isTakingEffect = false;
     }
+
+    
+    
+    
 }

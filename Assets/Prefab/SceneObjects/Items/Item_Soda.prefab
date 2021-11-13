@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6882732546034520186
+--- !u!1 &350264537073503478
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,45 +8,45 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5212682347719117186}
-  - component: {fileID: 2743106824762426827}
-  - component: {fileID: 6747887937679583163}
+  - component: {fileID: 1373362107566380302}
+  - component: {fileID: 9027881527101135175}
+  - component: {fileID: 503650158195407671}
   m_Layer: 0
-  m_Name: CokeBottle
+  m_Name: Garrafa de Refri
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5212682347719117186
+--- !u!4 &1373362107566380302
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6882732546034520186}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_GameObject: {fileID: 350264537073503478}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.09, y: 0.089999996, z: 0.089999996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 714534459059332824}
+  m_Father: {fileID: 6250050692966159920}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &2743106824762426827
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &9027881527101135175
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6882732546034520186}
-  m_Mesh: {fileID: -3173359557742668241, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
---- !u!23 &6747887937679583163
+  m_GameObject: {fileID: 350264537073503478}
+  m_Mesh: {fileID: -3173359557742668241, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+--- !u!23 &503650158195407671
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6882732546034520186}
+  m_GameObject: {fileID: 350264537073503478}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -58,9 +58,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6898816468745172488, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
-  - {fileID: 746031682361285082, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
-  - {fileID: -1491318751250290512, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
+  - {fileID: -6898816468745172488, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+  - {fileID: 746031682361285082, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+  - {fileID: -1491318751250290512, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,6 +81,37 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &6250050692966159923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6250050692966159920}
+  m_Layer: 0
+  m_Name: ITEM_GARRAFA
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6250050692966159920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6250050692966159923}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.6627672, y: 1.6627672, z: 1.6627672}
+  m_Children:
+  - {fileID: 1373362107566380302}
+  m_Father: {fileID: 714534459059332824}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &-2618453724019684211
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -160,20 +191,31 @@ PrefabInstance:
     - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: ShelfItemGroups.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: UISticker
       value: 
-      objectReference: {fileID: -1353976113170245158, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
+      objectReference: {fileID: 21300000, guid: 654d13f6993f0c948802972d757b48e3,
         type: 3}
     - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: ShelfItemGroups.Array.data[0].ItemGroupPrefab
       value: 
-      objectReference: {fileID: 5757851103692507315, guid: 000b1cb9daaaf15418bb426ec5cd6d78,
+      objectReference: {fileID: 5838868692120814634, guid: cb03c5968e633284786d7b59a27cfb2c,
         type: 3}
+    - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: ShelfItemGroups.Array.data[1].ItemGroupPrefab
+      value: 
+      objectReference: {fileID: 8038369140933729605, guid: 60b12535979be13459609171decf9e46,
+        type: 3}
+    - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: ShelfItemGroups.Array.data[1].ShelfType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHash

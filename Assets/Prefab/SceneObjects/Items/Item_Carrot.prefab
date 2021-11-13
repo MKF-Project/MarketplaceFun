@@ -14,7 +14,7 @@ CapsuleCollider:
   m_Height: 0.215
   m_Direction: 1
   m_Center: {x: 0, y: 0.1075, z: 0}
---- !u!1 &5513288048990510540
+--- !u!1 &4230261592453367998
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -22,45 +22,76 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5737867358160035208}
-  - component: {fileID: 5005786113266327402}
-  - component: {fileID: 7736613155232391798}
+  - component: {fileID: 4230261592453367999}
   m_Layer: 0
-  m_Name: Carrot
+  m_Name: ITEM_CENOURA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5737867358160035208
+--- !u!4 &4230261592453367999
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5513288048990510540}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_GameObject: {fileID: 4230261592453367998}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.056735, y: 0.056735, z: 0.056735}
-  m_Children: []
+  m_LocalScale: {x: 2.8473516, y: 2.8473516, z: 2.8473516}
+  m_Children:
+  - {fileID: 1705784672574491167}
   m_Father: {fileID: 6881498535193480348}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &5005786113266327402
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4719092545944677559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1705784672574491167}
+  - component: {fileID: 8273918976814907279}
+  - component: {fileID: 3792082978748803951}
+  m_Layer: 0
+  m_Name: Cenoura.001
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1705784672574491167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4719092545944677559}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4230261592453367999}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8273918976814907279
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5513288048990510540}
-  m_Mesh: {fileID: -4596221732735688436, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
---- !u!23 &7736613155232391798
+  m_GameObject: {fileID: 4719092545944677559}
+  m_Mesh: {fileID: -832114385549198806, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+--- !u!23 &3792082978748803951
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5513288048990510540}
+  m_GameObject: {fileID: 4719092545944677559}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -72,8 +103,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4754847041706118254, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
-  - {fileID: -7716991683959618028, guid: b7d1cdd8469879b45afc8651a9491533, type: 3}
+  - {fileID: 4754847041706118254, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
+  - {fileID: -7716991683959618028, guid: 62966b60bdd4d454b8c0b6975c7d6602, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -165,18 +196,18 @@ PrefabInstance:
         type: 3}
       propertyPath: UISticker
       value: 
-      objectReference: {fileID: -8374686303325181804, guid: 2df3661ecdfaa2249a3529fc6ea4766d,
+      objectReference: {fileID: 21300000, guid: a1f50e2442de24b4887b6cf8bd2db171,
         type: 3}
     - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: ShelfItemGroups.Array.data[0].ShelfType
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: ShelfItemGroups.Array.data[0].ItemGroupPrefab
       value: 
-      objectReference: {fileID: 161806010843421730, guid: 8711395e782d10541b2391a47eede8f5,
+      objectReference: {fileID: 8335574484138399011, guid: 8c1e0cfcf26bd564c9812e74d6292264,
         type: 3}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

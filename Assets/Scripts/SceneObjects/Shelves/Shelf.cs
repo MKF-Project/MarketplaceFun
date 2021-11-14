@@ -8,7 +8,7 @@ public enum ShelfType
 {
     Standard = 0,
     Freezer  = 1,
-    Basket   = 2,
+    Fruit   = 2,
     Pallet   = 3,
     Display  = 4
 }

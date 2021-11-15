@@ -38,33 +38,33 @@ public class Interactable : NetworkBehaviour
         _configured = InteractUI != null;
     }
 
-    public delegate void OnLookEnterDelegate(GameObject player);
+    public delegate void OnLookEnterDelegate(GameObject player, Collider enteredTrigger);
     public event OnLookEnterDelegate OnLookEnter;
-    public void TriggerLookEnter(GameObject player)
+    public void TriggerLookEnter(GameObject player, Collider enteredTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {
-            OnLookEnter?.Invoke(player);
+            OnLookEnter?.Invoke(player, enteredTrigger);
         }
     }
 
-    public delegate void OnLookExitDelegate(GameObject player);
+    public delegate void OnLookExitDelegate(GameObject player, Collider exitedTrigger);
     public event OnLookExitDelegate OnLookExit;
-    public void TriggerLookExit(GameObject player)
+    public void TriggerLookExit(GameObject player, Collider exitedTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {
-            OnLookExit?.Invoke(player);
+            OnLookExit?.Invoke(player, exitedTrigger);
         }
     }
 
-    public delegate void OnInteractDelegate(GameObject player);
+    public delegate void OnInteractDelegate(GameObject player, Collider interactedTrigger);
     public event OnInteractDelegate OnInteract;
-    public void TriggerInteract(GameObject player)
+    public void TriggerInteract(GameObject player, Collider interactedTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {
-            OnInteract?.Invoke(player);
+            OnInteract?.Invoke(player, interactedTrigger);
         }
     }
 

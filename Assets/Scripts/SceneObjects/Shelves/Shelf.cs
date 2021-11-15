@@ -103,7 +103,7 @@ public class Shelf : NetworkBehaviour
         ItemGenerator = null;
     }
 
-    protected virtual void ShowButtonPrompt(GameObject player)
+    protected virtual void ShowButtonPrompt(GameObject player, Collider enteredTrigger)
     {
         if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {
@@ -116,12 +116,12 @@ public class Shelf : NetworkBehaviour
         }
     }
 
-    protected virtual void HideButtonPrompt(GameObject player)
+    protected virtual void HideButtonPrompt(GameObject player, Collider exitedTrigger)
     {
         _interactScript.InteractUI.SetActive(false);
     }
 
-    protected virtual void InteractWithShelf(GameObject player)
+    protected virtual void InteractWithShelf(GameObject player, Collider interactedTrigger)
     {
         if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {

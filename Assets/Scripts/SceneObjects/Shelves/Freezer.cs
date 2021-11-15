@@ -83,14 +83,14 @@ public class Freezer : Shelf
         }
     }
 
-    protected override void ShowButtonPrompt(GameObject player)
+    protected override void ShowButtonPrompt(GameObject player, Collider enteredTrigger)
     {
         // If the door is open, we defer to the default Shelf script
         // which decides wether or not to show UI based on
         // item availability in the generator
         if(DoorState.Value == FreezerDoorState.Open)
         {
-            base.ShowButtonPrompt(player);
+            base.ShowButtonPrompt(player, enteredTrigger);
         }
 
         else if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
@@ -99,13 +99,13 @@ public class Freezer : Shelf
         }
     }
 
-    protected override void InteractWithShelf(GameObject player)
+    protected override void InteractWithShelf(GameObject player, Collider interactedTrigger)
     {
         // Defer to base shelf script when the time comes
         // to request a generated item
         if(DoorState.Value == FreezerDoorState.Open)
         {
-            base.InteractWithShelf(player);
+            base.InteractWithShelf(player, interactedTrigger);
         }
 
         // Otherwise, if the door is closed

@@ -59,7 +59,7 @@ public class ShoppingCartInteract : NetworkBehaviour
     }
 
     /** ---- Interaction ---- **/
-    private void showButtonPrompt(GameObject player)
+    private void showButtonPrompt(GameObject player, Collider enteredTrigger)
     {
         // Show UI if not holding item or driving a shopping cart
         var playerScript = player.GetComponent<Player>();
@@ -69,12 +69,12 @@ public class ShoppingCartInteract : NetworkBehaviour
         }
     }
 
-    private void hideButtonPrompt(GameObject player)
+    private void hideButtonPrompt(GameObject player, Collider exitedTrigger)
     {
         _interactScript.InteractUI.SetActive(false);
     }
 
-    private void grabCart(GameObject playerObject)
+    private void grabCart(GameObject playerObject, Collider interactedTrigger)
     {
         var playerScript = playerObject.GetComponent<Player>();
 
@@ -100,7 +100,7 @@ public class ShoppingCartInteract : NetworkBehaviour
         attachCart_ServerRpc();
 
         clientAttachCart(playerScript);
-        hideButtonPrompt(playerObject);
+        hideButtonPrompt(playerObject, interactedTrigger);
     }
 
     public void DetachCartFromPlayer(Player player)

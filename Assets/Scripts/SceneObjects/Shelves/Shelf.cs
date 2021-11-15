@@ -65,7 +65,7 @@ public class Shelf : NetworkBehaviour
     protected virtual void Awake()
     {
         _interactScript = gameObject.GetComponentInChildren<Interactable>();
-        _itemGroupVisuals = transform.Find(ITEM_GROUP_VISUALS_NAME).gameObject;
+        _itemGroupVisuals = transform.Find(ITEM_GROUP_VISUALS_NAME)?.gameObject;
 
         if(_interactScript == null)
         {

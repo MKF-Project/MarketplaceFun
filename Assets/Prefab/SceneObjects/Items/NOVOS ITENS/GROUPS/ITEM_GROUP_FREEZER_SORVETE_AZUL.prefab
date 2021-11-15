@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 501165144411780771}
   m_Layer: 0
-  m_Name: ITEM_GROUP_FREEZER_SORVETE
+  m_Name: ITEM_GROUP_FREEZER_SORVETE_AZUL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,8 +89,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 48b31daa83ddb854fadd9402702394e4, type: 2}
-  - {fileID: 2100000, guid: 48b31daa83ddb854fadd9402702394e4, type: 2}
+  - {fileID: 2100000, guid: 7da22757557ef204bb48c328d0889eaf, type: 2}
+  - {fileID: 2100000, guid: 4ea8e2de4ac6b564c98a36f67a2ad64f, type: 2}
   - {fileID: 2100000, guid: 48b31daa83ddb854fadd9402702394e4, type: 2}
   - {fileID: 2100000, guid: 11a8c080607cf47c299aff53087e0334, type: 2}
   m_StaticBatchInfo:

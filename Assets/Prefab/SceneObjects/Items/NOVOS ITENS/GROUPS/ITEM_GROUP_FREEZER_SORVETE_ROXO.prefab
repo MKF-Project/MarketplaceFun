@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 501165144411780771}
   m_Layer: 0
-  m_Name: ITEM_GROUP_FREEZER_SORVETE
+  m_Name: ITEM_GROUP_FREEZER_SORVETE_ROXO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,10 +89,10 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 48b31daa83ddb854fadd9402702394e4, type: 2}
-  - {fileID: 2100000, guid: 48b31daa83ddb854fadd9402702394e4, type: 2}
-  - {fileID: 2100000, guid: 48b31daa83ddb854fadd9402702394e4, type: 2}
-  - {fileID: 2100000, guid: 11a8c080607cf47c299aff53087e0334, type: 2}
+  - {fileID: 2100000, guid: 94345b13ddb8be1408174d20c37869a0, type: 2}
+  - {fileID: 2100000, guid: aca0d6d2f9125c743a0dd29affded936, type: 2}
+  - {fileID: 2100000, guid: 94345b13ddb8be1408174d20c37869a0, type: 2}
+  - {fileID: 2100000, guid: 94345b13ddb8be1408174d20c37869a0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &809357397409459402
+--- !u!1 &3017260174507837263
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,45 +8,45 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7377041144778708359}
-  - component: {fileID: 4793401782670305234}
-  - component: {fileID: 8916713245982062174}
+  - component: {fileID: 4138215086963269376}
+  - component: {fileID: 6804616651308823983}
+  - component: {fileID: 5140865813796992697}
   m_Layer: 0
-  m_Name: PimentaoAmarelo
+  m_Name: Garrafa de Refri.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7377041144778708359
+--- !u!4 &4138215086963269376
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 809357397409459402}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_GameObject: {fileID: 3017260174507837263}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4359116349609475613}
+  m_Father: {fileID: 5838868692120814637}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &4793401782670305234
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
+--- !u!33 &6804616651308823983
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 809357397409459402}
-  m_Mesh: {fileID: 5835526804766234407, guid: 8ce04974697f6f4438a73165263e9f7a, type: 3}
---- !u!23 &8916713245982062174
+  m_GameObject: {fileID: 3017260174507837263}
+  m_Mesh: {fileID: -5441257224164694788, guid: a544ac1a03cb5c74abd3d5d6e1349904, type: 3}
+--- !u!23 &5140865813796992697
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 809357397409459402}
+  m_GameObject: {fileID: 3017260174507837263}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -58,8 +58,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 42caffe1132386f4daa037a9663088b9, type: 2}
-  - {fileID: 5258131358227053084, guid: 8ce04974697f6f4438a73165263e9f7a, type: 3}
+  - {fileID: 2100000, guid: fde854042174e6e459ce4f8e84ce6d8d, type: 2}
+  - {fileID: 2100000, guid: 87ff71ffc286b91449d2296928632aed, type: 2}
+  - {fileID: 2100000, guid: 6e3ac6e47b4d7a44685dfef9bf209413, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -80,7 +81,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!1 &4359116349609475612
+--- !u!1 &5838868692120814634
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,26 +89,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4359116349609475613}
+  - component: {fileID: 5838868692120814637}
   m_Layer: 0
-  m_Name: ITEM_GROUP_HORTFRUT_PIMENTAO_AMARELO
+  m_Name: ITEM_GROUP_EXPO_GARRAFA_VERDE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4359116349609475613
+--- !u!4 &5838868692120814637
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4359116349609475612}
+  m_GameObject: {fileID: 5838868692120814634}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 7377041144778708359}
+  - {fileID: 4138215086963269376}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

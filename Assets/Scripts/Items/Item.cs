@@ -102,6 +102,13 @@ public class Item : NetworkBehaviour
 
     public GameObject GetShelfItemGroup(ShelfType shelfType)
     {
+        // Belt shelves don't have an item group, as the items appear
+        // individually one after another
+        if(shelfType == ShelfType.Belt)
+        {
+            return null;
+        }
+
         for(int i = 0; i < ShelfItemGroups.Count; i++)
         {
             if(ShelfItemGroups[i].ShelfType == shelfType)

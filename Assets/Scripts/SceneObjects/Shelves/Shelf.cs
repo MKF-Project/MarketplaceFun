@@ -8,9 +8,9 @@ public enum ShelfType
 {
     Standard = 0,
     Freezer  = 1,
-    Fruit   = 2,
+    Fruit    = 2,
     Pallet   = 3,
-    Display  = 4
+    Belt     = 4
 }
 
 public class Shelf : NetworkBehaviour
@@ -169,7 +169,7 @@ public class Shelf : NetworkBehaviour
     }
 
     // Editor Utils
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         if(_itemGenerator != null)
         {

@@ -38,7 +38,7 @@ public class Freezer : Shelf
 
     // These might be runtime changeable in the future, but if so, this would require
     // networking and NetworkVariables. so for the time being these are
-    // private, so that they aren't used in other scrripts without the proper
+    // private, so that they aren't used in other scripts without the proper
     // networking framework.
     [SerializeField] private float StayOpenDuration;
     [SerializeField] private float CloseDoorDuration;

@@ -211,7 +211,7 @@ public abstract class ItemGenerator : NetworkBehaviour
     }
 
     // Editor Utils
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         var shelves = GameObject.FindObjectsOfType<Shelf>();
         for(int i = 0; i < shelves.Length; i++)

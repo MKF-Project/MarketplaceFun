@@ -51,8 +51,6 @@ public class Shelf : NetworkBehaviour
         }
     }
 
-    protected Player _playerBuffer;
-
     protected ulong _lastItemStocked = Item.NO_ITEMTYPE_CODE;
 
     protected Action<Item> _itemAction = null;
@@ -103,34 +101,34 @@ public class Shelf : NetworkBehaviour
         ItemGenerator = null;
     }
 
-    protected virtual void ShowButtonPrompt(GameObject player, Collider enteredTrigger)
+    protected virtual void ShowButtonPrompt(Player player, Collider enteredTrigger)
     {
         if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {
             return;
         }
 
-        if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
+        if(player.CanInteract)
         {
             _interactScript.InteractUI.SetActive(true);
         }
     }
 
-    protected virtual void HideButtonPrompt(GameObject player, Collider exitedTrigger)
+    protected virtual void HideButtonPrompt(Player player, Collider exitedTrigger)
     {
         _interactScript.InteractUI.SetActive(false);
     }
 
-    protected virtual void InteractWithShelf(GameObject player, Collider interactedTrigger)
+    protected virtual void InteractWithShelf(Player player, Collider interactedTrigger)
     {
         if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {
             return;
         }
 
-        if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
+        if(player.CanInteract)
         {
-            ItemGenerator.GiveItemToPlayer(_playerBuffer);
+            ItemGenerator.GiveItemToPlayer(player);
         }
     }
 

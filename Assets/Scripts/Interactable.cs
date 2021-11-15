@@ -38,9 +38,9 @@ public class Interactable : NetworkBehaviour
         _configured = InteractUI != null;
     }
 
-    public delegate void OnLookEnterDelegate(GameObject player, Collider enteredTrigger);
+    public delegate void OnLookEnterDelegate(Player player, Collider enteredTrigger);
     public event OnLookEnterDelegate OnLookEnter;
-    public void TriggerLookEnter(GameObject player, Collider enteredTrigger)
+    public void TriggerLookEnter(Player player, Collider enteredTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {
@@ -48,9 +48,9 @@ public class Interactable : NetworkBehaviour
         }
     }
 
-    public delegate void OnLookExitDelegate(GameObject player, Collider exitedTrigger);
+    public delegate void OnLookExitDelegate(Player player, Collider exitedTrigger);
     public event OnLookExitDelegate OnLookExit;
-    public void TriggerLookExit(GameObject player, Collider exitedTrigger)
+    public void TriggerLookExit(Player player, Collider exitedTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {
@@ -58,9 +58,9 @@ public class Interactable : NetworkBehaviour
         }
     }
 
-    public delegate void OnInteractDelegate(GameObject player, Collider interactedTrigger);
+    public delegate void OnInteractDelegate(Player player, Collider interactedTrigger);
     public event OnInteractDelegate OnInteract;
-    public void TriggerInteract(GameObject player, Collider interactedTrigger)
+    public void TriggerInteract(Player player, Collider interactedTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {

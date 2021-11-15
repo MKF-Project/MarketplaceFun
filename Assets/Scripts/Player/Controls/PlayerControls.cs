@@ -151,11 +151,9 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         _lastInteractionTime = -InteractCooldown;
 
-        _rigidBody = gameObject.GetComponent<Rigidbody>();
-
-        gameObject.TryGetComponent<NetworkAnimator>(out _playerNetAnimator);
-
-        _playerScript = gameObject.GetComponent<Player>();
+        gameObject.TryGetComponent(out _rigidBody);
+        gameObject.TryGetComponent(out _playerNetAnimator);
+        gameObject.TryGetComponent(out _playerScript);
 
         _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
         _initialCameraLocalRotation = _cameraPosition.transform.localRotation;
@@ -296,7 +294,7 @@ public abstract class PlayerControls : NetworkBehaviour
             {
                 if(_currentLookingCollider.TryGetComponent(out _interactableBuffer))
                 {
-                    _interactableBuffer.TriggerLookExit(gameObject, _currentLookingCollider);
+                    _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
                 }
 
                 _currentLookingCollider = null;
@@ -319,7 +317,7 @@ public abstract class PlayerControls : NetworkBehaviour
                 _updateLastInteraction = false;
                 if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
                 {
-                    _interactableBuffer.TriggerLookExit(gameObject, _currentLookingCollider);
+                    _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
                     _currentLookingCollider = null;
                 }
 
@@ -340,14 +338,14 @@ public abstract class PlayerControls : NetworkBehaviour
                 // Was looking at one object, now looking at another
                 if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
                 {
-                    _interactableBuffer.TriggerLookExit(gameObject, _currentLookingCollider);
+                    _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
                 }
 
                 // Update current looking object
                 _currentLookingCollider = _raycastHitBuffer.collider;
                 if(_currentLookingCollider.TryGetComponent(out _interactableBuffer))
                 {
-                    _interactableBuffer.TriggerLookEnter(gameObject, _currentLookingCollider);
+                    _interactableBuffer.TriggerLookEnter(_playerScript, _currentLookingCollider);
                 }
             }
         }
@@ -355,7 +353,7 @@ public abstract class PlayerControls : NetworkBehaviour
         // Is no longer looking at a previous object. Call the object's OnLookExit
         else if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
         {
-            _interactableBuffer.TriggerLookExit(gameObject, _currentLookingCollider);
+            _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
             _currentLookingCollider = null;
         }
     }
@@ -535,7 +533,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
         if(_onInteractLookingCollider != null && _onInteractLookingCollider.TryGetComponent(out _interactableBuffer))
         {
-            _interactableBuffer.TriggerInteract(gameObject, _onInteractLookingCollider);
+            _interactableBuffer.TriggerInteract(_playerScript, _onInteractLookingCollider);
         }
         _onInteractLookingCollider = null;
 

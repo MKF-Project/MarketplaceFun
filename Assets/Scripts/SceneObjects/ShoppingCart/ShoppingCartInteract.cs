@@ -59,48 +59,45 @@ public class ShoppingCartInteract : NetworkBehaviour
     }
 
     /** ---- Interaction ---- **/
-    private void showButtonPrompt(GameObject player, Collider enteredTrigger)
+    private void showButtonPrompt(Player player, Collider enteredTrigger)
     {
         // Show UI if not holding item or driving a shopping cart
-        var playerScript = player.GetComponent<Player>();
-        if(playerScript != null && playerScript.CanInteract)
+        if(player.CanInteract)
         {
             _interactScript.InteractUI.SetActive(true);
         }
     }
 
-    private void hideButtonPrompt(GameObject player, Collider exitedTrigger)
+    private void hideButtonPrompt(Player player, Collider exitedTrigger)
     {
         _interactScript.InteractUI.SetActive(false);
     }
 
-    private void grabCart(GameObject playerObject, Collider interactedTrigger)
+    private void grabCart(Player player, Collider interactedTrigger)
     {
-        var playerScript = playerObject.GetComponent<Player>();
-
         // Cannot grab cart if it is owned by a different player than the current player
-        if((_cartScript.Owner != null && _cartScript.Owner != playerScript))
+        if((_cartScript.Owner != null && _cartScript.Owner != player))
         {
             return;
         }
 
         // Ensure the player has Network Ownership of the cart that has been interacted with
-        if(OwnerClientId != playerObject.GetComponent<NetworkObject>().OwnerClientId)
+        if(OwnerClientId != player.OwnerClientId)
         {
             _netRigidbody.RequestObjectOwnership_ServerRpc();
         }
 
         // If this cart has no onwer, and the player doesn't yet own a cart, the player now ows it
-        if(_cartScript.Owner == null && GameObject.FindObjectsOfType<ShoppingCartItem>().None(cart => cart._ownerID.Value == playerScript.OwnerClientId))
+        if(_cartScript.Owner == null && GameObject.FindObjectsOfType<ShoppingCartItem>().None(cart => cart._ownerID.Value == player.OwnerClientId))
         {
-            print($"[{gameObject.name}] Ownership Request: {playerScript.OwnerClientId}");
+            print($"[{gameObject.name}] Ownership Request: {player.OwnerClientId}");
             _cartScript.requestCartOwnership_ServerRpc();
         }
 
         attachCart_ServerRpc();
 
-        clientAttachCart(playerScript);
-        hideButtonPrompt(playerObject, interactedTrigger);
+        clientAttachCart(player);
+        hideButtonPrompt(player, interactedTrigger);
     }
 
     public void DetachCartFromPlayer(Player player)

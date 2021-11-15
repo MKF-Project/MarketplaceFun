@@ -151,12 +151,24 @@ public abstract class ItemGenerator : NetworkBehaviour
     }
 
     // Spawn
+
+    // Remove an item from the shelf
+    public virtual ulong TakeItem()
+    {
+        return IsDepleted? Item.NO_ITEMTYPE_CODE : ItemInStock;
+    }
+
+    // Remove Item from shelf, then give it to the player
     public virtual void GiveItemToPlayer(Player player)
     {
-        _currentPlayer = player;
-        _currentPlayer._currentGenerator = this;
+        var itemTaken = TakeItem();
+        if(itemTaken != Item.NO_ITEMTYPE_CODE)
+        {
+            _currentPlayer = player;
+            _currentPlayer._currentGenerator = this;
 
-        player.HeldItemType.Value = ItemInStock;
+            player.HeldItemType.Value = itemTaken;
+        }
     }
 
     public void GeneratePlayerHeldItem(Vector3 position = default, Quaternion rotation = default, Action<Item> afterSpawn = default)

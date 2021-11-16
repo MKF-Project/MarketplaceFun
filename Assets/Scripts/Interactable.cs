@@ -9,20 +9,17 @@ public class Interactable : NetworkBehaviour
     public const string LAYER_NAME = "Interact";
     public const string UI_NAME = "InteractCanvas";
 
-    private static int _layerMask = -1;
-    public static int LAYER_MASK
-    {
-        get => _layerMask;
-    }
+    public static int LAYER_MASK { get; private set; } = -1;
 
     public GameObject InteractUI { get; private set; }
     private bool _configured = false;
+    public virtual bool Configured => _configured;
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        if(_layerMask == -1)
+        if(LAYER_MASK == -1)
         {
-            _layerMask = 1 << LayerMask.NameToLayer(LAYER_NAME);
+            LAYER_MASK = 1 << LayerMask.NameToLayer(LAYER_NAME);
         }
 
         if(gameObject.tag != TAG_NAME || 1 << gameObject.layer != LAYER_MASK)
@@ -40,7 +37,7 @@ public class Interactable : NetworkBehaviour
 
     public delegate void OnLookEnterDelegate(Player player, Collider enteredTrigger);
     public event OnLookEnterDelegate OnLookEnter;
-    public void TriggerLookEnter(Player player, Collider enteredTrigger)
+    public virtual void TriggerLookEnter(Player player, Collider enteredTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {
@@ -50,7 +47,7 @@ public class Interactable : NetworkBehaviour
 
     public delegate void OnLookExitDelegate(Player player, Collider exitedTrigger);
     public event OnLookExitDelegate OnLookExit;
-    public void TriggerLookExit(Player player, Collider exitedTrigger)
+    public virtual void TriggerLookExit(Player player, Collider exitedTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {
@@ -60,7 +57,7 @@ public class Interactable : NetworkBehaviour
 
     public delegate void OnInteractDelegate(Player player, Collider interactedTrigger);
     public event OnInteractDelegate OnInteract;
-    public void TriggerInteract(Player player, Collider interactedTrigger)
+    public virtual void TriggerInteract(Player player, Collider interactedTrigger)
     {
         if(_configured && isActiveAndEnabled)
         {

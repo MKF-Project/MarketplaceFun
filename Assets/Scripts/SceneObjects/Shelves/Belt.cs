@@ -58,7 +58,7 @@ public class Belt : Shelf
         base.Awake();
 
         _waypoints = FindWaypoints();
-        _pathSections = CreateWaypointPaths(_waypoints);
+        _pathSections = CreateWaypointSections(_waypoints);
         _totalPathLength = _pathSections.Sum(section => section.length);
 
         NextItemInterval.OnValueChanged = IntervalChanged;
@@ -99,8 +99,7 @@ public class Belt : Shelf
             item.pathCompletePercent = Mathf.Clamp01(item.pathCompletePercent + Time.deltaTime / _timeExposed);
             if(item.pathCompletePercent == 1)
             {
-                _itemsInBelt.RemoveAt(i);
-                ReturnItemToPool(item);
+                RemoveItemFromBelt(i);
 
                 // Don't update i if we removed an item from the list,
                 // since the next item now exists in the same index
@@ -164,15 +163,9 @@ public class Belt : Shelf
         return false;
     }
 
-    protected override void RestockItem(ulong itemID)
-    {
-
-    }
-
-    protected override void ClearShelf()
-    {
-
-    }
+    // Deliberately turned into no-ops
+    protected override void RestockItem(ulong itemID) {}
+    protected override void ClearShelf() {}
 
     // The server controls the rate of belt item spawns
     private IEnumerator ExposeNextItem()
@@ -273,7 +266,7 @@ public class Belt : Shelf
         return res;
     }
 
-    private List<PathSection> CreateWaypointPaths(List<GameObject> waypoints)
+    private List<PathSection> CreateWaypointSections(List<GameObject> waypoints)
     {
         List<PathSection> res = new List<PathSection>(waypoints.Count - 1);
         for(int i = 0; i < waypoints.Count - 1; i++)
@@ -330,7 +323,7 @@ public class Belt : Shelf
 
         Gizmos.color = Color.yellow;
 
-        var sections = CreateWaypointPaths(FindWaypoints());
+        var sections = CreateWaypointSections(FindWaypoints());
         sections.ForEach(sect => Gizmos.DrawLine(sect.start.transform.position, sect.end.transform.position));
     }
 }

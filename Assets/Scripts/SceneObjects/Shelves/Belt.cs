@@ -137,14 +137,14 @@ public class Belt : Shelf
             ItemGenerator.GiveSpecificItemToPlayer(player, item.visualItemID);
 
             // Remove item from view
-            _itemsInBelt.Remove(item);
-            ReturnItemToPool(item);
+            var itemIndex = _itemsInBelt.IndexOf(item);
+
+            RemoveItemFromBelt(itemIndex);
+            RemoveItemFromBelt_ServerRpc(itemIndex);
+
             HideButtonPrompt(player, interactedTrigger);
 
-            // Remove item ServerRPC
-
         }
-
     }
 
     private bool FindItemWithCollider(Collider collider, out BeltItem result)
@@ -242,6 +242,13 @@ public class Belt : Shelf
         beltItem.visualItemID = itemID;
     }
 
+    private void RemoveItemFromBelt(int itemIndex)
+    {
+        var item = _itemsInBelt[itemIndex];
+        _itemsInBelt.RemoveAt(itemIndex);
+        ReturnItemToPool(item);
+    }
+
     private void ReturnItemToPool(BeltItem item)
     {
         _beltItemPool.Push(item);
@@ -292,6 +299,28 @@ public class Belt : Shelf
         }
 
         SendItemOnBelt(itemID);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RemoveItemFromBelt_ServerRpc(int itemIndex, ServerRpcParams rpcReceiveParams = default)
+    {
+        if(rpcReceiveParams.Receive.SenderClientId != NetworkController.ServerID)
+        {
+            RemoveItemFromBelt(itemIndex);
+        }
+
+        RemoveItemFromBelt_ClientRpc(itemIndex, rpcReceiveParams.Receive.SenderClientId);
+    }
+
+    [ClientRpc]
+    private void RemoveItemFromBelt_ClientRpc(int itemIndex, ulong clientInitiatorID)
+    {
+        if(NetworkController.SelfID == clientInitiatorID || IsServer)
+        {
+            return;
+        }
+
+        RemoveItemFromBelt(itemIndex);
     }
 
     // Editor Utils

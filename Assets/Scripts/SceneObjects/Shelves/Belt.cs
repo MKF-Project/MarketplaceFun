@@ -174,6 +174,7 @@ public class Belt : Shelf
 
     }
 
+    // The server controls the rate of belt item spawns
     private IEnumerator ExposeNextItem()
     {
         if(!IsServer)
@@ -186,8 +187,9 @@ public class Belt : Shelf
             yield return _nextItemIntervalWait;
             if(ItemGenerator != null && ItemGenerator.IsStocked)
             {
-                SendItemOnBelt(ItemGenerator.TakeItem());
-                // SendItemOnBelt_ClientRpc
+                var itemTaken = ItemGenerator.TakeItem();
+                SendItemOnBelt(itemTaken);
+                SendItemOnBelt_ClientRpc(itemTaken);
             }
         }
     }
@@ -278,6 +280,18 @@ public class Belt : Shelf
         }
 
         return res;
+    }
+
+    // RPCs
+    [ClientRpc]
+    private void SendItemOnBelt_ClientRpc(ulong itemID)
+    {
+        if(IsServer)
+        {
+            return;
+        }
+
+        SendItemOnBelt(itemID);
     }
 
     // Editor Utils

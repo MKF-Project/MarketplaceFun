@@ -896,27 +896,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShoppingListCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 5604627550947454851, guid: 7e2defa00923fc2488fcea1cbc0b9fc5,
-        type: 3}
-      propertyPath: StartingCheckedImage
-      value: 
-      objectReference: {fileID: 21300000, guid: be9aa9dec5397e046a082908df9edccb,
-        type: 3}
-    - target: {fileID: 5707597527422513948, guid: 7e2defa00923fc2488fcea1cbc0b9fc5,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 110.899414
-      objectReference: {fileID: 0}
-    - target: {fileID: 5707597527843277969, guid: 7e2defa00923fc2488fcea1cbc0b9fc5,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 358.5996
-      objectReference: {fileID: 0}
-    - target: {fileID: 7242281600374023625, guid: 7e2defa00923fc2488fcea1cbc0b9fc5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e2defa00923fc2488fcea1cbc0b9fc5, type: 3}
 --- !u!1 &1278010172
@@ -954,14 +933,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _registeredItems:
   - {fileID: 5029990366945900895, guid: c25db50359e6e2f4a9af4c9a10876a2e, type: 3}
+  - {fileID: 5029990366945900895, guid: c029ae303730a564b80c52f075ac7837, type: 3}
+  - {fileID: 5029990366945900895, guid: 1e4d11d85ccc4d646923b4068e76133d, type: 3}
   - {fileID: 6919559316252097267, guid: 67025575dbf551c40abbb48b556b8293, type: 3}
   - {fileID: 3684694769082725923, guid: e36d4f47a368eda45ae31965713b1e9f, type: 3}
+  - {fileID: 1306840504364761460, guid: b45808553ae766a4286d44448dd575ae, type: 3}
+  - {fileID: 1196024232458989409, guid: 42ca92e69cb7dbe43af22336c4ee730f, type: 3}
+  - {fileID: 1196024232458989409, guid: 1c276224807f5d64486f478b35f446ad, type: 3}
   - {fileID: 1196024232458989409, guid: c91aff04f064a04438e7873ce69f5a82, type: 3}
+  - {fileID: 1196024232458989409, guid: e18f3cb4025a79b4abf1aadda61859a4, type: 3}
+  - {fileID: 1196024232458989409, guid: 7db832053b8850a44a837adda14f4b22, type: 3}
   - {fileID: 621825044869907448, guid: 7eb4a3c71e14f6343a96893ad423b29b, type: 3}
+  - {fileID: 1825519733043588225, guid: bc29c7bb493f4dd40b542b183e07daf6, type: 3}
+  - {fileID: 1825519733043588225, guid: 6b2319aad76a45d4696b627be4ce98e6, type: 3}
   - {fileID: 1825519733043588225, guid: 9ac66c29a3e789c4e890fb30a6bb8c8d, type: 3}
+  - {fileID: 1825519733043588225, guid: c52cf12a78e33774c9ace2b7cffe11c9, type: 3}
   - {fileID: 7329570346653162599, guid: dfa2e24b5a67c6b459eddac90634d6e9, type: 3}
+  - {fileID: 7329570346653162599, guid: 44ff805dc6c7b9644adecd7292edea16, type: 3}
+  - {fileID: 7329570346653162599, guid: 479baac8378cca34dbb0f5d9b189506b, type: 3}
+  - {fileID: 7329570346653162599, guid: a441cd503a3f2d847a78fe8b8c43f35d, type: 3}
   - {fileID: 1306840504364761460, guid: 5e679da304d18794bb00602b5e581008, type: 3}
   - {fileID: 1102359294299689593, guid: b5678dd759dcaad449dcba56dd68b5d5, type: 3}
+  - {fileID: 1102359294299689593, guid: 1a7536925e2023f4ab2d53ca13dc8e6d, type: 3}
+  - {fileID: 1102359294299689593, guid: 95e45a4de59db8d46bcd77b3a6f650f2, type: 3}
+  - {fileID: 1102359294299689593, guid: f755a3f0d0e54ab4db809bcb14186059, type: 3}
 --- !u!114 &1278010174
 MonoBehaviour:
   m_ObjectHideFlags: 0

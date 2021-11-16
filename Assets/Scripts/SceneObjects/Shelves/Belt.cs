@@ -319,11 +319,24 @@ public class Belt : Shelf
     // Editor Utils
     protected override void OnDrawGizmosSelected()
     {
+        const float MARKER_SIZE = 0.2f;
         base.OnDrawGizmosSelected();
 
-        Gizmos.color = Color.yellow;
-
         var sections = CreateWaypointSections(FindWaypoints());
-        sections.ForEach(sect => Gizmos.DrawLine(sect.start.transform.position, sect.end.transform.position));
+
+        if(sections.Count > 0)
+        {
+            // Draw Start and End markers
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(sections[0].start.transform.position, MARKER_SIZE);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(sections[sections.Count-1].end.transform.position, MARKER_SIZE);
+
+            // Draw connecting line
+            Gizmos.color = Color.yellow;
+            sections.ForEach(sect => Gizmos.DrawLine(sect.start.transform.position, sect.end.transform.position));
+        }
+
     }
 }

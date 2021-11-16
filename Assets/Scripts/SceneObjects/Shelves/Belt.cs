@@ -25,6 +25,8 @@ public class Belt : Shelf
 
     private const string BELT_WAYPOINTS_CONTAINER = "Waypoints";
     private const string BELT_ITEM_TEMPLATE = "Belt_Item";
+    private const int BELT_ITEM_INTERACT_INDEX = 0;
+    private const int BELT_ITEM_VISUALS_INDEX = 1;
 
     [SerializeField, Min(0.1f)] private float _nextItemInterval = 2;
     [SerializeField, Min(0.1f)] private float _timeExposed = 1;
@@ -48,6 +50,8 @@ public class Belt : Shelf
     private GameObject _beltItemBaseTemplate = null;
     private Stack<BeltItem> _beltItemPool = new Stack<BeltItem>();
     private List<BeltItem> _itemsInBelt = new List<BeltItem>();
+
+    private Collider _interactColliderBuffer;
 
     protected override void Awake()
     {
@@ -123,6 +127,43 @@ public class Belt : Shelf
         }
     }
 
+    protected override void InteractWithShelf(Player player, Collider interactedTrigger)
+    {
+        print(interactedTrigger);
+
+        if(ItemGenerator != null && FindItemWithCollider(interactedTrigger, out var item) && item.visualItemID != Item.NO_ITEMTYPE_CODE)
+        {
+            // Give item to player
+            ItemGenerator.GiveSpecificItemToPlayer(player, item.visualItemID);
+
+            // Remove item from view
+            _itemsInBelt.Remove(item);
+            ReturnItemToPool(item);
+            HideButtonPrompt(player, interactedTrigger);
+
+            // Remove item ServerRPC
+
+        }
+
+    }
+
+    private bool FindItemWithCollider(Collider collider, out BeltItem result)
+    {
+        for(int i = 0; i < _itemsInBelt.Count; i++)
+        {
+            if(_itemsInBelt[i].item.transform.GetChild(BELT_ITEM_INTERACT_INDEX).TryGetComponent(out _interactColliderBuffer) && _interactColliderBuffer == collider)
+            {
+                result = _itemsInBelt[i];
+                return true;
+            }
+        }
+
+        result.item = null;
+        result.pathCompletePercent = 0;
+        result.visualItemID = Item.NO_ITEMTYPE_CODE;
+        return false;
+    }
+
     protected override void RestockItem(ulong itemID)
     {
 
@@ -170,7 +211,7 @@ public class Belt : Shelf
             itemTemplate.visualItemID = Item.NO_ITEMTYPE_CODE;
         }
 
-        PlaceVisualsOnBeltItem(itemTemplate, itemID);
+        PlaceVisualsOnBeltItem(ref itemTemplate, itemID);
 
         // Put item in belt queue
         itemTemplate.pathCompletePercent = 0;
@@ -179,17 +220,18 @@ public class Belt : Shelf
         _itemsInBelt.Add(itemTemplate);
     }
 
-    private void PlaceVisualsOnBeltItem(BeltItem beltItem, ulong itemID)
+    private void PlaceVisualsOnBeltItem(ref BeltItem beltItem, ulong itemID)
     {
+        var itemVisuals = beltItem.item.transform.GetChild(BELT_ITEM_VISUALS_INDEX);
         if(beltItem.visualItemID != itemID)
         {
-            beltItem.item.DestroyAllChildren();
+            itemVisuals.DestroyAllChildren();
         }
 
         var visuals = NetworkItemManager.GetItemPrefabVisuals(itemID);
         if(visuals != null)
         {
-            var generatedItem = Instantiate(visuals.gameObject, Vector3.zero, Quaternion.identity, beltItem.item.transform);
+            var generatedItem = Instantiate(visuals.gameObject, Vector3.zero, Quaternion.identity, itemVisuals);
             generatedItem.transform.localPosition = Vector3.zero;
             generatedItem.transform.localRotation = Quaternion.identity;
 

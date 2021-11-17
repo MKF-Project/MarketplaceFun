@@ -92,6 +92,11 @@ public class NetworkItemManager : MonoBehaviour
         return NetworkItemPrefabs.TryGetValue(itemID, out var itemPrefab)? itemPrefab.TryGetComponent<Item>(out _itemBuffer)? _itemBuffer : null : null;
     }
 
+    public static ItemVisuals GetItemPrefabVisuals(ulong itemID)
+    {
+        return GetItemPrefabScript(itemID)?.ItemVisuals;
+    }
+
     /* Spawning */
     public static void RegisterItem(ulong prefabHash, ulong id, GameObject item)
     {

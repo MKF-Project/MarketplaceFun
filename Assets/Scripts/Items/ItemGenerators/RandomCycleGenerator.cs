@@ -40,11 +40,15 @@ public class RandomCycleGenerator : ItemGenerator
         _randomIndex.OnValueChanged = OnItemShuffle;
     }
 
-    public override void GiveItemToPlayer(Player player)
+    public override ulong TakeItem()
     {
-        base.GiveItemToPlayer(player);
+        var itemTaken = base.TakeItem();
+        if(itemTaken != Item.NO_ITEMTYPE_CODE)
+        {
+            UpdateRandomIndex_ServerRpc();
+        }
 
-        UpdateRandomIndex_ServerRpc();
+        return itemTaken;
     }
 
     private void OnItemShuffle(int previous, int next)

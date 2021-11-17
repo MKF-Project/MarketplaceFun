@@ -75,6 +75,52 @@ public static class Utils
         return !list.Any(predicate);
     }
 
+    // Stack
+    public static bool TryPeek<T>(this Stack<T> stack, out T result)
+    {
+        if(stack.Count > 0) {
+            result = stack.Peek();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
+    public static bool TryPop<T>(this Stack<T> stack, out T result)
+    {
+        if(stack.Count > 0) {
+            result = stack.Pop();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
+    // Queue
+    public static bool TryPeek<T>(this Queue<T> queue, out T result)
+    {
+        if(queue.Count > 0) {
+            result = queue.Peek();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
+    public static bool TryDequeue<T>(this Queue<T> queue, out T result)
+    {
+        if(queue.Count > 0) {
+            result = queue.Dequeue();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
     // DontDestroyOnLoad
     public static void EnsureObjectDontDestroy(this GameObject gameobject)
     {
@@ -96,23 +142,17 @@ public static class Utils
     }
 
     // Destroy
-    public static void DestroyAllChildren(this Transform root)
+    public static void DestroyAllChildren(this Transform rootObj)
     {
-        if(root == root.root)
+        while(rootObj.childCount > 0)
         {
-            Debug.LogError($"[{root.name}]: Attempted to delete all objects in scene.");
-            return;
-        }
-
-        while(root.childCount > 0)
-        {
-            var child = root.GetChild(0);
+            var child = rootObj.GetChild(0);
             child.SetParent(null);
             GameObject.Destroy(child.gameObject);
         }
     }
 
-    public static void DestroyAllChildren(this GameObject root) => root.transform.DestroyAllChildren();
+    public static void DestroyAllChildren(this GameObject rootObj) => rootObj.transform.DestroyAllChildren();
 
     // Rigidbody
     public static RigidbodyTemplate ExtractToTemplate(this Rigidbody rb)

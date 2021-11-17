@@ -38,7 +38,7 @@ public class Freezer : Shelf
 
     // These might be runtime changeable in the future, but if so, this would require
     // networking and NetworkVariables. so for the time being these are
-    // private, so that they aren't used in other scrripts without the proper
+    // private, so that they aren't used in other scripts without the proper
     // networking framework.
     [SerializeField] private float StayOpenDuration;
     [SerializeField] private float CloseDoorDuration;
@@ -83,34 +83,34 @@ public class Freezer : Shelf
         }
     }
 
-    protected override void ShowButtonPrompt(GameObject player)
+    protected override void ShowButtonPrompt(Player player, Collider enteredTrigger)
     {
         // If the door is open, we defer to the default Shelf script
         // which decides wether or not to show UI based on
         // item availability in the generator
         if(DoorState.Value == FreezerDoorState.Open)
         {
-            base.ShowButtonPrompt(player);
+            base.ShowButtonPrompt(player, enteredTrigger);
         }
 
-        else if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
+        else if(player.CanInteract)
         {
             _interactScript.InteractUI.SetActive(true);
         }
     }
 
-    protected override void InteractWithShelf(GameObject player)
+    protected override void InteractWithShelf(Player player, Collider interactedTrigger)
     {
         // Defer to base shelf script when the time comes
         // to request a generated item
         if(DoorState.Value == FreezerDoorState.Open)
         {
-            base.InteractWithShelf(player);
+            base.InteractWithShelf(player, interactedTrigger);
         }
 
         // Otherwise, if the door is closed
         // we first request it to be opened
-        else if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
+        else if(player.CanInteract)
         {
             RequestDoorOpen_ServerRpc();
         }

@@ -1056,10 +1056,10 @@ MonoBehaviour:
     - Prefab: {fileID: 1467091572927595630, guid: 79ba415021884264ea9d5cac04ab3676,
         type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 6920535396168921089, guid: 21c72c256a34bed44bf9968e4f012aa6,
+    - Prefab: {fileID: 3328204990732231188, guid: 1f0c7fd2a52e7e94194b4d13d7b960af,
         type: 3}
       PlayerPrefab: 0
-    - Prefab: {fileID: 6920535396168921089, guid: af1bd1a419c459443b68fcdef9cf65e9,
+    - Prefab: {fileID: 4584430964254881646, guid: e5741831694437142aaa8d22855294aa,
         type: 3}
       PlayerPrefab: 0
     - Prefab: {fileID: 6523222016342087418, guid: 12b3a94aa38ea7144a7a44652123d617,

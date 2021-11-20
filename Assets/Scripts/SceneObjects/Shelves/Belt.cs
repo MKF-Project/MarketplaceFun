@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using MLAPI;
 using MLAPI.NetworkVariable;
 using MLAPI.Messaging;
@@ -25,6 +26,7 @@ public class Belt : Shelf
 
     private const string BELT_WAYPOINTS_CONTAINER = "Waypoints";
     private const string BELT_ITEM_TEMPLATE = "Belt_Item";
+    private const string BELT_ITEM_DISPLAY_PATH = "Canvas/ItemDisplay";
     private const int BELT_ITEM_INTERACT_INDEX = 0;
     private const int BELT_ITEM_VISUALS_INDEX = 1;
 
@@ -48,6 +50,7 @@ public class Belt : Shelf
     private Coroutine _exposeNextItemCoroutine = null;
 
     private GameObject _beltItemBaseTemplate = null;
+    private Image _itemDisplay = null;
     private Stack<BeltItem> _beltItemPool = new Stack<BeltItem>();
     private List<BeltItem> _itemsInBelt = new List<BeltItem>();
 
@@ -65,11 +68,18 @@ public class Belt : Shelf
 
         _beltItemBaseTemplate = transform.Find(BELT_ITEM_TEMPLATE).gameObject;
         _beltItemBaseTemplate.SetActive(false);
+
+        transform.Find(BELT_ITEM_DISPLAY_PATH).TryGetComponent(out _itemDisplay);
+        _itemDisplay.color = Color.clear;
+        _itemDisplay.preserveAspect = true;
     }
 
     protected override void OnDestroy()
     {
         StopCoroutine(_exposeNextItemCoroutine);
+
+        ItemGenerator.OnRestocked -= SetNextItemDisplay;
+        ItemGenerator.OnDepleted -= HideItemDisplay;
     }
 
     public override void NetworkStart()
@@ -83,6 +93,8 @@ public class Belt : Shelf
             _exposeNextItemCoroutine = StartCoroutine(ExposeNextItem());
         }
 
+        ItemGenerator.OnRestocked += SetNextItemDisplay;
+        ItemGenerator.OnDepleted += HideItemDisplay;
     }
 
     private void Update()
@@ -128,8 +140,6 @@ public class Belt : Shelf
 
     protected override void InteractWithShelf(Player player, Collider interactedTrigger)
     {
-        print(interactedTrigger);
-
         if(ItemGenerator != null && FindItemWithCollider(interactedTrigger, out var item) && item.visualItemID != Item.NO_ITEMTYPE_CODE)
         {
             // Give item to player
@@ -142,7 +152,6 @@ public class Belt : Shelf
             RemoveItemFromBelt_ServerRpc(itemIndex);
 
             HideButtonPrompt(player, interactedTrigger);
-
         }
     }
 
@@ -248,11 +257,24 @@ public class Belt : Shelf
         item.item.SetActive(false);
     }
 
+    private void SetNextItemDisplay(ulong item)
+    {
+        _itemDisplay.sprite = NetworkItemManager.GetItemPrefabScript(item).UISticker;
+        _itemDisplay.color = Color.white;
+    }
+
+    // Display
+    private void HideItemDisplay()
+    {
+        _itemDisplay.color = Color.clear;
+    }
+
     private void IntervalChanged(float before, float after)
     {
         _nextItemIntervalWait = new WaitForSeconds(after);
     }
 
+    // Waypoints
     private List<GameObject> FindWaypoints()
     {
         var container = transform.Find(BELT_WAYPOINTS_CONTAINER);

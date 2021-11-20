@@ -33,7 +33,7 @@ public class Put : NetworkBehaviour
             {
                 if (_shoppingList.IsListChecked())
                 {
-                    _player.ListComplete();
+                    //_player.ListComplete();
                 }
 
                 _player.DropItem();
@@ -41,7 +41,7 @@ public class Put : NetworkBehaviour
         }
     }
 
-    public bool CheckItem(int itemTypeCode)
+    public bool CheckItem(ulong itemTypeCode)
     {
         return _shoppingList.CheckItem(itemTypeCode);
     }

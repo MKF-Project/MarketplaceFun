@@ -10,13 +10,16 @@ using MLAPI.NetworkVariable;
 public class LobbyMenu : NetworkBehaviour
 {
     // Events
+    public delegate void OnEnterLobbyDelegate();
+    public static event OnEnterLobbyDelegate OnEnterLobby;
+    
     public delegate void OnStartMatchDelegate();
     public static event OnStartMatchDelegate OnStartMatch;
 
     public delegate void OnCancelMatchDelegate();
     public static event OnCancelMatchDelegate OnCancelMatch;
 
-    [SerializeField] private Text _playerList = null;
+    //[SerializeField] private Text _playerList = null;
     [SerializeField] private Button _startGame = null;
     
     [SerializeField] public GameObject Nickname1;
@@ -45,8 +48,8 @@ public class LobbyMenu : NetworkBehaviour
 
     private void openLobbyMenu(bool isHost)
     {
-
         this.toggleMenuDelayed();
+        OnEnterLobby?.Invoke();
     }
 
 

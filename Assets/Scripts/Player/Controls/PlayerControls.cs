@@ -14,6 +14,26 @@ public abstract class PlayerControls : NetworkBehaviour
     protected const string CAMERA_POSITION_NAME = "CameraPosition";
     public const float MINIMUM_INTERACTION_COOLDOWN = 0.1f;
 
+    // Animator consts
+    protected static readonly int ANIM_RUN_STATE          = Animator.StringToHash("Correndo_Sem_Item");
+    protected static readonly int ANIM_HOLD_ITEM_STATE    = Animator.StringToHash("Correndo_Com_Item");
+
+    protected static readonly int ANIM_PARAMETER_X        = Animator.StringToHash("Velocidade_X");
+    protected static readonly int ANIM_PARAMETER_Z        = Animator.StringToHash("Velocidade_Z");
+
+    protected static readonly int ANIM_JUMP_STATE         = Animator.StringToHash("Pulo");
+    protected static readonly int ANIM_ITEM_JUMP_STATE    = Animator.StringToHash("Pulo_Com_Item");
+    protected static readonly int ANIM_JUMP               = Animator.StringToHash("Pular");
+    protected static readonly int ANIM_FALLING_STATE      = Animator.StringToHash("Caindo");
+    protected static readonly int ANIM_ITEM_FALLING_STATE = Animator.StringToHash("Caindo_Com_Item");
+    protected static readonly int ANIM_FALLING            = Animator.StringToHash("Caindo");
+    protected static readonly int ANIM_LAND               = Animator.StringToHash("Pisa_No_Chao");
+
+    protected static readonly int ANIM_INTERACT           = Animator.StringToHash("Interagiu");
+    protected static readonly int ANIM_HAS_CART           = Animator.StringToHash("Pegou_carrinho");
+    protected static readonly int ANIM_ITEM_IN_HAND       = Animator.StringToHash("Item_na_mao");
+    protected static readonly int ANIM_THROW              = Animator.StringToHash("Atirar_Item");
+
     // This is the maximum speed the player is allowed to turn,
     // regardless of other factors. Keep this at a high value to allow fast mouse movement
     private const float MAX_ANGULAR_VELOCITY = 25;
@@ -55,7 +75,14 @@ public abstract class PlayerControls : NetworkBehaviour
 
     // Components
     protected Rigidbody _rigidBody;
-    protected GameObject _currentLookingObject = null;
+    protected NetworkAnimator _playerNetAnimator;
+
+    protected Collider _currentLookingCollider = null;
+    protected Collider _onInteractLookingCollider = null;
+
+    private Interactable _interactableBuffer = null;
+    private RaycastHit _raycastHitBuffer;
+
     protected Player _playerScript = null;
 
     protected GameObject _cameraPosition;
@@ -124,9 +151,9 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         _lastInteractionTime = -InteractCooldown;
 
-        _rigidBody = gameObject.GetComponent<Rigidbody>();
-
-        _playerScript = gameObject.GetComponent<Player>();
+        gameObject.TryGetComponent(out _rigidBody);
+        gameObject.TryGetComponent(out _playerNetAnimator);
+        gameObject.TryGetComponent(out _playerScript);
 
         _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
         _initialCameraLocalRotation = _cameraPosition.transform.localRotation;
@@ -135,6 +162,11 @@ public abstract class PlayerControls : NetworkBehaviour
             if(_rigidBody == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Rigidbody not Found!");
+            }
+
+            if(_playerNetAnimator == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: Player NetworkAnimator not Found!");
             }
 
             if(_cameraPosition == null)
@@ -258,12 +290,22 @@ public abstract class PlayerControls : NetworkBehaviour
 
         if(!_playerScript.CanInteract)
         {
-            if(_currentLookingObject != null)
+            if(_currentLookingCollider != null)
             {
-                _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
-                _currentLookingObject = null;
+                if(_currentLookingCollider.TryGetComponent(out _interactableBuffer))
+                {
+                    _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
+                }
+
+                _currentLookingCollider = null;
             }
             return;
+        }
+
+
+        if(!_playerScript.IsHoldingItem && _playerNetAnimator.GetCurrentAnimatorStateInfo(0).shortNameHash == ANIM_HOLD_ITEM_STATE)
+        {
+            _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
         }
 
         // Wait before interaction
@@ -273,8 +315,12 @@ public abstract class PlayerControls : NetworkBehaviour
             {
                 // Ensure we hide the interaction prompt when first stop interacting
                 _updateLastInteraction = false;
-                _currentLookingObject?.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
-                _currentLookingObject = null;
+                if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
+                {
+                    _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
+                    _currentLookingCollider = null;
+                }
+
             }
             return;
         }
@@ -284,28 +330,31 @@ public abstract class PlayerControls : NetworkBehaviour
             Debug.DrawRay(_cameraPosition.transform.position, _cameraPosition.transform.forward * InteractionDistance, Color.red);
         #endif
 
-        if(Physics.Raycast(_cameraPosition.transform.position, _cameraPosition.transform.forward, out var hitInfo, InteractionDistance, Interactable.LAYER_MASK))
+        if(Physics.Raycast(_cameraPosition.transform.position, _cameraPosition.transform.forward, out _raycastHitBuffer, InteractionDistance, Interactable.LAYER_MASK))
         {
-            // Was looking at something different than current object
-            if(_currentLookingObject != hitInfo.collider.gameObject)
+            // Was looking at something different than current collider
+            if(_currentLookingCollider != _raycastHitBuffer.collider)
             {
                 // Was looking at one object, now looking at another
-                if(_currentLookingObject != null)
+                if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
                 {
-                    _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
+                    _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
                 }
 
                 // Update current looking object
-                _currentLookingObject = hitInfo.collider.gameObject;
-                _currentLookingObject.GetComponent<Interactable>()?.TriggerLookEnter(gameObject);
+                _currentLookingCollider = _raycastHitBuffer.collider;
+                if(_currentLookingCollider.TryGetComponent(out _interactableBuffer))
+                {
+                    _interactableBuffer.TriggerLookEnter(_playerScript, _currentLookingCollider);
+                }
             }
         }
 
         // Is no longer looking at a previous object. Call the object's OnLookExit
-        else if(_currentLookingObject != null)
+        else if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
         {
-            _currentLookingObject.GetComponent<Interactable>()?.TriggerLookExit(gameObject);
-            _currentLookingObject = null;
+            _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
+            _currentLookingCollider = null;
         }
     }
 
@@ -369,6 +418,11 @@ public abstract class PlayerControls : NetworkBehaviour
                     StopCoroutine(nameof(clearGrounded));
 
                     isGrounded = true;
+                    var currentAnimatorState = _playerNetAnimator.GetCurrentAnimatorStateInfo(0);
+                    if(currentAnimatorState.shortNameHash == ANIM_FALLING_STATE || currentAnimatorState.shortNameHash == ANIM_ITEM_FALLING_STATE)
+                    {
+                        _playerNetAnimator.SetTrigger(ANIM_LAND);
+                    }
 
                     // Jump away from current surface (NYI)
                     // jumpNormal = contact.normal;
@@ -395,7 +449,13 @@ public abstract class PlayerControls : NetworkBehaviour
     private IEnumerator clearGrounded()
     {
         yield return Utils.FixedUpdateWait;
+
         isGrounded = false;
+        var nextState = _playerNetAnimator.GetNextAnimatorStateInfo(0);
+        if(!(nextState.shortNameHash == ANIM_JUMP_STATE || nextState.shortNameHash == ANIM_ITEM_JUMP_STATE))
+        {
+            _playerNetAnimator.SetTrigger(ANIM_FALLING);
+        }
     }
 
     private IEnumerator clearWallCollision()
@@ -413,6 +473,9 @@ public abstract class PlayerControls : NetworkBehaviour
         }
 
         _currentDirection = direction;
+
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_X, direction.x * (_currentSpeed / MoveSpeed));
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_Z, direction.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Look(Vector2 direction)
@@ -443,6 +506,9 @@ public abstract class PlayerControls : NetworkBehaviour
 
         _isWalking = !_isWalking;
         _currentSpeed = _isWalking? WalkSpeed : MoveSpeed;
+
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_X, _currentDirection.x * (_currentSpeed / MoveSpeed));
+        _playerNetAnimator.SetFloat(ANIM_PARAMETER_Z, _currentDirection.y * (_currentSpeed / MoveSpeed));
     }
 
     public virtual void Interact()
@@ -454,9 +520,28 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
+        _onInteractLookingCollider = _currentLookingCollider;
+        if(_onInteractLookingCollider != null)
+        {
+            _playerNetAnimator.SetTrigger(ANIM_INTERACT);
+        }
+    }
+
+    private void ExecuteGrab()
+    {
         _lastInteractionTime = Time.time;
 
-        _currentLookingObject?.GetComponent<Interactable>()?.TriggerInteract(gameObject);
+        if(_onInteractLookingCollider != null && _onInteractLookingCollider.TryGetComponent(out _interactableBuffer))
+        {
+            _interactableBuffer.TriggerInteract(_playerScript, _onInteractLookingCollider);
+        }
+        _onInteractLookingCollider = null;
+
+        if(_playerScript.IsHoldingItem)
+        {
+            _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, true);
+        }
+
         HasInteractedThisFrame = true;
     }
 
@@ -468,10 +553,16 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
+        _playerNetAnimator.SetTrigger(ANIM_THROW);
+    }
+
+    private void ExecuteThrow()
+    {
+        _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after
-        _playerScript.ThrowItem((item) => _currentLookingObject = null);
-
+        _playerScript.ThrowItem((item) => _currentLookingCollider = null);
     }
 
     public virtual void Drop()
@@ -482,8 +573,10 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
+        _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after
-        _playerScript.DropItem((item) => _currentLookingObject = null);
+        _playerScript.DropItem((item) => _currentLookingCollider = null);
     }
 }

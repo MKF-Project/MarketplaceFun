@@ -75,24 +75,84 @@ public static class Utils
         return !list.Any(predicate);
     }
 
-    // Destroy
-    public static void DestroyAllChildren(this Transform root)
+    // Stack
+    public static bool TryPeek<T>(this Stack<T> stack, out T result)
     {
-        if(root == root.root)
+        if(stack.Count > 0) {
+            result = stack.Peek();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
+    public static bool TryPop<T>(this Stack<T> stack, out T result)
+    {
+        if(stack.Count > 0) {
+            result = stack.Pop();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
+    // Queue
+    public static bool TryPeek<T>(this Queue<T> queue, out T result)
+    {
+        if(queue.Count > 0) {
+            result = queue.Peek();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
+    public static bool TryDequeue<T>(this Queue<T> queue, out T result)
+    {
+        if(queue.Count > 0) {
+            result = queue.Dequeue();
+            return true;
+        }
+
+        result = default(T);
+        return false;
+    }
+
+    // DontDestroyOnLoad
+    public static void EnsureObjectDontDestroy(this GameObject gameobject)
+    {
+        // DontDestroy Scene's build index is always -1
+        const int DontDestroySceneBuildIndex = -1;
+        if(gameobject.scene.buildIndex == DontDestroySceneBuildIndex)
         {
-            Debug.LogError($"[{root.name}]: Attempted to delete all objects in scene.");
+            // We don't need to do anything if the Object
+            // is already on the DontDestroy scene
             return;
         }
 
-        while(root.childCount > 0)
+        // We make sure that this GameObject will be place on the
+        // DontDestroyOnLoad Scene by first placing it on the top
+        // of the hierarchy tree. Unity gives Warnings when moving
+        // child objects to this Scene
+        gameobject.transform.SetParent(null);
+        GameObject.DontDestroyOnLoad(gameobject);
+    }
+
+    // Destroy
+    public static void DestroyAllChildren(this Transform rootObj)
+    {
+        while(rootObj.childCount > 0)
         {
-            var child = root.GetChild(0);
+            var child = rootObj.GetChild(0);
             child.SetParent(null);
             GameObject.Destroy(child.gameObject);
         }
     }
 
-    public static void DestroyAllChildren(this GameObject root) => root.transform.DestroyAllChildren();
+    public static void DestroyAllChildren(this GameObject rootObj) => rootObj.transform.DestroyAllChildren();
 
     // Rigidbody
     public static RigidbodyTemplate ExtractToTemplate(this Rigidbody rb)

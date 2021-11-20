@@ -48,6 +48,8 @@ public class CartControls : PlayerControls
 
         _cameraPosition.transform.localRotation = _initialCameraLocalRotation;
         _currentLookAngle = Vector2.zero;
+
+        _playerNetAnimator.SetBool(ANIM_HAS_CART, true);
     }
 
     public override void Interact()
@@ -61,6 +63,11 @@ public class CartControls : PlayerControls
             return;
         }
 
+        _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
+    }
+
+    public void DetachShoppingCart()
+    {
         _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
     }
 

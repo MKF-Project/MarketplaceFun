@@ -8,9 +8,9 @@ public struct ShoppingListItem : INetworkSerializable
 {
     public bool Caught;
 
-    public int ItemCode;
+    public ulong ItemCode;
 
-    public ShoppingListItem(int itemCode)
+    public ShoppingListItem(ulong itemCode)
     {
         Caught = false;
         ItemCode = itemCode;

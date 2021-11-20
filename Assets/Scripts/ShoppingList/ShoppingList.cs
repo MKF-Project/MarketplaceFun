@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = System.Random;
 
 public class ShoppingList : NetworkBehaviour
 {
-    public Dictionary<int, ShoppingListItem> ItemDictionary;
-    //public List<ShoppingListItem> ItemList;
+    public const int ITEM_LIST_AMOUNT = 5;
+
+    public Dictionary<ulong, ShoppingListItem> ItemDictionary;
     public ShoppingListUI ShoppingListUi;
 
     private int _quantityChecked;
@@ -22,57 +21,59 @@ public class ShoppingList : NetworkBehaviour
     void Start()
     {
         _quantityChecked = 0;
-        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
 
         if (IsOwner)
         {
             ShoppingListUi = GameObject.FindGameObjectsWithTag("ShoppingListUI")[0].GetComponent<ShoppingListUI>();
             Debug.Log("Colocou Owner");
             NetworkController.OnDisconnected += EraseListClient;
-
         }
 
         if (IsServer)
         {
             Debug.Log("Colocou Server");
             _randomSeed = (int) Time.time;
-            SceneManager.OnMatchLoaded += GenerateList_OnMatchLoaded;
             NetworkController.OnOtherClientDisconnected += EraseListServer;
+
+            ItemGenerator.OnGeneratablesDefined += GenerateList;
         }
+
+        MatchManager.OnMatchExit += EraseSelfList;
     }
-
-
 
     private void OnDestroy()
     {
-        //Didn't verify IsOwner or IsClient(bug if verify)
+        // Don't verify IsOwner or IsClient (bug if verify)
         NetworkController.OnDisconnected -= EraseListClient;
-        SceneManager.OnMatchLoaded -= GenerateList_OnMatchLoaded;
         NetworkController.OnOtherClientDisconnected -= EraseListServer;
+        MatchManager.OnMatchExit -= EraseSelfList;
+
+        ItemGenerator.OnGeneratablesDefined -= GenerateList;
     }
 
-    public void GenerateList_OnMatchLoaded(string _sceneName)
+    // Only on server
+    public void GenerateList(IEnumerable<ulong> setOfPossibleItems)
     {
-        GenerateList(5, ItemTypeList.ItemList.ToList());
-    }
-
-
-    //Only on server
-    public void GenerateList(int numberOfItems, List<ItemType> allItemsList)
-    {
-        Random random = new Random(_randomSeed);
-
-        while (numberOfItems > 0)
+        if(!IsServer)
         {
+            return;
+        }
 
-            int randomIndex = random.Next(0, allItemsList.Count);
+        var random = new Random(_randomSeed);
+        var itemList = new List<ulong>(setOfPossibleItems);
 
-            ShoppingListItem shoppingListItem = new ShoppingListItem(allItemsList[randomIndex].Code);
+        var numberOfItems = Mathf.Min(ITEM_LIST_AMOUNT, itemList.Count);
+        while(numberOfItems > 0)
+        {
+            int randomIndex = random.Next(0, itemList.Count);
 
-            //Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
+            ShoppingListItem shoppingListItem = new ShoppingListItem(itemList[randomIndex]);
 
-            ItemDictionary.Add(allItemsList[randomIndex].Code, shoppingListItem);
-            allItemsList.RemoveAt(randomIndex);
+            // Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
+
+            ItemDictionary.Add(itemList[randomIndex], shoppingListItem);
+            itemList.RemoveAt(randomIndex);
             numberOfItems--;
         }
 
@@ -81,8 +82,8 @@ public class ShoppingList : NetworkBehaviour
 
     }
 
+    // Populate List on Client RPC
     [ClientRpc]
-    //Populate List on Client RPC
     public void ReceiveList_ClientRpc(SerializedShoppingList serializedShoppingList)
     {
 
@@ -102,27 +103,32 @@ public class ShoppingList : NetworkBehaviour
         }
     }
 
+    public void EraseSelfList()
+    {
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
+        if (IsOwner)
+        {
+            ShoppingListUi.EraseItems();
+        }
+        _quantityChecked = 0;
+    }
+
     public void EraseListServer(ulong playerId)
     {
-        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
     }
 
     public void EraseListClient(bool wasHost, bool connectionWasLost)
     {
-        ItemDictionary = new Dictionary<int, ShoppingListItem>();
+        ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
         if (IsOwner)
         {
             ShoppingListUi.EraseItems();
         }
     }
 
-    public bool CheckItem(int itemCode)
+    public bool CheckItem(ulong itemCode)
     {
-        if (!IsOnList(itemCode))
-        {
-            return false;
-        }
-
         if(!ItemDictionary.ContainsKey(itemCode))
         {
             return false;
@@ -142,7 +148,7 @@ public class ShoppingList : NetworkBehaviour
         return true;
     }
 
-    public void UncheckItem(int itemCode)
+    public void UncheckItem(ulong itemCode)
     {
         if(!ItemDictionary.ContainsKey(itemCode))
         {
@@ -157,11 +163,6 @@ public class ShoppingList : NetworkBehaviour
         _quantityChecked--;
     }
 
-    public bool IsOnList(int itemCode)
-    {
-        return ItemDictionary.ContainsKey(itemCode);
-    }
-
 
     public bool IsListChecked()
     {
@@ -173,16 +174,16 @@ public class ShoppingList : NetworkBehaviour
         return false;
     }
 
-    public void PrintList()
-    {
+    // public void PrintList()
+    // {
 
-        String msg = "";
-        foreach (ShoppingListItem item in ItemDictionary.Values)
-        {
-            msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
-        }
-        MatchMessages.Instance.EditMessage(msg, 10f);
-        MatchMessages.Instance.ShowMessage();
-    }
+    //     String msg = "";
+    //     foreach (ShoppingListItem item in ItemDictionary.Values)
+    //     {
+    //         msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
+    //     }
+    //     MatchMessages.Instance.EditMessage(msg, 10f);
+    //     MatchMessages.Instance.ShowMessage();
+    // }
 
 }

@@ -215,7 +215,12 @@ public class Belt : Shelf
             itemTemplate.visualItemID = Item.NO_ITEMTYPE_CODE;
         }
 
-        PlaceVisualsOnBeltItem(ref itemTemplate, itemID);
+        // Replace visuals only if pooled item was different
+        if(itemTemplate.visualItemID != itemID)
+        {
+            itemTemplate.visualItemID = itemID;
+            PlaceVisualsOnBeltItem(itemTemplate);
+        }
 
         // Put item in belt queue
         itemTemplate.pathCompletePercent = 0;
@@ -224,24 +229,18 @@ public class Belt : Shelf
         _itemsInBelt.Add(itemTemplate);
     }
 
-    private void PlaceVisualsOnBeltItem(ref BeltItem beltItem, ulong itemID)
+    private void PlaceVisualsOnBeltItem(BeltItem beltItem)
     {
         var itemVisuals = beltItem.item.transform.GetChild(BELT_ITEM_VISUALS_INDEX);
-        if(beltItem.visualItemID != itemID)
-        {
-            itemVisuals.DestroyAllChildren();
-        }
+        itemVisuals.DestroyAllChildren();
 
-        var visuals = NetworkItemManager.GetItemPrefabVisuals(itemID);
+        var visuals = NetworkItemManager.GetItemPrefabVisuals(beltItem.visualItemID);
         if(visuals != null)
         {
             var generatedItem = Instantiate(visuals.gameObject, Vector3.zero, Quaternion.identity, itemVisuals);
             generatedItem.transform.localPosition = Vector3.zero;
             generatedItem.transform.localRotation = Quaternion.identity;
-
         }
-
-        beltItem.visualItemID = itemID;
     }
 
     private void RemoveItemFromBelt(int itemIndex)

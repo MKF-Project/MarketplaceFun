@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -62,7 +62,15 @@ public class Belt : Shelf
 
         _waypoints = FindWaypoints();
         _pathSections = CreateWaypointSections(_waypoints);
-        _totalPathLength = _pathSections.Sum(section => section.length);
+
+        // We use a simple for loop here, instead of _pathSection.Sum()
+        // because sum casts floats to doubles (then back to float at the end),
+        // we don't want that.
+        _totalPathLength = 0;
+        for(int i = 0; i < _pathSections.Count; i++)
+        {
+            _totalPathLength += _pathSections[i].length;
+        }
 
         NextItemInterval.OnValueChanged = IntervalChanged;
 
@@ -93,8 +101,11 @@ public class Belt : Shelf
             _exposeNextItemCoroutine = StartCoroutine(ExposeNextItem());
         }
 
-        ItemGenerator.OnRestocked += SetNextItemDisplay;
-        ItemGenerator.OnDepleted += HideItemDisplay;
+        if(ItemGenerator != null)
+        {
+            ItemGenerator.OnRestocked += SetNextItemDisplay;
+            ItemGenerator.OnDepleted += HideItemDisplay;
+        }
     }
 
     private void Update()

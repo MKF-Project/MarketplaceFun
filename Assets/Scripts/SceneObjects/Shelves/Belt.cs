@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -53,6 +53,9 @@ public class Belt : Shelf
     private Image _itemDisplay = null;
     private Stack<BeltItem> _beltItemPool = new Stack<BeltItem>();
     private List<BeltItem> _itemsInBelt = new List<BeltItem>();
+
+    [Range(0, 1)] public float StartCurtainPathPercent = 0;
+    [Range(0, 1)] public float EndCurtainPathPercent = 1;
 
     private Collider _interactColliderBuffer;
 
@@ -110,11 +113,6 @@ public class Belt : Shelf
 
     private void Update()
     {
-        // if(_pathSections.Count == 0)
-        // {
-        //     return;
-        // }
-
         int i = 0;
         while(i < _itemsInBelt.Count)
         {
@@ -365,24 +363,45 @@ public class Belt : Shelf
     // Editor Utils
     protected override void OnDrawGizmosSelected()
     {
-        const float MARKER_SIZE = 0.2f;
+        const float ENDPOINT_MARKER_SIZE = 0.2f;
+        const float CURTAIN_MARKER_SIZE = 0.1f;
+
         base.OnDrawGizmosSelected();
 
-        var sections = CreateWaypointSections(FindWaypoints());
+        _waypoints = FindWaypoints();
+        _pathSections = CreateWaypointSections(_waypoints);
 
-        if(sections.Count > 0)
+        _totalPathLength = 0;
+        for(int i = 0; i < _pathSections.Count; i++)
+        {
+            _totalPathLength += _pathSections[i].length;
+        }
+
+        if(_pathSections.Count > 0)
         {
             // Draw Start and End markers
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(sections[0].start.transform.position, MARKER_SIZE);
+            Gizmos.DrawSphere(_pathSections[0].start.transform.position, ENDPOINT_MARKER_SIZE);
 
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(sections[sections.Count-1].end.transform.position, MARKER_SIZE);
+            Gizmos.DrawSphere(_pathSections[_pathSections.Count-1].end.transform.position, ENDPOINT_MARKER_SIZE);
 
             // Draw connecting line
             Gizmos.color = Color.yellow;
-            sections.ForEach(sect => Gizmos.DrawLine(sect.start.transform.position, sect.end.transform.position));
+            _pathSections.ForEach(sect => Gizmos.DrawLine(sect.start.transform.position, sect.end.transform.position));
         }
 
+        Vector3 markerPosition;
+        if(GetBeltPositionAtPercent(StartCurtainPathPercent, out markerPosition))
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(markerPosition, CURTAIN_MARKER_SIZE);
+        }
+
+        if(GetBeltPositionAtPercent(EndCurtainPathPercent, out markerPosition))
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(markerPosition, CURTAIN_MARKER_SIZE);
+        }
     }
 }

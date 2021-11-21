@@ -523,6 +523,8 @@ MonoBehaviour:
   _itemGenerator: {fileID: 0}
   _nextItemInterval: 2
   _timeExposed: 10
+  StartCurtainPathPercent: 0.07
+  EndCurtainPathPercent: 0.92
 --- !u!65 &75308705380605435
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -758,6 +760,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8484561030104909563, guid: 64b2e1e02fcf4c540aff5b6188ed1caf,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: 8484561030104909563, guid: 64b2e1e02fcf4c540aff5b6188ed1caf,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70710677
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64b2e1e02fcf4c540aff5b6188ed1caf, type: 3}

@@ -27,6 +27,10 @@ public class Belt : Shelf
     private const string BELT_WAYPOINTS_CONTAINER = "Waypoints";
     private const string BELT_ITEM_TEMPLATE = "Belt_Item";
     private const string BELT_ITEM_DISPLAY_PATH = "Canvas/ItemDisplay";
+
+    private const string START_CURTAIN_TRIGGER = "StartCurtainFlap";
+    private const string END_CURTAIN_TRIGGER = "EndCurtainFlap";
+
     private const int BELT_ITEM_INTERACT_INDEX = 0;
     private const int BELT_ITEM_VISUALS_INDEX = 1;
 
@@ -51,6 +55,7 @@ public class Belt : Shelf
 
     private GameObject _beltItemBaseTemplate = null;
     private Image _itemDisplay = null;
+    private Animator _animator = null;
     private Stack<BeltItem> _beltItemPool = new Stack<BeltItem>();
     private List<BeltItem> _itemsInBelt = new List<BeltItem>();
 
@@ -83,6 +88,8 @@ public class Belt : Shelf
         transform.Find(BELT_ITEM_DISPLAY_PATH).TryGetComponent(out _itemDisplay);
         _itemDisplay.color = Color.clear;
         _itemDisplay.preserveAspect = true;
+
+        TryGetComponent(out _animator);
     }
 
     protected override void OnDestroy()
@@ -117,7 +124,22 @@ public class Belt : Shelf
         while(i < _itemsInBelt.Count)
         {
             var item = _itemsInBelt[i];
+            var previousComplete = item.pathCompletePercent;
+
             item.pathCompletePercent = Mathf.Clamp01(item.pathCompletePercent + Time.deltaTime / _timeExposed);
+
+            // Item has just passed Start curtain
+            if(previousComplete < StartCurtainPathPercent && item.pathCompletePercent >= StartCurtainPathPercent)
+            {
+                _animator.SetTrigger(START_CURTAIN_TRIGGER);
+            }
+
+            // Item has just passed End curtain
+            if(previousComplete < EndCurtainPathPercent && item.pathCompletePercent >= EndCurtainPathPercent)
+            {
+                _animator.SetTrigger(END_CURTAIN_TRIGGER);
+            }
+
             if(item.pathCompletePercent == 1)
             {
                 RemoveItemFromBelt(i);

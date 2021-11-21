@@ -22,6 +22,8 @@ public class Shelf : NetworkBehaviour
     [SerializeField]
     internal ItemGenerator _itemGenerator = null;
 
+    // Note: ItemGenerator is only initialized AFTER NetworkStart()
+    // Before that (on Awake, for example), it'll be null
     private ItemGenerator _itemGeneratorInternal = null;
     public ItemGenerator ItemGenerator
     {

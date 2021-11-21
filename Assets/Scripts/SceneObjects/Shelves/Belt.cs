@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using MLAPI;
 using MLAPI.NetworkVariable;
 using MLAPI.Messaging;
@@ -25,6 +26,11 @@ public class Belt : Shelf
 
     private const string BELT_WAYPOINTS_CONTAINER = "Waypoints";
     private const string BELT_ITEM_TEMPLATE = "Belt_Item";
+    private const string BELT_ITEM_DISPLAY_PATH = "Canvas/ItemDisplay";
+
+    private const string START_CURTAIN_TRIGGER = "StartCurtainFlap";
+    private const string END_CURTAIN_TRIGGER = "EndCurtainFlap";
+
     private const int BELT_ITEM_INTERACT_INDEX = 0;
     private const int BELT_ITEM_VISUALS_INDEX = 1;
 
@@ -48,8 +54,13 @@ public class Belt : Shelf
     private Coroutine _exposeNextItemCoroutine = null;
 
     private GameObject _beltItemBaseTemplate = null;
+    private Image _itemDisplay = null;
+    private Animator _animator = null;
     private Stack<BeltItem> _beltItemPool = new Stack<BeltItem>();
     private List<BeltItem> _itemsInBelt = new List<BeltItem>();
+
+    [Range(0, 1)] public float StartCurtainPathPercent = 0;
+    [Range(0, 1)] public float EndCurtainPathPercent = 1;
 
     private Collider _interactColliderBuffer;
 
@@ -59,17 +70,33 @@ public class Belt : Shelf
 
         _waypoints = FindWaypoints();
         _pathSections = CreateWaypointSections(_waypoints);
-        _totalPathLength = _pathSections.Sum(section => section.length);
+
+        // We use a simple for loop here, instead of _pathSection.Sum()
+        // because sum casts floats to doubles (then back to float at the end),
+        // we don't want that.
+        _totalPathLength = 0;
+        for(int i = 0; i < _pathSections.Count; i++)
+        {
+            _totalPathLength += _pathSections[i].length;
+        }
 
         NextItemInterval.OnValueChanged = IntervalChanged;
 
         _beltItemBaseTemplate = transform.Find(BELT_ITEM_TEMPLATE).gameObject;
         _beltItemBaseTemplate.SetActive(false);
+
+        transform.Find(BELT_ITEM_DISPLAY_PATH).TryGetComponent(out _itemDisplay);
+        _itemDisplay.color = Color.clear;
+        _itemDisplay.preserveAspect = true;
+
+        TryGetComponent(out _animator);
     }
 
     protected override void OnDestroy()
     {
         StopCoroutine(_exposeNextItemCoroutine);
+
+        ItemGenerator.OnDepleted -= HideItemDisplay;
     }
 
     public override void NetworkStart()
@@ -83,20 +110,40 @@ public class Belt : Shelf
             _exposeNextItemCoroutine = StartCoroutine(ExposeNextItem());
         }
 
+        if(ItemGenerator != null)
+        {
+            ItemGenerator.OnDepleted += HideItemDisplay;
+            SetNextItemDisplay(ItemGenerator.ItemInStock);
+        }
     }
 
     private void Update()
     {
-        // if(_pathSections.Count == 0)
-        // {
-        //     return;
-        // }
-
         int i = 0;
         while(i < _itemsInBelt.Count)
         {
             var item = _itemsInBelt[i];
+            var previousComplete = item.pathCompletePercent;
+
             item.pathCompletePercent = Mathf.Clamp01(item.pathCompletePercent + Time.deltaTime / _timeExposed);
+
+            // Item has just passed Start curtain
+            if(previousComplete < StartCurtainPathPercent && item.pathCompletePercent >= StartCurtainPathPercent)
+            {
+                _animator.SetTrigger(START_CURTAIN_TRIGGER);
+                if(_displayUpdateRequested)
+                {
+                    _displayUpdateRequested = false;
+                    SetNextItemDisplay(ItemGenerator.ItemInStock);
+                }
+            }
+
+            // Item has just passed End curtain
+            if(previousComplete < EndCurtainPathPercent && item.pathCompletePercent >= EndCurtainPathPercent)
+            {
+                _animator.SetTrigger(END_CURTAIN_TRIGGER);
+            }
+
             if(item.pathCompletePercent == 1)
             {
                 RemoveItemFromBelt(i);
@@ -106,30 +153,44 @@ public class Belt : Shelf
                 continue;
             }
 
-            var lengthTraveled = _totalPathLength * item.pathCompletePercent;
-            int currSection = 0;
-            var cumulativeSectionLength = _pathSections[currSection].length;
-            while(lengthTraveled > cumulativeSectionLength)
+            if(GetBeltPositionAtPercent(item.pathCompletePercent, out var newPosition))
             {
-                currSection++;
-                cumulativeSectionLength += _pathSections[currSection].length;
+                item.item.transform.position = newPosition;
+                _itemsInBelt[i] = item;
             }
-
-            var travelInThisSection = lengthTraveled - cumulativeSectionLength + _pathSections[currSection].length;
-            var travelPercentInThisSection = travelInThisSection / _pathSections[currSection].length;
-
-            item.item.transform.position = Vector3.Lerp(_pathSections[currSection].start.transform.position, _pathSections[currSection].end.transform.position, travelPercentInThisSection);
-
-            _itemsInBelt[i] = item;
 
             i++;
         }
     }
 
+    private bool GetBeltPositionAtPercent(float pathAmount, out Vector3 worldPosition)
+    {
+        if(_pathSections.Count == 0 || pathAmount < 0 || pathAmount > 1)
+        {
+            worldPosition = Vector3.zero;
+            return false;
+        }
+
+        var lengthTraveled = _totalPathLength * pathAmount;
+
+        // Find out which section this percentage corresponds to
+        int currSection = 0;
+        var cumulativeSectionLength = _pathSections[currSection].length;
+        while(lengthTraveled > cumulativeSectionLength)
+        {
+            currSection++;
+            cumulativeSectionLength += _pathSections[currSection].length;
+        }
+
+        var travelInThisSection = lengthTraveled - cumulativeSectionLength + _pathSections[currSection].length;
+        var travelPercentInThisSection = travelInThisSection / _pathSections[currSection].length;
+
+        worldPosition = Vector3.Lerp(_pathSections[currSection].start.transform.position, _pathSections[currSection].end.transform.position, travelPercentInThisSection);
+        return true;
+    }
+
     protected override void InteractWithShelf(Player player, Collider interactedTrigger)
     {
-        print(interactedTrigger);
-
         if(ItemGenerator != null && FindItemWithCollider(interactedTrigger, out var item) && item.visualItemID != Item.NO_ITEMTYPE_CODE)
         {
             // Give item to player
@@ -142,7 +203,6 @@ public class Belt : Shelf
             RemoveItemFromBelt_ServerRpc(itemIndex);
 
             HideButtonPrompt(player, interactedTrigger);
-
         }
     }
 
@@ -189,12 +249,13 @@ public class Belt : Shelf
 
     private void SendItemOnBelt(ulong itemID)
     {
+        HideItemDisplay();
+        _displayUpdateRequested = true;
+
         if(itemID == Item.NO_ITEMTYPE_CODE)
         {
             return;
         }
-
-        print($"[{gameObject.name}]: Moving Item {itemID} in belt");
 
         // Get belt item from pool
         BeltItem itemTemplate;
@@ -206,7 +267,12 @@ public class Belt : Shelf
             itemTemplate.visualItemID = Item.NO_ITEMTYPE_CODE;
         }
 
-        PlaceVisualsOnBeltItem(ref itemTemplate, itemID);
+        // Replace visuals only if pooled item was different
+        if(itemTemplate.visualItemID != itemID)
+        {
+            itemTemplate.visualItemID = itemID;
+            PlaceVisualsOnBeltItem(itemTemplate);
+        }
 
         // Put item in belt queue
         itemTemplate.pathCompletePercent = 0;
@@ -215,24 +281,18 @@ public class Belt : Shelf
         _itemsInBelt.Add(itemTemplate);
     }
 
-    private void PlaceVisualsOnBeltItem(ref BeltItem beltItem, ulong itemID)
+    private void PlaceVisualsOnBeltItem(BeltItem beltItem)
     {
         var itemVisuals = beltItem.item.transform.GetChild(BELT_ITEM_VISUALS_INDEX);
-        if(beltItem.visualItemID != itemID)
-        {
-            itemVisuals.DestroyAllChildren();
-        }
+        itemVisuals.DestroyAllChildren();
 
-        var visuals = NetworkItemManager.GetItemPrefabVisuals(itemID);
+        var visuals = NetworkItemManager.GetItemPrefabVisuals(beltItem.visualItemID);
         if(visuals != null)
         {
             var generatedItem = Instantiate(visuals.gameObject, Vector3.zero, Quaternion.identity, itemVisuals);
             generatedItem.transform.localPosition = Vector3.zero;
             generatedItem.transform.localRotation = Quaternion.identity;
-
         }
-
-        beltItem.visualItemID = itemID;
     }
 
     private void RemoveItemFromBelt(int itemIndex)
@@ -248,11 +308,27 @@ public class Belt : Shelf
         item.item.SetActive(false);
     }
 
-    private void IntervalChanged(float before, float after)
+    // Display
+    private bool _displayUpdateRequested = false;
+
+    private void SetNextItemDisplay(ulong item)
     {
-        _nextItemIntervalWait = new WaitForSeconds(after);
+        if(item == Item.NO_ITEMTYPE_CODE)
+        {
+            HideItemDisplay();
+            return;
+        }
+
+        _itemDisplay.sprite = NetworkItemManager.GetItemPrefabScript(item).UISticker;
+        _itemDisplay.color = Color.white;
     }
 
+    private void HideItemDisplay()
+    {
+        _itemDisplay.color = Color.clear;
+    }
+
+    // Waypoints
     private List<GameObject> FindWaypoints()
     {
         var container = transform.Find(BELT_WAYPOINTS_CONTAINER);
@@ -280,6 +356,11 @@ public class Belt : Shelf
         }
 
         return res;
+    }
+
+    private void IntervalChanged(float before, float after)
+    {
+        _nextItemIntervalWait = new WaitForSeconds(after);
     }
 
     // RPCs
@@ -319,24 +400,45 @@ public class Belt : Shelf
     // Editor Utils
     protected override void OnDrawGizmosSelected()
     {
-        const float MARKER_SIZE = 0.2f;
+        const float ENDPOINT_MARKER_SIZE = 0.2f;
+        const float CURTAIN_MARKER_SIZE = 0.1f;
+
         base.OnDrawGizmosSelected();
 
-        var sections = CreateWaypointSections(FindWaypoints());
+        _waypoints = FindWaypoints();
+        _pathSections = CreateWaypointSections(_waypoints);
 
-        if(sections.Count > 0)
+        _totalPathLength = 0;
+        for(int i = 0; i < _pathSections.Count; i++)
+        {
+            _totalPathLength += _pathSections[i].length;
+        }
+
+        if(_pathSections.Count > 0)
         {
             // Draw Start and End markers
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(sections[0].start.transform.position, MARKER_SIZE);
+            Gizmos.DrawSphere(_pathSections[0].start.transform.position, ENDPOINT_MARKER_SIZE);
 
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(sections[sections.Count-1].end.transform.position, MARKER_SIZE);
+            Gizmos.DrawSphere(_pathSections[_pathSections.Count-1].end.transform.position, ENDPOINT_MARKER_SIZE);
 
             // Draw connecting line
             Gizmos.color = Color.yellow;
-            sections.ForEach(sect => Gizmos.DrawLine(sect.start.transform.position, sect.end.transform.position));
+            _pathSections.ForEach(sect => Gizmos.DrawLine(sect.start.transform.position, sect.end.transform.position));
         }
 
+        Vector3 markerPosition;
+        if(GetBeltPositionAtPercent(StartCurtainPathPercent, out markerPosition))
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(markerPosition, CURTAIN_MARKER_SIZE);
+        }
+
+        if(GetBeltPositionAtPercent(EndCurtainPathPercent, out markerPosition))
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(markerPosition, CURTAIN_MARKER_SIZE);
+        }
     }
 }

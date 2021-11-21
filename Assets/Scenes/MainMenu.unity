@@ -1023,6 +1023,7 @@ MonoBehaviour:
     NetworkTransport: {fileID: 1278010175}
     RegisteredScenes:
     - MainMenu
+    - LoadingScene
     - ItemListTestScene
     - _VerticalSlice_maior
     - _Beta
@@ -1495,6 +1496,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864047925030908390, guid: 544b8ccc802de154fac238b9c290f6a6,
+        type: 3}
+      propertyPath: m_Name
+      value: ConnectionMenu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 544b8ccc802de154fac238b9c290f6a6, type: 3}

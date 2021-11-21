@@ -295,7 +295,7 @@ public class NetworkController : MonoBehaviour
         _instance._localPlayers.Add(player.OwnerClientId, player);
     }
 
-    public static void switchNetworkScene(string sceneName)
+    public static void switchNetworkScene(string sceneName, bool skipProgressiveLoad = false)
     {
         if(!_instance._netManager.IsServer)
         {
@@ -307,7 +307,24 @@ public class NetworkController : MonoBehaviour
             return;
         }
 
-        NetworkSceneManager.SwitchScene(sceneName);
+        if(skipProgressiveLoad)
+        {
+            NetworkSceneManager.SwitchScene(sceneName);
+        }
+
+        // Defer loading next scene until after Loading scene has loaded for all clients
+        else
+        {
+            var loadingSceneEvent = NetworkSceneManager.SwitchScene(SceneManager.LOADING_SCENE_NAME);
+
+            ClientConnectionChecker.OnAllClientResponses += afterClientSceneLoad;
+
+            void afterClientSceneLoad()
+            {
+                ClientConnectionChecker.OnAllClientResponses -= afterClientSceneLoad;
+                NetworkSceneManager.SwitchScene(sceneName);
+            }
+        }
     }
 
     private static IEnumerator disconnectAfterDelay(float delaySeconds)

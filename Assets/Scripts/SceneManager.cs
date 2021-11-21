@@ -11,34 +11,33 @@ public class SceneManager : MonoBehaviour
     public delegate void OnMainMenuLostConnectionDelegate();
     public static event OnMainMenuLostConnectionDelegate OnMainMenuLostConnection;
 
+    public delegate void OnSceneLoadedDelegate(string sceneName);
+    public static event OnSceneLoadedDelegate OnSceneLoaded;
 
-    public delegate void OnMenuLoadedDelegate(string sceneName);
+    public delegate void OnMenuLoadedDelegate();
     public static event OnMenuLoadedDelegate OnMenuLoaded;
 
-
-    public delegate void OnMatchLoadedDelegate(string sceneName);
-    public static event OnMatchLoadedDelegate OnMatchLoaded;
+    public delegate void OnLoadingSceneLoadedDelegate();
+    public static event OnLoadingSceneLoadedDelegate OnLoadingSceneLoaded;
 
     public delegate void OnScoreLoadedDelegate();
     public static event OnScoreLoadedDelegate OnScoreLoaded;
 
+    public delegate void OnMatchLoadedDelegate(string sceneName);
+    public static event OnMatchLoadedDelegate OnMatchLoaded;
 
-    public delegate void OnSceneLoadedDelegate(string sceneName);
-    public static event OnSceneLoadedDelegate OnSceneLoaded;
-
-
-    public  String MatchScene;
+    public String MatchScene;
 
     public static String MatchSceneTag;
 
-    private const string _selfTag = "SceneManager";
+    public const string SELF_TAG = "SceneManager";
+    public const string MAIN_MENU_SCENE_NAME = "MainMenu";
+    public const string LOADING_SCENE_NAME = "LoadingScene";
+    public const string SCORE_SCENE_NAME = "ScoreScene";
 
-    private const string _mainMenu = "MainMenu";
-
-    private const string _scoreScene = "ScoreScene";
     private bool _onMainMenu
     {
-        get => UnityScene.SceneManager.GetActiveScene().name == _mainMenu;
+        get => UnityScene.SceneManager.GetActiveScene().name == MAIN_MENU_SCENE_NAME;
     }
 
     private void Awake()
@@ -55,7 +54,7 @@ public class SceneManager : MonoBehaviour
         // If, after moving to DontDestroyOnLoad, we detect more than one
         // SceneManager object, that means we are the duplicate one that came after
         // And so should delete ourselves
-        if(GameObject.FindGameObjectsWithTag(_selfTag).Length > 1)
+        if(GameObject.FindGameObjectsWithTag(SELF_TAG).Length > 1)
         {
             DestroyImmediate(gameObject);
         }
@@ -104,7 +103,7 @@ public class SceneManager : MonoBehaviour
         UnityScene.SceneManager.sceneLoaded += deferredMainMenuAction;
 
         // Finally, load MainMenu
-        UnityScene.SceneManager.LoadScene(_mainMenu);
+        UnityScene.SceneManager.LoadScene(MAIN_MENU_SCENE_NAME);
     }
 
     private void loadMatch()
@@ -120,7 +119,7 @@ public class SceneManager : MonoBehaviour
 
     public static void LoadScore()
     {
-        NetworkController.switchNetworkScene(_scoreScene);
+        NetworkController.switchNetworkScene(SCORE_SCENE_NAME);
     }
 
 
@@ -128,17 +127,23 @@ public class SceneManager : MonoBehaviour
     {
         OnSceneLoaded?.Invoke(scene.name);
 
-        if (scene.name == _mainMenu)
+        switch(scene.name)
         {
-            OnMenuLoaded?.Invoke(scene.name);
-        }
-        else if (scene.name == _scoreScene)
-        {
-            OnScoreLoaded?.Invoke();
-        }
-        else
-        {
-            OnMatchLoaded?.Invoke(scene.name);
+            case MAIN_MENU_SCENE_NAME:
+                OnMenuLoaded?.Invoke();
+                break;
+
+            case LOADING_SCENE_NAME:
+                OnLoadingSceneLoaded?.Invoke();
+                break;
+
+            case SCORE_SCENE_NAME:
+                OnScoreLoaded?.Invoke();
+                break;
+
+            default:
+                OnMatchLoaded?.Invoke(scene.name);
+                break;
         }
     }
 }

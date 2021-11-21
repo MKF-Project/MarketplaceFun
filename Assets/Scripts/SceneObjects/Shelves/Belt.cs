@@ -129,24 +129,40 @@ public class Belt : Shelf
                 continue;
             }
 
-            var lengthTraveled = _totalPathLength * item.pathCompletePercent;
-            int currSection = 0;
-            var cumulativeSectionLength = _pathSections[currSection].length;
-            while(lengthTraveled > cumulativeSectionLength)
+            if(GetBeltPositionAtPercent(item.pathCompletePercent, out var newPosition))
             {
-                currSection++;
-                cumulativeSectionLength += _pathSections[currSection].length;
+                item.item.transform.position = newPosition;
+                _itemsInBelt[i] = item;
             }
-
-            var travelInThisSection = lengthTraveled - cumulativeSectionLength + _pathSections[currSection].length;
-            var travelPercentInThisSection = travelInThisSection / _pathSections[currSection].length;
-
-            item.item.transform.position = Vector3.Lerp(_pathSections[currSection].start.transform.position, _pathSections[currSection].end.transform.position, travelPercentInThisSection);
-
-            _itemsInBelt[i] = item;
 
             i++;
         }
+    }
+
+    private bool GetBeltPositionAtPercent(float pathAmount, out Vector3 worldPosition)
+    {
+        if(_pathSections.Count == 0 || pathAmount < 0 || pathAmount > 1)
+        {
+            worldPosition = Vector3.zero;
+            return false;
+        }
+
+        var lengthTraveled = _totalPathLength * pathAmount;
+
+        // Find out which section this percentage corresponds to
+        int currSection = 0;
+        var cumulativeSectionLength = _pathSections[currSection].length;
+        while(lengthTraveled > cumulativeSectionLength)
+        {
+            currSection++;
+            cumulativeSectionLength += _pathSections[currSection].length;
+        }
+
+        var travelInThisSection = lengthTraveled - cumulativeSectionLength + _pathSections[currSection].length;
+        var travelPercentInThisSection = travelInThisSection / _pathSections[currSection].length;
+
+        worldPosition = Vector3.Lerp(_pathSections[currSection].start.transform.position, _pathSections[currSection].end.transform.position, travelPercentInThisSection);
+        return true;
     }
 
     protected override void InteractWithShelf(Player player, Collider interactedTrigger)
@@ -213,8 +229,6 @@ public class Belt : Shelf
         {
             return;
         }
-
-        print($"[{gameObject.name}]: Moving Item {itemID} in belt");
 
         // Get belt item from pool
         BeltItem itemTemplate;

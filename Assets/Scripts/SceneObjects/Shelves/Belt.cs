@@ -96,7 +96,6 @@ public class Belt : Shelf
     {
         StopCoroutine(_exposeNextItemCoroutine);
 
-        ItemGenerator.OnRestocked -= SetNextItemDisplay;
         ItemGenerator.OnDepleted -= HideItemDisplay;
     }
 
@@ -113,8 +112,8 @@ public class Belt : Shelf
 
         if(ItemGenerator != null)
         {
-            ItemGenerator.OnRestocked += SetNextItemDisplay;
             ItemGenerator.OnDepleted += HideItemDisplay;
+            SetNextItemDisplay(ItemGenerator.ItemInStock);
         }
     }
 
@@ -132,6 +131,11 @@ public class Belt : Shelf
             if(previousComplete < StartCurtainPathPercent && item.pathCompletePercent >= StartCurtainPathPercent)
             {
                 _animator.SetTrigger(START_CURTAIN_TRIGGER);
+                if(_displayUpdateRequested)
+                {
+                    _displayUpdateRequested = false;
+                    SetNextItemDisplay(ItemGenerator.ItemInStock);
+                }
             }
 
             // Item has just passed End curtain
@@ -245,6 +249,9 @@ public class Belt : Shelf
 
     private void SendItemOnBelt(ulong itemID)
     {
+        HideItemDisplay();
+        _displayUpdateRequested = true;
+
         if(itemID == Item.NO_ITEMTYPE_CODE)
         {
             return;
@@ -301,21 +308,24 @@ public class Belt : Shelf
         item.item.SetActive(false);
     }
 
+    // Display
+    private bool _displayUpdateRequested = false;
+
     private void SetNextItemDisplay(ulong item)
     {
+        if(item == Item.NO_ITEMTYPE_CODE)
+        {
+            HideItemDisplay();
+            return;
+        }
+
         _itemDisplay.sprite = NetworkItemManager.GetItemPrefabScript(item).UISticker;
         _itemDisplay.color = Color.white;
     }
 
-    // Display
     private void HideItemDisplay()
     {
         _itemDisplay.color = Color.clear;
-    }
-
-    private void IntervalChanged(float before, float after)
-    {
-        _nextItemIntervalWait = new WaitForSeconds(after);
     }
 
     // Waypoints
@@ -346,6 +356,11 @@ public class Belt : Shelf
         }
 
         return res;
+    }
+
+    private void IntervalChanged(float before, float after)
+    {
+        _nextItemIntervalWait = new WaitForSeconds(after);
     }
 
     // RPCs

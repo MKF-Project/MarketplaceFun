@@ -1023,6 +1023,7 @@ MonoBehaviour:
     NetworkTransport: {fileID: 1278010175}
     RegisteredScenes:
     - MainMenu
+    - LoadingScene
     - ItemListTestScene
     - _VerticalSlice_maior
     - _Beta

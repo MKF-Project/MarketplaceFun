@@ -21,11 +21,12 @@ public class ShoppingCartItem : NetworkBehaviour
     public Player Owner { get; private set; } = null;
     internal NetworkVariableULong _ownerID = new NetworkVariableULong(NO_OWNER_ID);
 
-    private int _nextIndex = 0;
-
-    private ulong[] _itemCodes;
-    private bool[] _occupiedPositions;
     private List<GameObject> _itemPositions;
+
+    // List of items needs to be of fixed size
+    // So we keep track of count in addition to capacity
+    private int _itemCount = 0;
+    private ulong[] _itemIDs;
 
     private float _lastCollision = 0;
 
@@ -35,8 +36,7 @@ public class ShoppingCartItem : NetworkBehaviour
     {
         // Items
         _itemPositions = gameObject.FindChildrenWithTag(ITEM_POSITIONS_TAG);
-        _itemCodes = new ulong[_itemPositions.Count];
-        _occupiedPositions = new bool[_itemPositions.Count];
+        _itemIDs = new ulong[_itemPositions.Count];
 
         _ownerID.OnValueChanged += onOwnershipChanged;
     }
@@ -64,7 +64,7 @@ public class ShoppingCartItem : NetworkBehaviour
         }
 
         // Acquire cart when touching it, if it has no owner and already has items inside
-        else if(_ownerID.Value == NO_OWNER_ID && other.gameObject.tag == PLAYER_TAG && _occupiedPositions.Any(pos => pos))
+        else if(_ownerID.Value == NO_OWNER_ID && other.gameObject.tag == PLAYER_TAG && _itemCount > 0)
         {
             var playerScript = other.gameObject.GetComponent<Player>();
             if(playerScript == null || !playerScript.IsOwner)
@@ -90,13 +90,10 @@ public class ShoppingCartItem : NetworkBehaviour
 
             // Update player shopping list when acquiring ownership of a shopping cart
             // for this client's player
-            var shoppingList = Owner.GetComponent<ShoppingList>();
-            for(int i = 0; i < _occupiedPositions.Length; i++)
+            Owner.TryGetComponent(out _shoppingListBuffer);
+            for(int i = 0; i < _itemCount; i++)
             {
-                if(_occupiedPositions[i])
-                {
-                    shoppingList.CheckItem(_itemCodes[i]);
-                }
+                _shoppingListBuffer.CheckItem(_itemIDs[i]);
             }
 
             /*
@@ -114,40 +111,82 @@ public class ShoppingCartItem : NetworkBehaviour
         {
             item.DestroyItem_ClientRpc();
 
-            setNextItem_ClientRpc(item.ItemTypeCode);
-            setNextItem(item.ItemTypeCode);
+            var index = GetItemCartIndex();
+
+            setNextItem_ClientRpc(item.ItemTypeCode, index);
+            setNextItem(item.ItemTypeCode, index);
+
             _lastCollision = Time.unscaledTime;
         }
     }
 
-    private void setNextItem(ulong itemTypeCode)
+    private ShoppingList _shoppingListBuffer;
+    private int GetItemCartIndex()
     {
-        // Destroy previous model
-        _itemPositions[_nextIndex].transform.DestroyAllChildren();
+        if(!IsServer)
+        {
+            return -1;
+        }
+
+        // Insert the item at the end, if we still have space for it
+        if(_itemCount < _itemIDs.Length)
+        {
+            return _itemCount;
+        }
+
+        var preferredItems = _shoppingListBuffer.ItemDictionary.Keys;
+
+        var previouslySeen = new HashSet<ulong>();
+        for(int i = 0; i < _itemCount; i++)
+        {
+            // This item is not part of this player's shopping list
+            if(!preferredItems.Contains(_itemIDs[i]))
+            {
+                return i;
+            }
+
+            // This item is a duplicate of a item on the player's list
+            if(!previouslySeen.Add(_itemIDs[i]))
+            {
+                return i;
+            }
+        }
+
+        return Random.Range(0, _itemCount);
+    }
+
+    private void setNextItem(ulong itemTypeCode, int itemIndex)
+    {
+        // Destroy previous model if it is replacing a previous item
+        if(itemIndex != _itemCount)
+        {
+            _itemPositions[itemIndex].transform.DestroyAllChildren();
+        }
 
         // Update item logic
         if(Owner == NetworkController.SelfPlayer && IsClient)
         {
-            var shoppingList = Owner.GetComponent<ShoppingList>();
-
             // Uncheck player list if this was the only item of this type in the cart
-            if(_itemCodes.Unique(code => code == _itemCodes[_nextIndex]))
+            if(itemIndex != _itemCount && _itemIDs.Unique(code => code == _itemIDs[itemIndex]))
             {
-                shoppingList.UncheckItem(_itemCodes[_nextIndex]);
+                _shoppingListBuffer.UncheckItem(_itemIDs[itemIndex]);
             }
 
-            shoppingList.CheckItem(itemTypeCode);
+            _shoppingListBuffer.CheckItem(itemTypeCode);
             // Add item to player list and check if finished
             /*
-            if(shoppingList.CheckItem(itemTypeCode) && shoppingList.IsListChecked())
+            if(_shoppingListBuffer.CheckItem(itemTypeCode) && _shoppingListBuffer.IsListChecked())
             {
                 Owner.ListComplete();
             }
             */
         }
 
-        _occupiedPositions[_nextIndex] = true;
-        _itemCodes[_nextIndex] = itemTypeCode;
+        _itemIDs[itemIndex] = itemTypeCode;
+        if(itemIndex == _itemCount)
+        {
+            _itemCount++;
+        }
 
         // Create new mesh
         var itemPrefab = NetworkItemManager.NetworkItemPrefabs[itemTypeCode];
@@ -155,14 +194,12 @@ public class ShoppingCartItem : NetworkBehaviour
 
         if(itemVisuals != null)
         {
-            var generatedItem = Instantiate(itemVisuals.gameObject, Vector3.zero, Quaternion.identity, _itemPositions[_nextIndex].transform);
+            var generatedItem = Instantiate(itemVisuals.gameObject, Vector3.zero, Quaternion.identity, _itemPositions[itemIndex].transform);
 
             generatedItem.transform.localPosition = Vector3.zero;
             generatedItem.transform.localRotation = Quaternion.identity;
             generatedItem.transform.localScale = itemVisuals.transform.localScale;
         }
-
-        _nextIndex = (_nextIndex + 1) % _itemPositions.Count;
     }
 
     private void updateCartOwnership(ulong playerID)
@@ -213,11 +250,11 @@ public class ShoppingCartItem : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void setNextItem_ClientRpc(ulong itemTypeCode)
+    private void setNextItem_ClientRpc(ulong itemTypeCode, int itemIndex)
     {
         if(!IsServer)
         {
-            setNextItem(itemTypeCode);
+            setNextItem(itemTypeCode, itemIndex);
         }
     }
 

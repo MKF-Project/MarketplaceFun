@@ -17,8 +17,7 @@ public class ShoppingList : NetworkBehaviour
 
     private int _randomSeed;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _quantityChecked = 0;
         ItemDictionary = new Dictionary<ulong, ShoppingListItem>();

@@ -169,12 +169,12 @@ PrefabInstance:
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHash
-      value: 14418283181073039581
+      value: 4413857150539453974
       objectReference: {fileID: 0}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHashGenerator
-      value: Item_IceCream_Blue
+      value: Item_Popsicle_Green
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

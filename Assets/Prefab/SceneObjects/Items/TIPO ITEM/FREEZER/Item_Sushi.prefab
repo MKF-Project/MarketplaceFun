@@ -183,12 +183,12 @@ PrefabInstance:
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHash
-      value: 14386965838868816775
+      value: 14930577581847142983
       objectReference: {fileID: 0}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHashGenerator
-      value: Item_Steak
+      value: Item_Sushi
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

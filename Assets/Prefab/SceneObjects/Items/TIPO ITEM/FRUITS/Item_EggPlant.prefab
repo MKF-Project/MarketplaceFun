@@ -185,12 +185,12 @@ PrefabInstance:
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHash
-      value: 6210453710773391398
+      value: 11408101324708274713
       objectReference: {fileID: 0}
     - target: {fileID: 5636176568219039418, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: PrefabHashGenerator
-      value: Item_Carrot
+      value: Item_EggPlant
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

@@ -119,17 +119,17 @@ PrefabInstance:
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handRotationOffset.x
-      value: 41.664
+      value: 3.7
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handRotationOffset.y
-      value: -143.866
+      value: -43.9
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handRotationOffset.z
-      value: -13.937
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8366653308701922321, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

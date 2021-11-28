@@ -105,6 +105,51 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1747685760816393902, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2854343218784971386, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -200,12 +245,22 @@ PrefabInstance:
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handPositionOffset.y
-      value: -0.223
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}
       propertyPath: handRotationOffset.z
-      value: -11.427
+      value: 60.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: handRotationOffset.x
+      value: -1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257564386199076653, guid: 6f6d2dd32353c9b43849828fa34e28af,
+        type: 3}
+      propertyPath: handRotationOffset.y
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 8366653308701922321, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

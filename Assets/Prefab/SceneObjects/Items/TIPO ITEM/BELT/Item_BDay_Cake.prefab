@@ -84,7 +84,7 @@ PrefabInstance:
         type: 3}
       propertyPath: UISticker
       value: 
-      objectReference: {fileID: 21300000, guid: 9c1a75e949e113f4da7fa9e2fcaafb31,
+      objectReference: {fileID: 21300000, guid: 2b0897d898a392c43b8d394ab4aaf7f3,
         type: 3}
     - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

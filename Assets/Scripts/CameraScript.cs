@@ -43,6 +43,7 @@ public class CameraScript : MonoBehaviour
                 transform.position = Vector3.zero;
                 transform.rotation = Quaternion.identity;
                 transform.SetParent(playerCameraObject.transform, false);
+                ShowPlayerHead(_currentPlayer);
                 return;
             }
 
@@ -65,7 +66,18 @@ public class CameraScript : MonoBehaviour
     {
         if(_currentPlayer == NetworkController.SelfPlayer)
         {
+            ShowPlayerHead(_currentPlayer);
             Destroy(gameObject);
         }
+    }
+
+    public static void HidePlayerHead(Player player)
+    {
+        // TODO: Implement
+    }
+
+    public static void ShowPlayerHead(Player player)
+    {
+        // TODO: Implement
     }
 }

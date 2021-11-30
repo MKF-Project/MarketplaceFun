@@ -16,6 +16,13 @@ public class CameraScript : MonoBehaviour
     {
         _initalPosition = transform.position;
         _initialRotation = transform.rotation;
+
+        SceneManager.OnSceneLoaded += DetachFromPlayer;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.OnSceneLoaded -= DetachFromPlayer;
     }
 
     private void LateUpdate()
@@ -30,12 +37,6 @@ public class CameraScript : MonoBehaviour
         {
             _currentPlayer = NetworkController.SelfPlayer;
             var playerCameraObject = _currentPlayer.transform.Find(CAMERA_POSITION_NAME).gameObject;
-            #if UNITY_EDITOR
-                if(playerCameraObject == null)
-                {
-                    Debug.LogError($"[{gameObject.name}]: Player ({_currentPlayer.name}) has no Camera placeholder object");
-                }
-            #endif
 
             if(playerCameraObject != null)
             {
@@ -44,6 +45,13 @@ public class CameraScript : MonoBehaviour
                 transform.SetParent(playerCameraObject.transform, false);
                 return;
             }
+
+            #if UNITY_EDITOR
+                else
+                {
+                    Debug.LogError($"[{gameObject.name}]: Player ({_currentPlayer.name}) has no Camera placeholder object");
+                }
+            #endif
         }
 
         // Reset Player variables if no valid Local player was found
@@ -51,5 +59,13 @@ public class CameraScript : MonoBehaviour
 
         transform.position = _initalPosition;
         transform.rotation = _initialRotation;
+    }
+
+    private void DetachFromPlayer(string sceneName)
+    {
+        if(_currentPlayer == NetworkController.SelfPlayer)
+        {
+            Destroy(gameObject);
+        }
     }
 }

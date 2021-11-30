@@ -28,7 +28,7 @@ public class PlayerDisplay : MonoBehaviour
         Material material = ColorManager.Instance.GetColor(color);
         Material[] materials = MeshRenderer.materials;
 
-        materials[0] = material;
+        materials[1] = material;
 
         MeshRenderer.materials = materials;
     }

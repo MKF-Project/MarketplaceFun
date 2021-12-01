@@ -186,6 +186,11 @@ public abstract class PlayerControls : NetworkBehaviour
         _rigidBody.sleepThreshold = 0; // Since this is the player object, we never sleep it's rigidbody
         _rigidBody.useGravity = false;
 
+        // Set the player center of mass manually,
+        // so that it doesn't change when adding/removing cart colliders
+        var collider = GetComponent<CapsuleCollider>();
+        _rigidBody.centerOfMass = collider.center;
+
         PlayerGravity = _gravity;
 
         _currentSpeed = MoveSpeed;
@@ -209,6 +214,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
     private IEnumerator switchControlSchemeCoroutine()
     {
+        _interactableBuffer?.TriggerLookExit(_playerScript, _currentLookingCollider);
+
         yield return Utils.EndOfFrameWait;
 
         // Store currentDirection from the current active control script

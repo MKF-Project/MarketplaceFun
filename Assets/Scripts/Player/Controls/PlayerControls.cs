@@ -209,6 +209,8 @@ public abstract class PlayerControls : NetworkBehaviour
 
     private IEnumerator switchControlSchemeCoroutine()
     {
+        _interactableBuffer?.TriggerLookExit(_playerScript, _currentLookingCollider);
+
         yield return Utils.EndOfFrameWait;
 
         // Store currentDirection from the current active control script

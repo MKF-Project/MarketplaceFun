@@ -16,13 +16,6 @@ public class CameraScript : MonoBehaviour
     {
         _initalPosition = transform.position;
         _initialRotation = transform.rotation;
-
-        SceneManager.OnSceneLoaded += DetachFromPlayer;
-    }
-
-    private void OnDestroy()
-    {
-        SceneManager.OnSceneLoaded -= DetachFromPlayer;
     }
 
     private void LateUpdate()
@@ -40,10 +33,14 @@ public class CameraScript : MonoBehaviour
 
             if(playerCameraObject != null)
             {
+                // Clear older cameras that might've been present on the player
+                playerCameraObject.DestroyAllChildren();
+
                 transform.position = Vector3.zero;
                 transform.rotation = Quaternion.identity;
                 transform.SetParent(playerCameraObject.transform, false);
-                ShowPlayerHead(_currentPlayer);
+
+                HidePlayerHead(_currentPlayer);
                 return;
             }
 
@@ -60,15 +57,6 @@ public class CameraScript : MonoBehaviour
 
         transform.position = _initalPosition;
         transform.rotation = _initialRotation;
-    }
-
-    private void DetachFromPlayer(string sceneName)
-    {
-        if(_currentPlayer == NetworkController.SelfPlayer)
-        {
-            ShowPlayerHead(_currentPlayer);
-            Destroy(gameObject);
-        }
     }
 
     public static void HidePlayerHead(Player player)

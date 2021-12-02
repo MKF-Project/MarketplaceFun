@@ -1375,6 +1375,27 @@ MonoBehaviour:
     Id: 0
     ScorableAction: {fileID: 492374440104628429, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
       type: 3}
+  - Type: AtTheLimit
+    Points: 2
+    Id: 0
+    ScorableAction: {fileID: 288981495909586724, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
+      type: 3}
+  - Type: SoloWinner
+    Points: 3
+    Id: 0
+    ScorableAction: {fileID: 0}
+  - Type: GameChanger
+    Points: 4
+    Id: 0
+    ScorableAction: {fileID: 0}
+  - Type: FirstToCheckOut
+    Points: 1
+    Id: 0
+    ScorableAction: {fileID: 0}
+  - Type: Teste
+    Points: 1
+    Id: 0
+    ScorableAction: {fileID: 0}
 --- !u!1001 &1961909834
 PrefabInstance:
   m_ObjectHideFlags: 0

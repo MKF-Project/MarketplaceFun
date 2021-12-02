@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MLAPI;
@@ -48,7 +49,7 @@ public class ScoreCanvas : MonoBehaviour
         _points[index].text = "" + points;
     }
     
-    public void SetScoreDescription(int index, int descriptiveText)
+    public void SetScoreDescription(int index, String descriptiveText)
     {
         _descriptiveTexts[index].text = "" + descriptiveText;
     }

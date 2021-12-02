@@ -13,7 +13,7 @@ public class LobbyPositionController : NetworkBehaviour
 
     public Dictionary<ulong, int> playerPositions;
 
-    public Vector3 OwnerPosition;
+    //public Vector3 OwnerPosition;
     
     // Start is called before the first frame update
     public override void NetworkStart()

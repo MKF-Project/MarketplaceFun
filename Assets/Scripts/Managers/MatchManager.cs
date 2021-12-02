@@ -19,8 +19,12 @@ public class MatchManager : NetworkBehaviour
     private float _startTime;
     private bool _timeStarted;
     private bool _matchEnded;
+
+    private int _clientsFished;
     
-    private NetworkVariableFloat networkTimeSpent = new NetworkVariableFloat(
+    public int SecondsThresholdToScore;
+
+    public NetworkVariableFloat NetworkTimeSpent = new NetworkVariableFloat(
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
@@ -41,6 +45,8 @@ public class MatchManager : NetworkBehaviour
 
     public void Start()
     {
+        _clientsFished = 0;
+        _matchEnded = false;
         _timeStarted = false;
         MatchTime = MatchTime * 60; 
         _clockText = GameObject.FindGameObjectWithTag("MatchCanvas").GetComponentInChildren<Text>();
@@ -53,7 +59,7 @@ public class MatchManager : NetworkBehaviour
             _scoreController = GameObject.FindGameObjectWithTag(SCORE_CONTROLLER_TAG).GetComponent<ScoreController>();
         }
 
-        networkTimeSpent.OnValueChanged = DisplayTime;
+        NetworkTimeSpent.OnValueChanged = DisplayTime;
 
     }
     private void OnDestroy()
@@ -77,11 +83,20 @@ public class MatchManager : NetworkBehaviour
             {
                 float timeSpent = Time.time - _startTime;
                 int secondsLeft = (int) (MatchTime - timeSpent) % 60;
-                int networkSeconds = (int) (MatchTime - networkTimeSpent.Value) % 60;
+                int networkSeconds = (int) (MatchTime - NetworkTimeSpent.Value) % 60;
                 if (!secondsLeft.Equals(networkSeconds))
                 {
-                    networkTimeSpent.Value = timeSpent;
+                    NetworkTimeSpent.Value = timeSpent;
                 }
+            }
+
+            if (_matchEnded)
+            {
+                if (_clientsFished == NetworkManager.ConnectedClientsList.Count)
+                {
+                    NetworkController.switchNetworkScene(SCORE_SCENE_NAME);
+                }
+                
             }
         }
     }
@@ -111,13 +126,15 @@ public class MatchManager : NetworkBehaviour
             OnMatchExit?.Invoke();
             _clockText.text = "";
 
+            if (IsClient)
+            {
+                WarnServerMatchEnd_ServerRpc();
+            }
+
             if (IsServer)
             {
                 EndMatch_ClientRpc();
                 _scoreController.EndMatch();
-                NetworkController.switchNetworkScene(SCORE_SCENE_NAME);
-                //Use ScoreAuditor
-                //Change to ScoreScene
             }
 
             Debug.Log("Match Ended");
@@ -129,7 +146,16 @@ public class MatchManager : NetworkBehaviour
     public void EndMatch_ClientRpc()
     {
         EndMatch();
+        
     }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void WarnServerMatchEnd_ServerRpc()
+    {
+        _clientsFished += 1;
+    }
+    
 
     [ServerRpc(RequireOwnership = false)]
     public void CheckOutPlayer_ServerRpc(ulong playerId)
@@ -140,6 +166,12 @@ public class MatchManager : NetworkBehaviour
             {
                 ListCompletedPlayers.Add(playerId);
                 WarnPlayerCheckOut_ClientRpc(playerId);
+                GameObject playerGameObject = NetworkManager.ConnectedClients[playerId].PlayerObject.gameObject;
+                playerGameObject.GetComponent<CheckOut>().ScoreCheckOut_OnlyServer();
+                if (SecondsThresholdToScore > NetworkTimeSpent.Value)
+                {
+                    playerGameObject.GetComponent<CheckedOutAtTheLimit>().ScoreAtTheLimit_OnlyServer();
+                }
             }
         }
     }

@@ -8,9 +8,9 @@ public enum ShelfType
 {
     Standard = 0,
     Freezer  = 1,
-    Basket   = 2,
+    Fruit    = 2,
     Pallet   = 3,
-    Display  = 4
+    Belt     = 4
 }
 
 public class Shelf : NetworkBehaviour
@@ -22,6 +22,8 @@ public class Shelf : NetworkBehaviour
     [SerializeField]
     internal ItemGenerator _itemGenerator = null;
 
+    // Note: ItemGenerator is only initialized AFTER NetworkStart()
+    // Before that (on Awake, for example), it'll be null
     private ItemGenerator _itemGeneratorInternal = null;
     public ItemGenerator ItemGenerator
     {
@@ -51,8 +53,6 @@ public class Shelf : NetworkBehaviour
         }
     }
 
-    protected Player _playerBuffer;
-
     protected ulong _lastItemStocked = Item.NO_ITEMTYPE_CODE;
 
     protected Action<Item> _itemAction = null;
@@ -65,7 +65,7 @@ public class Shelf : NetworkBehaviour
     protected virtual void Awake()
     {
         _interactScript = gameObject.GetComponentInChildren<Interactable>();
-        _itemGroupVisuals = transform.Find(ITEM_GROUP_VISUALS_NAME).gameObject;
+        _itemGroupVisuals = transform.Find(ITEM_GROUP_VISUALS_NAME)?.gameObject;
 
         if(_interactScript == null)
         {
@@ -103,34 +103,34 @@ public class Shelf : NetworkBehaviour
         ItemGenerator = null;
     }
 
-    protected virtual void ShowButtonPrompt(GameObject player)
+    protected virtual void ShowButtonPrompt(Player player, Collider enteredTrigger)
     {
         if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {
             return;
         }
 
-        if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
+        if(player.CanInteract)
         {
             _interactScript.InteractUI.SetActive(true);
         }
     }
 
-    protected virtual void HideButtonPrompt(GameObject player)
+    protected virtual void HideButtonPrompt(Player player, Collider exitedTrigger)
     {
         _interactScript.InteractUI.SetActive(false);
     }
 
-    protected virtual void InteractWithShelf(GameObject player)
+    protected virtual void InteractWithShelf(Player player, Collider interactedTrigger)
     {
         if(ItemGenerator == null || ItemGenerator.IsDepleted)
         {
             return;
         }
 
-        if(player.TryGetComponent<Player>(out _playerBuffer) && _playerBuffer.CanInteract)
+        if(player.CanInteract)
         {
-            ItemGenerator.GiveItemToPlayer(_playerBuffer);
+            ItemGenerator.GiveItemToPlayer(player);
         }
     }
 
@@ -169,7 +169,7 @@ public class Shelf : NetworkBehaviour
     }
 
     // Editor Utils
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         if(_itemGenerator != null)
         {

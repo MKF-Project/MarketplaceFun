@@ -104,8 +104,7 @@ public class Player : NetworkBehaviour
 
         if(newItemType != Item.NO_ITEMTYPE_CODE)
         {
-            var itemPrefab = NetworkItemManager.NetworkItemPrefabs[newItemType];
-            _heldItemVisuals = itemPrefab?.GetComponent<Item>()?.ItemVisuals;
+            _heldItemVisuals = NetworkItemManager.GetItemPrefabVisuals(newItemType);
 
             if(_heldItemVisuals != null)
             {
@@ -221,9 +220,9 @@ public class Player : NetworkBehaviour
         }
 
         HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
-        
+
         HeldItem = null;
-        
+
         IsDrivingCart = false;
     }
 }

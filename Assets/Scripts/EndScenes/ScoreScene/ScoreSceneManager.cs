@@ -9,6 +9,11 @@ using UnityEngine;
 
 public class ScoreSceneManager : NetworkBehaviour
 {
+    public float FirstPositionY;
+
+    private const float markerScale = 0.3f;
+
+    private bool _scoreFinished;
     
     private ScoreCanvas _scoreCanvas;
 
@@ -18,7 +23,8 @@ public class ScoreSceneManager : NetworkBehaviour
     
     private const string MARKER_CONTROLLER_TAG = "PointMarkerController";
 
-
+    public Transform Camera;
+    
     public int _playersReady;
 
     private ScoreController _scoreController;
@@ -35,31 +41,26 @@ public class ScoreSceneManager : NetworkBehaviour
     );
     public void Awake()
     {
-
+        NetworkController.SelfPlayer.GetComponent<LobbyPosition>().EnterOnScore(Camera.position);
         
-        
-        //_scoreCanvas = GameObject.FindGameObjectWithTag(SCORE_CANVAS_TAG).GetComponent<ScoreCanvas>();
+        _scoreCanvas = GameObject.FindGameObjectWithTag(SCORE_CANVAS_TAG).GetComponent<ScoreCanvas>();
         _pointMarkerController = GameObject.FindGameObjectWithTag(MARKER_CONTROLLER_TAG).GetComponent<PointMarkerController>();
 
         if (IsServer)
         {
+            //NetworkController.OnOtherClientDisconnected +=
+            _scoreFinished = false;
             _playersReady = 1;
             _scoreController = GameObject.FindGameObjectWithTag("ScoreController").GetComponent<ScoreController>();
             scoreList.Value = _scoreController.GetSerializedScore();
-            //PopulateTextOnCanvas();
             StartShowPoints();
-            //_scoreCanvas.ShowButtonStart();
+            _scoreCanvas.ShowButtonStart();
             
         }
 
         if (IsClient)
         {
-            //scoreList.OnValueChanged += PopulateTextOnCanvas;
             scoreList.OnValueChanged += StartShowPoints;
-            if (!IsHost)
-            {
-                //_scoreCanvas.ShowButtonReady();
-            }
         }
 
     }
@@ -82,84 +83,95 @@ public class ScoreSceneManager : NetworkBehaviour
     {
         if (IsServer )
         {
-            if (_playersReady == NetworkManager.ConnectedClientsList.Count)
+            if (_playersReady == NetworkManager.ConnectedClientsList.Count & _scoreFinished)
             {
-               // _scoreCanvas.ActivateButtonStart();
+                _scoreCanvas.ActivateButtonStart();
             }
         }
     }
 
-    public void PopulateTextOnCanvas(SerializedScorePointList prev, SerializedScorePointList pos)
-    {
-        PopulateTextOnCanvas();
-        
-    }
-    
-    
-    
-    public void PopulateTextOnCanvas()
-    {
-        ScorePoints[] scorePointsList = scoreList.Value.Array;
-        foreach (ScorePoints scorePoints in scorePointsList)
-        {
-            int points = scorePoints.Points;
-            
-            int playerNumber = NetworkController.GetPlayerByID(scorePoints.PlayerId).GetComponent<PlayerInfo>().PlayerData.Color;
-            Debug.Log("Finalizou o player " + scorePoints.PlayerId + " com a cor " + playerNumber + " e pontuação " +  points);
-            _scoreCanvas.SetScorePoints(playerNumber -1 , points);
-            String description = "";
-            foreach (DescriptivePoints lastMatchPoint in scorePoints.LastMatchPoints)
-            {
-                String scoreTypeName = ScoreConfig.ScoreTypeDictionary[lastMatchPoint.ScoreTypeId].Type;
-                description += "+" + lastMatchPoint.Points + " " + scoreTypeName + "    ";
-            }
-            _scoreCanvas.SetScoreDescription(playerNumber -1, description);
-        }
-        
-        if (IsServer)
-        {
-            _scoreController.MoveToScoresToMainList();
-        }
-    }
     
     private void StartShowPoints()
     {
-        StartCoroutine(nameof(ShowMatchPoints));
+        GenerateBeginMarkers();
+        StartCoroutine(nameof(GenerateMarkersForPointType));
     }
 
     private void StartShowPoints(SerializedScorePointList prev, SerializedScorePointList pos)
     {
-        StartCoroutine(nameof(ShowMatchPoints));
+        GenerateBeginMarkers();
+        StartCoroutine(nameof(GenerateMarkersForPointType));
     }
-    
-    private IEnumerator ShowMatchPoints()
-    {
-        foreach (int scoreTypeId in ScoreConfig.ScoreTypeDictionary.Keys)
-        {
-            GenerateMarkersForPointType(scoreTypeId);
-            yield return new WaitForSeconds(.3f);
-        }
-    }
-    
 
-    public void GenerateMarkersForPointType(int scoreTypeId)
+    private IEnumerator GenerateMarkersForPointType()
     {
         ScorePoints[] scorePointsList = scoreList.Value.Array;
+        Dictionary<ulong, Player> localPlayers = NetworkController.GetLocalPlayers();
 
-        foreach (ScorePoints scorePoint in scorePointsList)
+        foreach (int scoreTypeId in ScoreConfig.ScoreTypeDictionary.Keys)
         {
-            foreach (DescriptivePoints descriptivePoints in scorePoint.LastMatchPoints)
+            yield return new WaitForSeconds(.5f);
+            foreach (ScorePoints scorePoint in scorePointsList)
             {
-                if (descriptivePoints.ScoreTypeId == scoreTypeId)
+                foreach (DescriptivePoints descriptivePoints in scorePoint.LastMatchPoints)
                 {
-                    int playerIndex = NetworkController.GetPlayerByID(scorePoint.PlayerId).GetComponent<PlayerInfo>()
-                        .PlayerData.Color;
-                    _pointMarkerController.SpawnMarkerAt(playerIndex, descriptivePoints.ScoreTypeId,descriptivePoints.Points);
+                    if (descriptivePoints.ScoreTypeId == scoreTypeId)
+                    {
+                        int playerIndex = localPlayers[scorePoint.PlayerId]
+                            .GetComponent<PlayerInfo>()
+                            .PlayerData.Color;
+                        Debug.Log("Generated " + descriptivePoints.ScoreTypeId + " Points:  " + descriptivePoints.Points + " --- at " + playerIndex);
+
+                        
+                        
+                        _pointMarkerController.SpawnMarker(playerIndex-1, descriptivePoints.ScoreTypeId, descriptivePoints.Points);
+                        
+                        if (IsServer)
+                        {
+                            _scoreController.AddToMainList(scorePoint.PlayerId, descriptivePoints);
+                        }
+                        
+                        yield return new WaitForSeconds(.2f);
+                    }
+                    
                 }
             }
         }
+        
+        if (IsClient & !IsHost)
+        {
+            _scoreCanvas.ShowButtonReady();
+        }
+
+        if (IsServer)
+        {
+            _scoreController.MoveToScoresToMainList();
+            _scoreFinished = true;
+        }
+
     }
-    
+
+    private void GenerateBeginMarkers()
+    {
+        ScorePoints[] scorePointsList = scoreList.Value.Array;
+
+        float nextPositionY = 0;
+        
+        foreach (ScorePoints scorePoint in scorePointsList)
+        {
+            int playerIndex = NetworkController.GetPlayerByID(scorePoint.PlayerId).GetComponent<PlayerInfo>().PlayerData.Color; 
+            foreach (DescriptivePoints descriptivePoints in scorePoint.PlayerPoints)
+            {
+                Debug.Log("Begin Generated " + descriptivePoints.ScoreTypeId + " Points:  " + descriptivePoints.Points + " --- at " + playerIndex);
+                float halfMarkerScale = (markerScale + 0.1f * descriptivePoints.Points) / 2;
+                nextPositionY += halfMarkerScale;
+                _pointMarkerController.SpawnMarkerAt(playerIndex-1, descriptivePoints.ScoreTypeId, descriptivePoints.Points, FirstPositionY + nextPositionY);
+                nextPositionY += halfMarkerScale;
+            }
+        }
+    }
+
+
 
     public void IAmReady()
     {
@@ -169,6 +181,11 @@ public class ScoreSceneManager : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void PlayerIsReady_ServerRpc()
+    {
+        _playersReady += 1;
+    }
+    
+    public void PlayerDisconnectedTurnIsReady()
     {
         _playersReady += 1;
     }

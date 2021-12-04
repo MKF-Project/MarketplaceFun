@@ -11,6 +11,8 @@ public class Player : NetworkBehaviour
 {
     //public bool IsListComplete;
 
+    
+    
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
 
@@ -79,6 +81,8 @@ public class Player : NetworkBehaviour
         HeldItemType.OnValueChanged = OnHeldItemChange;
         MatchManager.OnMatchExit += PlayerReset;
     }
+
+
 
     public delegate void OnBeforeDestroyDelegate(Player player);
     public event OnBeforeDestroyDelegate OnBeforeDestroy;
@@ -187,14 +191,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-    /*
-    public void ListComplete()
-    {
-        MatchMessages.Instance.EditMessage("Your list is complete");
-        MatchMessages.Instance.ShowMessage();
-        IsListComplete = true;
-    }
-    */
 
     public void Teleport(Vector3 position, Vector3 eulerAngles = default)
     {

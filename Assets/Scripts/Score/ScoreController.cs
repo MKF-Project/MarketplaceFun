@@ -163,8 +163,13 @@ public class ScoreController : MonoBehaviour
     {
         foreach (ulong playerId in _playerPoints.Keys)
         {
-            _playerPoints[playerId].MoveToScoresToMainList();
+            _playerPoints[playerId].ClearLastMatchPoints();
         }
+    }
+
+    public void AddToMainList(ulong playerId, DescriptivePoints descriptivePoints)
+    {
+        _playerPoints[playerId].PlayerPoints.Add(descriptivePoints);
     }
 
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
@@ -172,7 +177,7 @@ public class ScoreController : MonoBehaviour
     private void AdicionaParaTeste()
     {
         List<DescriptivePoints> descriptivePointsList = new List<DescriptivePoints>();
-        DescriptivePoints descriptivePoints = new DescriptivePoints(0, 5);
+        DescriptivePoints descriptivePoints = new DescriptivePoints(1, 5);
         descriptivePointsList.Add(descriptivePoints);
 
         AddPointsToPlayer(0, 5, descriptivePointsList);

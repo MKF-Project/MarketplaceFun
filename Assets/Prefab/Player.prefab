@@ -473,6 +473,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0399195b6e53abe449313461fad5aabb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HandTransform: {fileID: 3136341188997947409}
+  HandPosition: {x: 0, y: 0, z: 0}
   IsDrivingCart: 0
 --- !u!114 &3284909891683801097
 MonoBehaviour:
@@ -537,6 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01f449eb92d20c841a59ed96937c6b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isOnScore: 0
 --- !u!114 &-6045655609219840054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,11 +619,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1fe3d7452b5a6468c031b616f7abb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Position1: {x: -1, y: 0.2, z: 0}
-  Position2: {x: -3, y: 0.2, z: 0}
+  Position1: {x: -3, y: 0.2, z: 0}
+  Position2: {x: -1, y: 0.2, z: 0}
   Position3: {x: 1, y: 0.2, z: 0}
   Position4: {x: 3, y: 0.2, z: 0}
-  OwnerPosition: {x: -1, y: 0.2, z: 0}
 --- !u!114 &-2014535450862663308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -852,6 +854,12 @@ PrefabInstance:
 --- !u!4 &5337645767089002945 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2783200272332627278, guid: d2f345f07aa76474a8ff992427135a55,
+    type: 3}
+  m_PrefabInstance: {fileID: 7821848124420064399}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3136341188997947409 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5118988436916348062, guid: d2f345f07aa76474a8ff992427135a55,
     type: 3}
   m_PrefabInstance: {fileID: 7821848124420064399}
   m_PrefabAsset: {fileID: 0}

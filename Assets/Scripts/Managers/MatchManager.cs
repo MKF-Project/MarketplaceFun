@@ -125,7 +125,7 @@ public class MatchManager : NetworkBehaviour
             _matchEnded = true;
             OnMatchExit?.Invoke();
             _clockText.text = "";
-
+            InputController.RequestMenuControlsSwitch();
             if (IsClient)
             {
                 WarnServerMatchEnd_ServerRpc();

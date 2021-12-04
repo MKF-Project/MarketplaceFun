@@ -11,6 +11,7 @@
           <e p="DeferredInteractable.cs" t="Include" />
           <e p="EndScenes" t="Include">
             <e p="ScoreScene" t="Include">
+              <e p="CameraSwitch.cs" t="Include" />
               <e p="PointMarker" t="Include">
                 <e p="PointMarker.cs" t="Include" />
                 <e p="PointMarkerController.cs" t="Include" />
@@ -107,6 +108,7 @@
           <e p="SceneObjects" t="Include">
             <e p="Barrier.cs" t="Include" />
             <e p="Cashier.cs" t="Include" />
+            <e p="DestroyOnChangeScene.cs" t="Include" />
             <e p="Shelves" t="Include">
               <e p="Belt.cs" t="Include" />
               <e p="Freezer.cs" t="Include" />

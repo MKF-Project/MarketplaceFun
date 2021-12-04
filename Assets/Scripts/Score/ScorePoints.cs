@@ -21,9 +21,9 @@ public struct ScorePoints : INetworkSerializable
         LastMatchPoints = new List<DescriptivePoints>();
     }
 
-    public void MoveToScoresToMainList()
+    public void ClearLastMatchPoints()
     {
-        PlayerPoints.AddRange(LastMatchPoints);
+        //PlayerPoints.AddRange(LastMatchPoints);
         LastMatchPoints.Clear();
     }
 
@@ -32,7 +32,14 @@ public struct ScorePoints : INetworkSerializable
         serializer.Serialize(ref PlayerId);
         serializer.Serialize(ref Points);
         serializer.Serialize(ref LostCounter);
-        
+
+        SerializeLastMatchPoints(serializer);
+        SerializePlayerPoints(serializer);
+
+    }
+
+    private void SerializeLastMatchPoints(NetworkSerializer serializer)
+    {
         // Length
         int length = 0;
         DescriptivePoints[] Array = new DescriptivePoints[1];
@@ -59,6 +66,36 @@ public struct ScorePoints : INetworkSerializable
         {
             LastMatchPoints = Array.ToList();
         }
-        
     }
+    
+    private void SerializePlayerPoints(NetworkSerializer serializer)
+    {
+        // Length
+        int length = 0;
+        DescriptivePoints[] Array = new DescriptivePoints[1];
+        if (!serializer.IsReading)
+        {
+            Array = PlayerPoints.ToArray();
+            length = Array.Length;
+        }
+
+        serializer.Serialize(ref length);
+
+        // Array
+        if (serializer.IsReading)
+        {
+            Array = new DescriptivePoints[length];
+        }
+
+        for (int n = 0; n < length; ++n)
+        {
+            Array[n].NetworkSerialize(serializer);
+        }
+        
+        if (serializer.IsReading)
+        {
+            PlayerPoints = Array.ToList();
+        }
+    }
+    
 }

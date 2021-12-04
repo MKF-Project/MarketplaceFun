@@ -5,8 +5,6 @@ using UnityEngine;
 public class PointMarkerController : MonoBehaviour
 {
     private const string MARKER_SPAWNER_TAG = "PointMarkerSpawner";
-
-    public Camera MainScoreCamera;
     
     private List<PointMarkerSpawner> _pointMarkerSpawners;
 
@@ -16,8 +14,7 @@ public class PointMarkerController : MonoBehaviour
 
     public void Awake()
     {
-        Camera.current.enabled = false;
-        MainScoreCamera.enabled = true;
+
         
         _pointMarkerSpawners = new List<PointMarkerSpawner>();
         foreach (GameObject child in gameObject.FindChildrenWithTag(MARKER_SPAWNER_TAG))
@@ -27,8 +24,19 @@ public class PointMarkerController : MonoBehaviour
 
     }
 
-    public void SpawnMarkerAt(int player, int pointType, int pointValue)
+    public void SpawnMarker(int player, int pointType, int pointValue)
     {
-        _pointMarkerSpawners[player].Spawn(pointType,pointValue);
+        _pointMarkerSpawners[player].Spawn(pointType, pointValue);
+    }
+    
+    public void SpawnMarkerAt(int player, int pointType, int pointValue, float positionY)
+    {
+        
+        _pointMarkerSpawners[player].Spawn(pointType, pointValue, positionY);
+    }
+    
+    public void SpawnMarkerAt(int player, int pointType, int pointValue, Vector3 position)
+    {
+        _pointMarkerSpawners[player].Spawn(pointType, pointValue, position);
     }
 }

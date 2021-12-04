@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class ScoreSceneManager_old : NetworkBehaviour
 {
-    
+    /*
     private ScoreCanvas _scoreCanvas;
 
     private const string SCORE_CANVAS_TAG = "ScoreCanvas";
@@ -137,4 +137,5 @@ public class ScoreSceneManager_old : NetworkBehaviour
         NetworkController.switchNetworkScene(WIN_SCENE_NAME);
     }
 
+*/
 }

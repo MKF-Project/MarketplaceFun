@@ -38,6 +38,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/_MilestoneBeta.unity
     guid: 99506e30285dec345a2de0cfb40745b5
+  - enabled: 1
+    path: Assets/Scenes/WinScene.unity
+    guid: a0f14cc5b5248214ca9b1a912eac582a
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 2e70073df21b80344a023973ac0c0eb9,
       type: 2}

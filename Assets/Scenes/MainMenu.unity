@@ -1370,32 +1370,39 @@ MonoBehaviour:
     Id: 0
     ScorableAction: {fileID: 162437846829725900, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
       type: 3}
+    ScoreColor: {fileID: 2100000, guid: f27b555ac63aaac4fae197c4047f049d, type: 2}
   - Type: CompleteList
     Points: 5
     Id: 0
     ScorableAction: {fileID: 492374440104628429, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
       type: 3}
+    ScoreColor: {fileID: 2100000, guid: 1845c6e488453b94b94ce6b27cbb2246, type: 2}
   - Type: AtTheLimit
     Points: 2
     Id: 0
     ScorableAction: {fileID: 288981495909586724, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
       type: 3}
+    ScoreColor: {fileID: 2100000, guid: 6cd198b01ea11094b89f1fe65baf3578, type: 2}
   - Type: SoloWinner
     Points: 3
     Id: 0
     ScorableAction: {fileID: 0}
+    ScoreColor: {fileID: 2100000, guid: 636310bce82b9874faf3c942c96664ef, type: 2}
   - Type: GameChanger
     Points: 4
     Id: 0
     ScorableAction: {fileID: 0}
+    ScoreColor: {fileID: 2100000, guid: e3f5bd1ce8103df44aa5e001893cf785, type: 2}
   - Type: FirstToCheckOut
     Points: 1
     Id: 0
     ScorableAction: {fileID: 0}
+    ScoreColor: {fileID: 2100000, guid: 0034d5d69d4ee2840af040a2b4bd508c, type: 2}
   - Type: Teste
     Points: 1
     Id: 0
     ScorableAction: {fileID: 0}
+    ScoreColor: {fileID: 2100000, guid: 95821979916067f42a16562664fc84ce, type: 2}
 --- !u!1001 &1961909834
 PrefabInstance:
   m_ObjectHideFlags: 0

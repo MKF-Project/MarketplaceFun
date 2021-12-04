@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 5971755897877414076}
   - component: {fileID: 5627006724775332899}
   - component: {fileID: 7603711061499481325}
+  - component: {fileID: 2761266514714342867}
   m_Layer: 0
   m_Name: Expositor L_AMARELO02
   m_TagString: Untagged
@@ -111,3 +112,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &2761266514714342867
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6564163986164677710}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.52635324, y: 0.52635306, z: 1.9999998}
+  m_Center: {x: -0.23682338, y: -0.2631765, z: 1.0000046}

@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 761233511966389401}
   - component: {fileID: 8048868212397252360}
   - component: {fileID: 6499823219369038457}
+  - component: {fileID: 7947884082245192957}
   m_Layer: 0
   m_Name: Expositor L_VERDE02
   m_TagString: Untagged
@@ -111,3 +112,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &7947884082245192957
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5078317878459078546}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5189886, y: 0.526353, z: 1.9999998}
+  m_Center: {x: -0.2405057, y: -0.26317653, z: 1.0000042}

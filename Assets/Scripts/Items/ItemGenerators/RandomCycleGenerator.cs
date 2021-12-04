@@ -19,8 +19,8 @@ public class RandomCycleGenerator : ItemGenerator
         0
     );
 
-    public override ulong ItemInStock => ItemPool[_randomIndex.Value];
-    public override bool IsDepleted => false;
+    public override ulong RequestItemInStock(Shelf shelf) => ItemPool[_randomIndex.Value];
+    public override bool RequestIsDepleted(Shelf shelf) => false;
 
     protected override void Awake()
     {
@@ -40,9 +40,9 @@ public class RandomCycleGenerator : ItemGenerator
         _randomIndex.OnValueChanged = OnItemShuffle;
     }
 
-    public override ulong TakeItem()
+    public override ulong TakeItem(Shelf shelf)
     {
-        var itemTaken = base.TakeItem();
+        var itemTaken = base.TakeItem(shelf);
         if(itemTaken != Item.NO_ITEMTYPE_CODE)
         {
             UpdateRandomIndex_ServerRpc();

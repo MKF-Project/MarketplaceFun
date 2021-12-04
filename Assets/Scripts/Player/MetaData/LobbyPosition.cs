@@ -7,7 +7,7 @@ public class LobbyPosition : NetworkBehaviour
 {
     private bool _isOnLobby;
     private Vector3 _lobbyPosition;
-    public bool _isOnScore;
+    private bool _isOnScore;
     private Vector3 _lookAt;
 
     
@@ -56,7 +56,6 @@ public class LobbyPosition : NetworkBehaviour
     {
         _isOnScore = true;
         _isOnLobby = true;
-        //_lookAt = cameraPosition;
-        //transform.LookAt(_lookAt);
+
     }
 }

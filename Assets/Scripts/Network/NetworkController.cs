@@ -273,6 +273,11 @@ public class NetworkController : MonoBehaviour
         return _instance._netManager.ConnectedClients[playerID]?.PlayerObject?.GetComponent<Player>();
     }
 
+    public static Dictionary<ulong, Player> GetLocalPlayers()
+    {
+        return _instance._localPlayers;
+    }
+
     public static int NumberOfClients => _instance._netManager.ConnectedClientsList.Count;
 
     public static IEnumerable<ulong> getClientIDs()

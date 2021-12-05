@@ -38,13 +38,21 @@ public class CheckOut : ScorableAction
     public void ConfirmCheckOut()
     {
         _alreadyCheckOut = true;
-        ScoreCheckOut_ServerRpc();
+        //ScoreCheckOut_ServerRpc();
     }
 
     [ServerRpc]
     public void ScoreCheckOut_ServerRpc()
     {
         _playerScore.ScoreAction(_scoreType);
+    }
+    
+    public void ScoreCheckOut_OnlyServer()
+    {
+        if (IsServer)
+        {
+            _playerScore.ScoreAction(_scoreType);
+        }
     }
 
     public void ResetPlayer()

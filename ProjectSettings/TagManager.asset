@@ -24,6 +24,9 @@ TagManager:
   - WinCanvas
   - PlayerModel
   - DescriptivePointText
+  - ItensSlotsPanel
+  - PointMarkerController
+  - PointMarkerSpawner
   layers:
   - Default
   - TransparentFX

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using MLAPI;
 
 public enum ShelfType
@@ -55,7 +52,7 @@ public class Shelf : NetworkBehaviour
 
     protected ulong _lastItemStocked = Item.NO_ITEMTYPE_CODE;
 
-    protected Action<Item> _itemAction = null;
+    protected System.Action<Item> _itemAction = null;
     protected Interactable _interactScript = null;
 
     protected GameObject _itemGroupVisuals;
@@ -91,6 +88,11 @@ public class Shelf : NetworkBehaviour
 
     protected virtual void OnDestroy()
     {
+        if (IsClient)
+        {
+            Debug.Log("Vou me Destroir");
+        }
+
         if(_interactScript == null)
         {
             return;
@@ -101,6 +103,8 @@ public class Shelf : NetworkBehaviour
         _interactScript.OnInteract  -= InteractWithShelf;
 
         ItemGenerator = null;
+        
+        
     }
 
     protected virtual void ShowButtonPrompt(Player player, Collider enteredTrigger)

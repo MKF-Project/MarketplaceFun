@@ -86,6 +86,14 @@ public abstract class ItemGenerator : NetworkBehaviour
         ItemPool = new List<ulong>(_itemPool.Count);
         for(int i = 0; i < _itemPool.Count; i++)
         {
+            if (_itemPool[i] == null)
+            {
+                #if UNITY_EDITOR
+                    Debug.LogWarning($"[{gameObject.name}/{nameof(ItemGenerator)}]: Item #{i} in Pool is null. Skipping...");
+                #endif
+                continue;
+            }
+
             if(!_itemPool[i].TryGetComponent<NetworkObject>(out _netObjectBuffer))
             {
                 #if UNITY_EDITOR

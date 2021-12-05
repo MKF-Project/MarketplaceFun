@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8148567355363609406}
   - component: {fileID: 1961818565890406787}
   - component: {fileID: 2726642635145719269}
+  - component: {fileID: 940090792844758136}
   m_Layer: 16
   m_Name: SpawnArea
   m_TagString: Untagged
@@ -69,6 +70,18 @@ MonoBehaviour:
     type: 2}
   _releaseCountdown: {fileID: 991431430459195076}
   _releaseCanvas: {fileID: 1969910382882918487}
+--- !u!114 &940090792844758136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648491957000830187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5986e738b2475440850ae7a89f3fa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3238373579143077278
 GameObject:
   m_ObjectHideFlags: 0

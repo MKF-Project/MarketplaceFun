@@ -148,7 +148,7 @@ public class SpawnController : NetworkBehaviour
             _playerInSpawn.Add(rpcReceiveParams.Receive.SenderClientId);
 
             // Check for game start
-            if(_playerInSpawn.Count >= PlayerSpawnsRequired)
+            if(_playerInSpawn.Count >= NetworkController.NumberOfClients) //PlayerSpawnsRequired
             {
                 print("RELEASE THE PLAYERS!");
                 ReleasePlayers_ClientRpc();

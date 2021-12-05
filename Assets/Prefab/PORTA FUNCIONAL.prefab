@@ -294,6 +294,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MOEDA_Mercadux.003 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7664266313410569316, guid: ebe2a53187120ec439496d11037b9230,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebe2a53187120ec439496d11037b9230, type: 3}
 --- !u!1001 &8872467928566677281

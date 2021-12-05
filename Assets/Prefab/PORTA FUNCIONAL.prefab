@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 18
   m_IsActive: 1
 --- !u!4 &6217777374598184827
 Transform:
@@ -49,6 +49,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Porta
+      objectReference: {fileID: 0}
+    - target: {fileID: 3217601500057732913, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 5238230084203408780, guid: 97fd97f88bc656c4d9c1ef5213601b92,
         type: 3}
@@ -119,6 +124,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5942941645750749251, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5942941647216204579, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 5942941647216204588, guid: 97fd97f88bc656c4d9c1ef5213601b92,
         type: 3}
@@ -318,6 +333,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Porta (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3217601500057732913, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 5238230084203408780, guid: 97fd97f88bc656c4d9c1ef5213601b92,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -388,6 +408,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5942941645750749251, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5942941647216204579, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 5942941647216204588, guid: 97fd97f88bc656c4d9c1ef5213601b92,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -417,6 +447,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Porta (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3217601500057732913, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 5238230084203408780, guid: 97fd97f88bc656c4d9c1ef5213601b92,
         type: 3}
@@ -487,6 +522,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.x
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5942941645750749251, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5942941647216204579, guid: 97fd97f88bc656c4d9c1ef5213601b92,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 5942941647216204588, guid: 97fd97f88bc656c4d9c1ef5213601b92,
         type: 3}

@@ -52,20 +52,26 @@ public class CameraScript : MonoBehaviour
         {
             _currentPlayer = NetworkController.SelfPlayer;
             var playerCameraObject = _currentPlayer.transform.Find(CAMERA_POSITION_NAME).gameObject;
+
+            if(playerCameraObject != null)
+            {
+                // Clear older cameras that might've been present on the player
+                playerCameraObject.DestroyAllChildren();
+
+                transform.position = Vector3.zero;
+                transform.rotation = Quaternion.identity;
+                transform.SetParent(playerCameraObject.transform, false);
+
+                HidePlayerHead(_currentPlayer);
+                return;
+            }
+
             #if UNITY_EDITOR
-                if(playerCameraObject == null)
+                else
                 {
                     Debug.LogError($"[{gameObject.name}]: Player ({_currentPlayer.name}) has no Camera placeholder object");
                 }
             #endif
-
-            if(playerCameraObject != null)
-            {
-                transform.position = Vector3.zero;
-                transform.rotation = Quaternion.identity;
-                transform.SetParent(playerCameraObject.transform, false);
-                return;
-            }
         }
 
         // Reset Player variables if no valid Local player was found
@@ -83,4 +89,14 @@ public class CameraScript : MonoBehaviour
     }
     
 
+
+    public static void HidePlayerHead(Player player)
+    {
+        // TODO: Implement
+    }
+
+    public static void ShowPlayerHead(Player player)
+    {
+        // TODO: Implement
+    }
 }

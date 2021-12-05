@@ -113,17 +113,20 @@ public class ShoppingCartItem : NetworkBehaviour
         {
             item.DestroyItem_ClientRpc();
 
-            var index = GetItemCartIndex();
+            var index = GetItemCartIndex(item);
 
-            setNextItem_ClientRpc(item.ItemTypeCode, index);
-            setNextItem(item.ItemTypeCode, index);
+            if(index != -1)
+            {
+                setNextItem_ClientRpc(item.ItemTypeCode, index);
+                setNextItem(item.ItemTypeCode, index);
+            }
 
             _lastCollision = Time.unscaledTime;
         }
     }
 
     private ShoppingList _shoppingListBuffer;
-    private int GetItemCartIndex()
+    private int GetItemCartIndex(Item item)
     {
         if(!IsServer)
         {
@@ -136,25 +139,43 @@ public class ShoppingCartItem : NetworkBehaviour
             return _itemCount;
         }
 
-        var preferredItems = _shoppingListBuffer.ItemDictionary.Keys;
-
-        var previouslySeen = new HashSet<ulong>();
-        for(int i = 0; i < _itemCount; i++)
+        // If the player that threw the item into the cart also owns said cart,
+        // we attempt to fit it in an advantageous position,
+        // preferably not replacing items from the player's shopping list
+        if(Owner.OwnerClientId == item.OwnerClientId)
         {
-            // This item is not part of this player's shopping list
-            if(!preferredItems.Contains(_itemIDs[i]))
+            if(_shoppingListBuffer == null)
             {
-                return i;
+                if(!Owner.TryGetComponent(out _shoppingListBuffer))
+                {
+                    return -1;
+                }
             }
 
-            // This item is a duplicate of a item on the player's list
-            if(!previouslySeen.Add(_itemIDs[i]))
+            var preferredItems = _shoppingListBuffer.ItemDictionary.Keys;
+
+            var previouslySeen = new HashSet<ulong>();
+            for(int i = 0; i < _itemCount; i++)
             {
-                return i;
+                // This item is not part of this player's shopping list
+                if(!preferredItems.Contains(_itemIDs[i]))
+                {
+                    return i;
+                }
+
+                // This item is a duplicate of a item on the player's list
+                if(!previouslySeen.Add(_itemIDs[i]))
+                {
+                    return i;
+                }
             }
         }
 
-        return Random.Range(0, _itemCount);
+        // If the player that threw the item was not the cart onwer,
+        // or no suitable advantageous position was found,
+        // we simply select a random position in the shopping cart
+        return Random.Range(0, _itemCount);;
+
     }
 
     private void setNextItem(ulong itemTypeCode, int itemIndex)

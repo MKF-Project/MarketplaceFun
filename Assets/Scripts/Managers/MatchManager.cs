@@ -193,11 +193,11 @@ public class MatchManager : NetworkBehaviour
                 }
 
                 if (MatchHurry)
-                {
-                    float timeSpent = MatchTime - NetworkTimeSpent.Value;
-                    if (timeSpent > HurryTimeSeconds)
-                    {
-                        MatchTime -= timeSpent - HurryTimeSeconds;
+                {              
+                    float timeLeft = MatchTime - NetworkTimeSpent.Value;
+                    if (timeLeft > HurryTimeSeconds)
+                    {           
+                        MatchTime -= timeLeft - HurryTimeSeconds;
                     }
                 }
             }

@@ -81,8 +81,10 @@ public class ShoppingCartItem : NetworkBehaviour
         // We use NO_OWNER_ID as placeholder for when the owner of this cart hasn't been set yet
         if(currentOwner != NO_OWNER_ID)
         {
-            Owner = NetworkController.GetPlayerByID(_ownerID.Value);
-
+            Player player = NetworkController.GetPlayerByID(_ownerID.Value);
+            Owner = player;
+            player.ShoppingCart = gameObject;
+            
             if(Owner != NetworkController.SelfPlayer)
             {
                 return;

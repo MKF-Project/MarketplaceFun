@@ -11,7 +11,8 @@ public class Player : NetworkBehaviour
 {
     //public bool IsListComplete;
 
-    
+    [HideInInspector]
+    public GameObject ShoppingCart;
     
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
@@ -220,5 +221,7 @@ public class Player : NetworkBehaviour
         HeldItem = null;
 
         IsDrivingCart = false;
+
+        ShoppingCart = null;
     }
 }

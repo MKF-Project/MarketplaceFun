@@ -86,7 +86,7 @@ public abstract class ItemGenerator : NetworkBehaviour
         if(!_isLongLivedGenEventSet)
         {
             _isLongLivedGenEventSet = true;
-            SceneManager.OnMatchLoaded += ClearGeneratables;
+            SceneManager.OnSceneUnloaded += ClearGeneratables;
 
             #if UNITY_EDITOR
                 OnGeneratablesDefined += PrintCurrentGeneratables;

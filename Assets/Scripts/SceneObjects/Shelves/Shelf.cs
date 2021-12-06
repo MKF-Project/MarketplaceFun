@@ -30,7 +30,10 @@ public class Shelf : NetworkBehaviour
             if(_itemGeneratorInternal != null)
             {
                 _itemGeneratorInternal.OnRestocked -= RestockItem;
+                _itemGeneratorInternal.OnShelfRestocked -= RestockShelfItem;
+
                 _itemGeneratorInternal.OnDepleted -= ClearShelf;
+                _itemGeneratorInternal.OnShelfDepleted -= ClearSpecificShelf;
 
                 _itemGeneratorInternal.UnregisterShelf(this);
                 // Don't do anything with the old generator after Unregistering from it,
@@ -41,7 +44,10 @@ public class Shelf : NetworkBehaviour
             if(value != null)
             {
                 value.OnRestocked += RestockItem;
+                value.OnShelfRestocked += RestockShelfItem;
+
                 value.OnDepleted += ClearShelf;
+                value.OnShelfDepleted += ClearSpecificShelf;
 
                 value.RegisterShelf(this);
                 // Don't do anything after Register, since the new Generator might
@@ -109,7 +115,7 @@ public class Shelf : NetworkBehaviour
 
     protected virtual void ShowButtonPrompt(Player player, Collider enteredTrigger)
     {
-        if(ItemGenerator == null || ItemGenerator.IsDepleted)
+        if(ItemGenerator == null || ItemGenerator.RequestIsDepleted(this))
         {
             return;
         }
@@ -127,14 +133,14 @@ public class Shelf : NetworkBehaviour
 
     protected virtual void InteractWithShelf(Player player, Collider interactedTrigger)
     {
-        if(ItemGenerator == null || ItemGenerator.IsDepleted)
+        if(ItemGenerator == null || ItemGenerator.RequestIsDepleted(this))
         {
             return;
         }
 
         if(player.CanInteract)
         {
-            ItemGenerator.GiveItemToPlayer(player);
+            ItemGenerator.GiveItemToPlayer(this, player);
         }
     }
 
@@ -167,9 +173,25 @@ public class Shelf : NetworkBehaviour
         _itemGroupVisuals.SetActive(true);
     }
 
+    protected virtual void RestockShelfItem(Shelf shelf, ulong itemID)
+    {
+        if(shelf == this)
+        {
+            RestockItem(itemID);
+        }
+    }
+
     protected virtual void ClearShelf()
     {
         _itemGroupVisuals.SetActive(false);
+    }
+
+    protected virtual void ClearSpecificShelf(Shelf shelf)
+    {
+        if(shelf == this)
+        {
+            ClearShelf();
+        }
     }
 
     // Editor Utils

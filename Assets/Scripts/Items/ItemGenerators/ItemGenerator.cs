@@ -22,9 +22,17 @@ public abstract class ItemGenerator : NetworkBehaviour
     public event OnDepletedDelegate OnDepleted;
     protected void InvokeOnDepleted() => OnDepleted?.Invoke();
 
+    public delegate void OnShelfDepletedDelegate(Shelf shelf);
+    public event OnShelfDepletedDelegate OnShelfDepleted;
+    protected void InvokeOnShelfDepleted(Shelf shelf) => OnShelfDepleted?.Invoke(shelf);
+
     public delegate void OnRestockedDelegate(ulong itemID);
     public event OnRestockedDelegate OnRestocked;
     protected void InvokeOnRestocked(ulong itemID) => OnRestocked?.Invoke(itemID);
+
+    public delegate void OnShelfRestockedDelegate(Shelf shelf, ulong itemID);
+    public event OnShelfRestockedDelegate OnShelfRestocked;
+    protected void InvokeOnShelfRestocked(Shelf shelf, ulong itemID) => OnShelfRestocked?.Invoke(shelf, itemID);
 
     // Selecting Item
     [SerializeField]
@@ -32,9 +40,9 @@ public abstract class ItemGenerator : NetworkBehaviour
     protected NetworkObject _netObjectBuffer = null;
     public List<ulong> ItemPool { get; protected set; }
 
-    public abstract ulong ItemInStock { get; }
-    public abstract bool IsDepleted { get; }
-    public virtual bool IsStocked => !IsDepleted;
+    public abstract ulong RequestItemInStock(Shelf shelf);
+    public abstract bool RequestIsDepleted(Shelf shelf);
+    public virtual bool RequestIsStocked(Shelf shelf) => !RequestIsDepleted(shelf);
 
     // Populated on Server. Defines which items from the pool this generator
     // can actually generate during the match. Used to create shopping lists.
@@ -116,9 +124,9 @@ public abstract class ItemGenerator : NetworkBehaviour
 
     protected virtual void Start()
     {
-        if(IsStocked)
+        if(RequestIsStocked(null))
         {
-            OnRestocked?.Invoke(ItemInStock);
+            OnRestocked?.Invoke(RequestItemInStock(null));
         }
     }
 
@@ -161,10 +169,10 @@ public abstract class ItemGenerator : NetworkBehaviour
     // Spawn
 
     // Remove an item from the shelf
-    public virtual ulong TakeItem() => IsDepleted? Item.NO_ITEMTYPE_CODE : ItemInStock;
+    public virtual ulong TakeItem(Shelf shelf) => RequestIsDepleted(shelf)? Item.NO_ITEMTYPE_CODE : RequestItemInStock(shelf);
 
     // Remove Item from shelf, then give it to the player
-    public virtual void GiveItemToPlayer(Player player) => GiveSpecificItemToPlayer(player, TakeItem());
+    public virtual void GiveItemToPlayer(Shelf shelf, Player player) => GiveSpecificItemToPlayer(player, TakeItem(shelf));
 
     public void GiveSpecificItemToPlayer(Player player, ulong itemID)
     {

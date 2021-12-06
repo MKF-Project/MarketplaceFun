@@ -94,7 +94,10 @@ public class Belt : Shelf
 
     protected override void OnDestroy()
     {
-        StopCoroutine(_exposeNextItemCoroutine);
+        if(_exposeNextItemCoroutine != null)
+        {
+            StopCoroutine(_exposeNextItemCoroutine);
+        }
 
         ItemGenerator.OnDepleted -= HideItemDisplay;
     }

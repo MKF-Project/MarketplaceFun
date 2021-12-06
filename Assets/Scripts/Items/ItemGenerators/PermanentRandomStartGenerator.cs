@@ -49,8 +49,7 @@ public class PermanentRandomStartGenerator : ItemGenerator
 
             _randomIndex.Value = value;
 
-            _generatableItems = new List<ulong>(1);
-            _generatableItems.Add(ItemPool[_randomIndex.Value]);
+            InvokeOnOwnGeneratablesDefined(ItemPool[value].Yield());
         }
     }
 }

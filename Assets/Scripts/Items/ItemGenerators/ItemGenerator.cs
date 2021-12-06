@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
@@ -12,10 +13,35 @@ public abstract class ItemGenerator : NetworkBehaviour
     public delegate void OnGeneratablesDefinedDelegate(IEnumerable<ulong> generatables);
     public static event OnGeneratablesDefinedDelegate OnGeneratablesDefined;
 
-    private static bool _hasDefinedGeneratables = false;
     public static HashSet<ulong> Generatables { get; private set; } = new HashSet<ulong>();
 
+    private const int GEN_NOT_INITIALIZED = -1;
+
     private static bool _isLongLivedGenEventSet = false;
+    private static int _amountOfGeneratableEvents = GEN_NOT_INITIALIZED;
+    private static int _generatableEventsCompleted = 0;
+
+    // Populated on Server. Defines which items from the pool this generator
+    // can actually generate during the match. Used to create shopping lists.
+    //
+    // Once every ItemGenerator on the scene has triggered their own Generatables
+    // defined event, the static event will be triggered for outside subscribers.
+    private event OnGeneratablesDefinedDelegate OnOwnGeneratablesDefined;
+
+    private bool _ownDefineEventSet = false;
+    protected void InvokeOnOwnGeneratablesDefined(IEnumerable<ulong> generatables) {
+        if(_ownDefineEventSet)
+        {
+            OnOwnGeneratablesDefined?.Invoke(generatables);
+        }
+
+        #if UNITY_EDITOR
+            else
+            {
+                Debug.LogError($"[{name}/InvokeOnOwnGeneratablesDefined]: Attempt to Invoke own generatables event before initalization. Only Invoke this AFTER running ItemGenerator.DefineOwnGeneratables(), or run it yourself on a subclass");
+            }
+        #endif
+    }
 
     // Generation Events
     public delegate void OnDepletedDelegate();
@@ -44,43 +70,90 @@ public abstract class ItemGenerator : NetworkBehaviour
     public abstract bool RequestIsDepleted(Shelf shelf);
     public virtual bool RequestIsStocked(Shelf shelf) => !RequestIsDepleted(shelf);
 
-    // Populated on Server. Defines which items from the pool this generator
-    // can actually generate during the match. Used to create shopping lists.
-    // Must have been set by the time NetworkStart happens.
-    public List<ulong> GeneratableItems => IsServer? _generatableItems : null;
-    protected List<ulong> _generatableItems = null;
-
     // Spawning Item
     protected Action<Item> _afterSpawn = null;
     protected Player _currentPlayer = null;
 
-    private static void PopulateGeneratables()
+    protected static void InitializeGeneratables()
     {
-        var generatorInstances = GameObject.FindObjectsOfType<ItemGenerator>();
-        for(int i = 0; i < generatorInstances.Length; i++)
+        if(!IsServer)
         {
-            generatorInstances[i].GeneratableItems?.ForEach(itemID => Generatables.Add(itemID));
+            return;
         }
 
-        _hasDefinedGeneratables = true;
-        OnGeneratablesDefined?.Invoke(Generatables);
-    }
-
-    private static void ClearGeneratables(string sceneName)
-    {
-        _hasDefinedGeneratables = false;
-        Generatables.Clear();
-    }
-
-    protected virtual void Awake()
-    {
         // We set the event once per game start,
         // and keep it there until the game quits
         if(!_isLongLivedGenEventSet)
         {
             _isLongLivedGenEventSet = true;
             SceneManager.OnMatchLoaded += ClearGeneratables;
+
+            #if UNITY_EDITOR
+                OnGeneratablesDefined += PrintCurrentGeneratables;
+            #endif
         }
+
+        if(_amountOfGeneratableEvents == GEN_NOT_INITIALIZED)
+        {
+            _amountOfGeneratableEvents = GameObject.FindObjectsOfType<ItemGenerator>().Length;
+
+            // Trigger final event if we have confirmation from all ItemGenerators
+            if(_generatableEventsCompleted == _amountOfGeneratableEvents)
+            {
+                OnGeneratablesDefined?.Invoke(Generatables);
+            }
+
+            #if UNITY_EDITOR
+                if(_generatableEventsCompleted > _amountOfGeneratableEvents)
+                {
+                    Debug.LogError($"[ItemGenerator/InitializeGeneratables]: More Generatables events fired than expected: {_generatableEventsCompleted} out of {_amountOfGeneratableEvents} expected");
+                }
+            #endif
+        }
+    }
+
+    private static void ClearGeneratables(string sceneName)
+    {
+        Generatables.Clear();
+        _amountOfGeneratableEvents = GEN_NOT_INITIALIZED;
+        _generatableEventsCompleted = 0;
+    }
+
+    protected void DefineOwnGeneratables()
+    {
+        if(!IsServer)
+        {
+            return;
+        }
+
+        void DefineOwnEvent(IEnumerable<ulong> generatables)
+        {
+            OnOwnGeneratablesDefined -= DefineOwnEvent;
+            Generatables.UnionWith(generatables);
+
+            _generatableEventsCompleted++;
+
+            // Trigger final event if we have confirmation from all ItemGenerators
+            if(_amountOfGeneratableEvents != GEN_NOT_INITIALIZED && _generatableEventsCompleted == _amountOfGeneratableEvents)
+            {
+                OnGeneratablesDefined?.Invoke(Generatables);
+            }
+
+            #if UNITY_EDITOR
+                if(_amountOfGeneratableEvents != GEN_NOT_INITIALIZED && _generatableEventsCompleted > _amountOfGeneratableEvents)
+                {
+                    Debug.LogError($"[{name}/DefineOwnGeneratables]: More Generatables events fired than expected: {_generatableEventsCompleted} out of {_amountOfGeneratableEvents} expected");
+                }
+            #endif
+        }
+
+        OnOwnGeneratablesDefined += DefineOwnEvent;
+        _ownDefineEventSet = true;
+    }
+
+    protected virtual void Awake()
+    {
+        DefineOwnGeneratables();
 
         if(_itemPool == null)
         {
@@ -106,16 +179,10 @@ public abstract class ItemGenerator : NetworkBehaviour
         }
     }
 
-    public override void NetworkStart()
-    {
-        if(IsServer && !_hasDefinedGeneratables)
-        {
-            PopulateGeneratables();
-        }
-    }
-
     protected virtual void Start()
     {
+        InitializeGeneratables();
+
         if(RequestIsStocked(null))
         {
             OnRestocked?.Invoke(RequestItemInStock(null));
@@ -217,6 +284,33 @@ public abstract class ItemGenerator : NetworkBehaviour
     }
 
     // Editor Utils
+    #if UNITY_EDITOR
+        private static void PrintCurrentGeneratables(IEnumerable<ulong> generatables)
+        {
+            var sb = new StringBuilder("Generatable items: [");
+
+            var isFirst = true;
+            foreach(var name in generatables.Select(itemID => NetworkItemManager.GetItemPrefabScript(itemID).name))
+            {
+                if(!isFirst)
+                {
+                    sb.Append(", ");
+                }
+
+                else
+                {
+                    isFirst = false;
+                }
+
+                sb.Append(name);
+            }
+
+            sb.Append("]");
+
+            Debug.Log(sb.ToString());
+        }
+    #endif
+
     protected virtual void OnDrawGizmosSelected()
     {
         var shelves = GameObject.FindObjectsOfType<Shelf>();

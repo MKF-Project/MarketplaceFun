@@ -71,6 +71,8 @@ public class DistributedGenerator : ItemGenerator
 
     protected override void Start()
     {
+        InitializeGeneratables();
+
         if(_seed.Value != NO_SEED)
         {
             DistributeGroupItems(_seed.Value);
@@ -94,6 +96,7 @@ public class DistributedGenerator : ItemGenerator
     private void DistributeGroupItems(int seed)
     {
         var rng = new System.Random(seed);
+        var generatables = new HashSet<ulong>();
 
         var keys = _groupItems.Keys.ToList();
         for(int i = 0; i < keys.Count; i++)
@@ -105,10 +108,13 @@ public class DistributedGenerator : ItemGenerator
                 ItemPool.RemoveAt(randomIndex);
 
                 _groupItems[keys[i]] = itemID;
+                generatables.Add(itemID);
 
                 _shelvesPerGroup[keys[i]].ForEach(shelf => InvokeOnShelfRestocked(shelf, itemID));
             }
         }
+
+        InvokeOnOwnGeneratablesDefined(generatables);
     }
 
     private string GetShelfGroup(Shelf shelf)

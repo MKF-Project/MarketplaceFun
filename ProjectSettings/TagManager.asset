@@ -27,6 +27,7 @@ TagManager:
   - ItensSlotsPanel
   - PointMarkerController
   - PointMarkerSpawner
+  - Dice
   layers:
   - Default
   - TransparentFX

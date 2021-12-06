@@ -108,15 +108,28 @@ public class ScoreSceneManager : NetworkBehaviour
         ScorePoints[] scorePointsList = scoreList.Value.Array;
         Dictionary<ulong, Player> localPlayers = NetworkController.GetLocalPlayers();
 
+        bool haveScoreType;
         foreach (int scoreTypeId in ScoreConfig.ScoreTypeDictionary.Keys)
         {
-            yield return new WaitForSeconds(.5f);
+            haveScoreType = false;
+            //
             foreach (ScorePoints scorePoint in scorePointsList)
             {
                 foreach (DescriptivePoints descriptivePoints in scorePoint.LastMatchPoints)
                 {
                     if (descriptivePoints.ScoreTypeId == scoreTypeId)
                     {
+                        if (!haveScoreType)
+                        {
+                            ScoreType scoreType = ScoreConfig.ScoreTypeDictionary[scoreTypeId];
+                            _scoreCanvas.ShowScoreText(scoreType.Type, scoreType.ScoreColor.color);
+                        
+                            yield return new WaitForSeconds(0.5f);
+                            haveScoreType = true;
+                        }
+
+                        
+                        
                         int playerIndex = localPlayers[scorePoint.PlayerId]
                             .GetComponent<PlayerInfo>()
                             .PlayerData.Color;
@@ -136,6 +149,10 @@ public class ScoreSceneManager : NetworkBehaviour
                     
                 }
             }
+            if(haveScoreType){
+                yield return new WaitForSeconds(1f);
+            }
+            
         }
         
         if (IsClient & !IsHost)

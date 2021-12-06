@@ -13,7 +13,7 @@ public class PlayerInfoController : MonoBehaviour
     private void Start()
     {
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+//        DontDestroyOnLoad(gameObject);
         PlayerInfos = new Dictionary<ulong, PlayerData>();
 
         InitializeColors();

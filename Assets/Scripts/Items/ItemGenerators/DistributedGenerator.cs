@@ -24,8 +24,6 @@ public class DistributedGenerator : ItemGenerator
         NO_SEED
     );
 
-    // private Dictionary<Shelf, string> _shelfGroups = new Dictionary<Shelf, string>();
-    // private HashSet<Shelf> _registeredShelves = new HashSet<Shelf>();
     private SortedDictionary<string, ulong> _groupItems = new SortedDictionary<string, ulong>();
     private Dictionary<string, List<Shelf>> _shelvesPerGroup = new Dictionary<string, List<Shelf>>();
 

@@ -15,6 +15,8 @@ public enum ShelfType
 
 public class Shelf : NetworkBehaviour
 {
+    public const string SHELF_NO_GROUP = "";
+
     protected const string ITEM_GROUP_VISUALS_NAME = "ItemGroupVisuals";
 
     public ShelfType Type;
@@ -58,6 +60,10 @@ public class Shelf : NetworkBehaviour
             }
         }
     }
+
+    [SerializeField]
+    private string _group = SHELF_NO_GROUP;
+    public string Group => _group;
 
     protected ulong _lastItemStocked = Item.NO_ITEMTYPE_CODE;
 

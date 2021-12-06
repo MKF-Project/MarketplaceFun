@@ -29,7 +29,7 @@ public class RandomCycleGenerator : ItemGenerator
         if(IsServer)
         {
             _randomIndex.Value = Random.Range(0, ItemPool.Count);
-            _generatableItems = ItemPool;
+            InvokeOnOwnGeneratablesDefined(ItemPool);
         }
     }
 

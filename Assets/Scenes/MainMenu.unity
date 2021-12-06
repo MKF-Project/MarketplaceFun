@@ -1063,6 +1063,8 @@ MonoBehaviour:
     - ScoreScene
     - _MilestoneBeta
     - WinScene
+    - _Gold_1
+    - _Gold_2
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
@@ -1271,6 +1273,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 803058857227299788, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 803058857892825872, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 803058858462004299, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 803058858775331362, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5289194820835798354, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5289194820901398603, guid: 66c840212bce8114c8336be63ccb9c58,
         type: 3}
       propertyPath: m_Enabled
@@ -1346,16 +1373,36 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5289194821466534800, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5289194821649221603, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5289194822083635698, guid: 66c840212bce8114c8336be63ccb9c58,
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5289194822368145694, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5289194822397509452, guid: 66c840212bce8114c8336be63ccb9c58,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6820537856372210677, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4b6c16c8bf29c9e40bc66796d0674b6e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66c840212bce8114c8336be63ccb9c58, type: 3}
 --- !u!1 &1679518248
@@ -1826,7 +1873,7 @@ PrefabInstance:
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
       propertyPath: MatchScene
-      value: _MilestoneBeta
+      value: _Gold_2
       objectReference: {fileID: 0}
     - target: {fileID: 3806232346622104752, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}

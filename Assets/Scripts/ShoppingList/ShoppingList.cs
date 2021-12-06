@@ -4,6 +4,7 @@ using System.Linq;
 using MLAPI;
 using MLAPI.Messaging;
 using UnityEngine;
+using Random = System.Random;
 
 public class ShoppingList : NetworkBehaviour
 {
@@ -13,6 +14,8 @@ public class ShoppingList : NetworkBehaviour
     public ShoppingListUI ShoppingListUi;
 
     private int _quantityChecked;
+
+    private int _randomSeed;
 
     private void Start()
     {
@@ -29,6 +32,7 @@ public class ShoppingList : NetworkBehaviour
         if (IsServer)
         {
             Debug.Log("Colocou Server");
+            _randomSeed = (int) Time.time;
             NetworkController.OnOtherClientDisconnected += EraseListServer;
 
             ItemGenerator.OnGeneratablesDefined += GenerateList;
@@ -55,7 +59,7 @@ public class ShoppingList : NetworkBehaviour
             return;
         }
 
-        var random = new System.Random();
+        var random = new Random(_randomSeed);
         var itemList = new List<ulong>(setOfPossibleItems);
 
         var numberOfItems = Mathf.Min(ITEM_LIST_AMOUNT, itemList.Count);

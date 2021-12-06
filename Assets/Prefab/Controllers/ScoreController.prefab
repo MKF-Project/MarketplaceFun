@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PointsToWin: 25
+  RoundsLoosing: 2
 --- !u!114 &5383552216265904450
 MonoBehaviour:
   m_ObjectHideFlags: 0

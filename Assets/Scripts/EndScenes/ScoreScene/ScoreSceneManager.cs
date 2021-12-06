@@ -128,14 +128,10 @@ public class ScoreSceneManager : NetworkBehaviour
                             haveScoreType = true;
                         }
 
-                        
-                        
                         int playerIndex = localPlayers[scorePoint.PlayerId]
                             .GetComponent<PlayerInfo>()
                             .PlayerData.Color;
                         Debug.Log("Generated " + descriptivePoints.ScoreTypeId + " Points:  " + descriptivePoints.Points + " --- at " + playerIndex);
-
-                        
                         
                         _pointMarkerController.SpawnMarker(playerIndex-1, descriptivePoints.ScoreTypeId, descriptivePoints.Points);
                         

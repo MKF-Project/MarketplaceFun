@@ -15,6 +15,8 @@ public class ScoreController : MonoBehaviour
     private ScoreAuditor _scoreAuditor;
 
     public int PointsToWin;
+
+    public int RoundsLoosing;
     
     void Awake()
     {
@@ -45,7 +47,7 @@ public class ScoreController : MonoBehaviour
         ScorePoints scorePoints = new ScorePoints(playerId);
         _playerPoints.Add(playerId, scorePoints);
         
-        
+        /*
         // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
         List<DescriptivePoints> descriptivePointsList = new List<DescriptivePoints>();
         DescriptivePoints descriptivePoints = new DescriptivePoints(6, 1);
@@ -54,7 +56,7 @@ public class ScoreController : MonoBehaviour
 
         AddPointsToPlayer(playerId, 2, descriptivePointsList);
         // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
-
+        */
     }
 
     public void RemovePlayer(ulong playerId)
@@ -102,6 +104,16 @@ public class ScoreController : MonoBehaviour
         }
     }
 
+    public bool IsGameChangingAvailable(ulong playerId)
+    {
+        if (_playerPoints[playerId].LostCounter >= RoundsLoosing)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public SerializedScorePointList GetSerializedScore()
     {
         SerializedScorePointList serializedScorePointList = new SerializedScorePointList(_playerPoints.Values.ToArray());
@@ -112,7 +124,7 @@ public class ScoreController : MonoBehaviour
     public void EndMatch()
     {
         _scoreAuditor.Audit();
-        AdicionaParaTeste();
+        //AdicionaParaTeste();
     }
 
     public bool VerifyWinner()

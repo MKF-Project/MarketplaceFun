@@ -12,7 +12,7 @@ public class ScoreConfig : MonoBehaviour
     
     public void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         
         ScoreTypeDictionary = new Dictionary<int, ScoreType>();
         PopulateDictionary();

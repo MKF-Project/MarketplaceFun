@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,13 +13,34 @@ public class CameraScript : MonoBehaviour
     /* Player related variables */
     private Player _currentPlayer = null;
 
+    public bool CameraOnPlayer;
+
     private void Awake()
     {
         _initalPosition = transform.position;
         _initialRotation = transform.rotation;
+        MatchManager.OnMatchExit += SetCameraOnScene;
+
     }
 
-    private void LateUpdate()
+    private void OnDestroy()
+    {
+        MatchManager.OnMatchExit -= SetCameraOnScene;
+    }
+
+
+    private void Start()
+    {
+        if (CameraOnPlayer)
+        {
+            SetCameraOnPlayer();
+        }
+
+    }
+    
+    //
+    //private void LateUpdate()
+    private void SetCameraOnPlayer()
     {
         if(_currentPlayer == NetworkController.SelfPlayer)
         {
@@ -58,6 +80,15 @@ public class CameraScript : MonoBehaviour
         transform.position = _initalPosition;
         transform.rotation = _initialRotation;
     }
+
+    public void SetCameraOnScene()
+    {
+        transform.SetParent(null);
+        transform.position = _initalPosition;
+        transform.rotation = _initialRotation;
+    }
+    
+
 
     public static void HidePlayerHead(Player player)
     {

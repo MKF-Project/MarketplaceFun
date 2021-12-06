@@ -94,7 +94,10 @@ public class Belt : Shelf
 
     protected override void OnDestroy()
     {
-        StopCoroutine(_exposeNextItemCoroutine);
+        if(_exposeNextItemCoroutine != null)
+        {
+            StopCoroutine(_exposeNextItemCoroutine);
+        }
 
         ItemGenerator.OnDepleted -= HideItemDisplay;
     }
@@ -113,7 +116,7 @@ public class Belt : Shelf
         if(ItemGenerator != null)
         {
             ItemGenerator.OnDepleted += HideItemDisplay;
-            SetNextItemDisplay(ItemGenerator.ItemInStock);
+            SetNextItemDisplay(ItemGenerator.RequestItemInStock(this));
         }
     }
 
@@ -134,7 +137,7 @@ public class Belt : Shelf
                 if(_displayUpdateRequested)
                 {
                     _displayUpdateRequested = false;
-                    SetNextItemDisplay(ItemGenerator.ItemInStock);
+                    SetNextItemDisplay(ItemGenerator.RequestItemInStock(this));
                 }
             }
 
@@ -238,9 +241,9 @@ public class Belt : Shelf
         while(true)
         {
             yield return _nextItemIntervalWait;
-            if(ItemGenerator != null && ItemGenerator.IsStocked)
+            if(ItemGenerator != null && ItemGenerator.RequestIsStocked(this))
             {
-                var itemTaken = ItemGenerator.TakeItem();
+                var itemTaken = ItemGenerator.TakeItem(this);
                 SendItemOnBelt(itemTaken);
                 SendItemOnBelt_ClientRpc(itemTaken);
             }

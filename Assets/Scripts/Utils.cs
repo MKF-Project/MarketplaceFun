@@ -62,7 +62,14 @@ public static class Utils
     public static void toggleMenu(this MonoBehaviour menuScript) => MenuManager.toggleMenu(menuScript.gameObject);
     public static void toggleMenuDelayed(this MonoBehaviour menuScript) => MenuManager.toggleMenuDelayed(menuScript.gameObject);
 
-    // Lists
+    // IEnumerables
+
+    // Converts a single item into an enumerable of itself
+    public static IEnumerable<T> Yield<T>(this T item)
+    {
+        yield return item;
+    }
+
     public static bool Unique<T>(this IEnumerable<T> list, Func<T, bool> predicate)
     {
         // Evaluate Enumerator has no more than one element that satifies the predicate

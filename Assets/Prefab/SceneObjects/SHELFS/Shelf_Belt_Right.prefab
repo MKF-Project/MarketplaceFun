@@ -465,6 +465,7 @@ GameObject:
   - component: {fileID: 8320464348792637393}
   - component: {fileID: 9131741681457719732}
   - component: {fileID: 3829745647815123329}
+  - component: {fileID: 8722662237351283969}
   m_Layer: 0
   m_Name: Shelf_Belt_Right
   m_TagString: Untagged
@@ -623,6 +624,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.73, y: 0.5652084, z: 0.7687206}
   m_Center: {x: -2.5, y: 0.2826043, z: 2.7906966}
+--- !u!114 &8722662237351283969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9163671556202452854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5986e738b2475440850ae7a89f3fa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &140565651524105987
 PrefabInstance:
   m_ObjectHideFlags: 0

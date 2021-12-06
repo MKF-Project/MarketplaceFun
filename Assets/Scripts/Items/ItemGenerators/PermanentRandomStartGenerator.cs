@@ -28,8 +28,8 @@ public class PermanentRandomStartGenerator : ItemGenerator
         0
     );
 
-    public override ulong ItemInStock => ItemPool[_randomIndex.Value];
-    public override bool IsDepleted => false;
+    public override ulong RequestItemInStock(Shelf shelf) => ItemPool[_randomIndex.Value];
+    public override bool RequestIsDepleted(Shelf shelf) => false;
 
     protected override void Awake()
     {
@@ -49,8 +49,7 @@ public class PermanentRandomStartGenerator : ItemGenerator
 
             _randomIndex.Value = value;
 
-            _generatableItems = new List<ulong>(1);
-            _generatableItems.Add(ItemInStock);
+            InvokeOnOwnGeneratablesDefined(ItemPool[value].Yield());
         }
     }
 }

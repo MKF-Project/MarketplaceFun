@@ -30,6 +30,11 @@ public abstract class ItemGenerator : NetworkBehaviour
 
     private bool _ownDefineEventSet = false;
     protected void InvokeOnOwnGeneratablesDefined(IEnumerable<ulong> generatables) {
+        if(!IsServer)
+        {
+            return;
+        }
+
         if(_ownDefineEventSet)
         {
             OnOwnGeneratablesDefined?.Invoke(generatables);

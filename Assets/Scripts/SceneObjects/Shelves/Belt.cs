@@ -99,7 +99,10 @@ public class Belt : Shelf
             StopCoroutine(_exposeNextItemCoroutine);
         }
 
-        ItemGenerator.OnDepleted -= HideItemDisplay;
+        if(ItemGenerator != null)
+        {
+            ItemGenerator.OnDepleted -= HideItemDisplay;
+        }
     }
 
     public override void NetworkStart()

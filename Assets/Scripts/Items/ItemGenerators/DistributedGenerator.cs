@@ -64,11 +64,6 @@ public class DistributedGenerator : ItemGenerator
         base.RegisterShelf(shelf);
     }
 
-    // public override void UnregisterShelf(Shelf shelf)
-    // {
-
-    // }
-
     protected override void Start()
     {
         InitializeGeneratables();
@@ -117,9 +112,5 @@ public class DistributedGenerator : ItemGenerator
         InvokeOnOwnGeneratablesDefined(generatables);
     }
 
-    private string GetShelfGroup(Shelf shelf)
-    {
-        // TODO set group
-        return shelf.Group;
-    }
+    private string GetShelfGroup(Shelf shelf) => shelf.Group != Shelf.SHELF_NO_GROUP || GroupSingleShelves? shelf.Group : $"{shelf.NetworkObject.PrefabHashGenerator}-{shelf.NetworkObjectId}";
 }

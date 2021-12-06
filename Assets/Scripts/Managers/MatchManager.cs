@@ -25,7 +25,7 @@ public class MatchManager : NetworkBehaviour
 
     
     //Time variables
-    public float MatchTime;
+    public float MatchTimeMinutes;
     private Text _clockText;
     private float _startTime;
     private bool _timeStarted;
@@ -33,7 +33,7 @@ public class MatchManager : NetworkBehaviour
 
     private int _clientsFished;
     
-    public int SecondsThresholdToScore;
+    public int ThresholdSeconds;
 
     public NetworkVariableFloat NetworkTimeSpent = new NetworkVariableFloat(
         new NetworkVariableSettings
@@ -60,7 +60,7 @@ public class MatchManager : NetworkBehaviour
         _clientsFished = 0;
         _matchEnded = false;
         _timeStarted = false;
-        MatchTime = MatchTime * 60; 
+        MatchTimeMinutes = MatchTimeMinutes * 60; 
         _clockText = GameObject.FindGameObjectWithTag("MatchCanvas").GetComponentInChildren<Text>();
         _clockText.text = "";
 
@@ -96,8 +96,8 @@ public class MatchManager : NetworkBehaviour
             if (_timeStarted)
             {
                 float timeSpent = Time.time - _startTime;
-                int secondsLeft = (int) (MatchTime - timeSpent) % 60;
-                int networkSeconds = (int) (MatchTime - NetworkTimeSpent.Value) % 60;
+                int secondsLeft = (int) (MatchTimeMinutes - timeSpent) % 60;
+                int networkSeconds = (int) (MatchTimeMinutes - NetworkTimeSpent.Value) % 60;
                 if (!secondsLeft.Equals(networkSeconds))
                 {
                     NetworkTimeSpent.Value = timeSpent;
@@ -117,8 +117,8 @@ public class MatchManager : NetworkBehaviour
 
     public void DisplayTime(float pre, float timeSpent)
     {
-        int minutesLeft = (int) (MatchTime - timeSpent) / 60;
-        int secondsLeft = (int) (MatchTime - timeSpent) % 60;
+        int minutesLeft = (int) (MatchTimeMinutes - timeSpent) / 60;
+        int secondsLeft = (int) (MatchTimeMinutes - timeSpent) % 60;
         String minutesLeftText = minutesLeft > 9 ? "" + minutesLeft : "0" + minutesLeft;
         String secondsLeftText = secondsLeft > 9 ? "" + secondsLeft : "0" + secondsLeft;
 
@@ -187,17 +187,17 @@ public class MatchManager : NetworkBehaviour
                 WarnPlayerCheckOut_ClientRpc(playerId);
                 GameObject playerGameObject = NetworkManager.ConnectedClients[playerId].PlayerObject.gameObject;
                 playerGameObject.GetComponent<CheckOut>().ScoreCheckOut_OnlyServer();
-                if (SecondsThresholdToScore > NetworkTimeSpent.Value)
+                if (ThresholdSeconds > NetworkTimeSpent.Value)
                 {
                     playerGameObject.GetComponent<CheckedOutAtTheLimit>().ScoreAtTheLimit_OnlyServer();
                 }
 
                 if (MatchHurry)
                 {              
-                    float timeLeft = MatchTime - NetworkTimeSpent.Value;
+                    float timeLeft = MatchTimeMinutes - NetworkTimeSpent.Value;
                     if (timeLeft > HurryTimeSeconds)
                     {           
-                        MatchTime -= timeLeft - HurryTimeSeconds;
+                        MatchTimeMinutes -= timeLeft - HurryTimeSeconds;
                     }
                 }
             }
@@ -221,9 +221,13 @@ public class MatchManager : NetworkBehaviour
     [ClientRpc]
     public void WarnPlayerCheckOut_ClientRpc(ulong playerId)
     {
-        GameObject playerGameObject = NetworkController.GetPlayerByID(playerId).gameObject;//NetworkManager.ConnectedClients[playerId].PlayerObject.gameObject;
-        String playerNickname = playerGameObject.GetComponent<PlayerInfo>().PlayerData.Nickname;
+        GameObject playerGameObject = NetworkController.GetPlayerByID(playerId).gameObject;
+        PlayerInfo playerInfo = playerGameObject.GetComponent<PlayerInfo>();
+        String playerNickname = playerInfo.PlayerData.Nickname;
+        Color color = ColorManager.Instance.GetColor(playerInfo.PlayerData.Color).color;
         MatchMessages.Instance.EditMessage("Player " + playerNickname + " Checked Out");
+        MatchMessages.Instance.EditColorMessage(color);
+
         MatchMessages.Instance.ShowMessage();
         if (NetworkManager.LocalClientId == playerId)
         {

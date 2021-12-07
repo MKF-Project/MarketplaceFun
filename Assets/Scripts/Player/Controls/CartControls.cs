@@ -63,12 +63,12 @@ public class CartControls : PlayerControls
             return;
         }
 
-        _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
+        _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(_playerScript);
     }
 
     public void DetachShoppingCart()
     {
-        _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(GetComponent<Player>());
+        _shoppingCartPosition.GetComponentInChildren<ShoppingCartInteract>()?.DetachCartFromPlayer(_playerScript);
     }
 
     private void updateMovement()

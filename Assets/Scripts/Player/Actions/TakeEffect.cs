@@ -8,16 +8,26 @@ using UnityEngine;
 public class TakeEffect : ScorableAction
 {
     private Animator _animator;
+    private Player _playerScript;
 
     private static readonly int RECEIVE_HIT = Animator.StringToHash("Recebeu_Golpe");
 
     private bool _isTakingEffect;
-    
+
     // Start is called before the first frame update
     protected override void Awake()
     {
         base.Awake();
+
         _animator = GetComponentInChildren<Animator>();
+
+        if(!TryGetComponent(out _playerScript))
+        {
+            #if UNITY_EDITOR
+                Debug.LogError($"[{name}/TakeEffect]: Player Script not found!");
+            #endif
+        }
+
         _isTakingEffect = false;
     }
 
@@ -40,7 +50,7 @@ public class TakeEffect : ScorableAction
             NetworkManager.ConnectedClients[throwerId].PlayerObject.GetComponent<PlayerScore>().ScoreAction(_scoreType);
             _isTakingEffect = true;
             NormalEffect_ClientRpc();
-            
+
         }
     }
 
@@ -51,6 +61,9 @@ public class TakeEffect : ScorableAction
         if(IsOwner)
         {
             InputController.FreezePlayerControls();
+
+            _playerScript.DropItem();
+            _playerScript.ReleaseCart();
         }
         _animator.SetTrigger(RECEIVE_HIT);
     }
@@ -69,8 +82,4 @@ public class TakeEffect : ScorableAction
     {
         _isTakingEffect = false;
     }
-
-    
-    
-    
 }

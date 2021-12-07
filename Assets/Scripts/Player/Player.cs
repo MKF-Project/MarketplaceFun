@@ -13,7 +13,7 @@ public class Player : NetworkBehaviour
 
     [HideInInspector]
     public GameObject ShoppingCart;
-    
+
     private const string HELD_POSITION_NAME = "HeldPosition";
     private Throw _throwScript = null;
 
@@ -162,36 +162,45 @@ public class Player : NetworkBehaviour
 
     public void DropItem(Action<Item> itemAction = null)
     {
-        if(IsHoldingItem)
+        if(!IsHoldingItem)
         {
-            var itemVisuals = _heldItemPosition.GetComponentInChildren<ItemVisuals>();
+            return;
+        }
 
-            void positionItem(Item generatedItem)
+        var itemVisuals = _heldItemPosition.GetComponentInChildren<ItemVisuals>();
+
+        void positionItem(Item generatedItem)
+        {
+            if(!generatedItem.IsOwner)
             {
-                if(!generatedItem.IsOwner)
-                {
-                    return;
-                }
-
-                // We update position and rotation after it has been released
-                // to account for the player movement
-                generatedItem.transform.position = _heldItemPosition.position + itemVisuals.handPositionOffset;
-                generatedItem.transform.rotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
-
-                HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
-
-                AimCanvas.Instance.DisableAim();
-
-                itemAction?.Invoke(generatedItem);
+                return;
             }
 
-            var spawnPosition = _heldItemPosition.position + itemVisuals.handPositionOffset;
-            var spawnRotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
+            // We update position and rotation after it has been released
+            // to account for the player movement
+            generatedItem.transform.position = _heldItemPosition.position + itemVisuals.handPositionOffset;
+            generatedItem.transform.rotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
 
-            _currentGenerator?.GeneratePlayerHeldItem(spawnPosition, spawnRotation, positionItem);
+            HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
+
+            AimCanvas.Instance.DisableAim();
+
+            itemAction?.Invoke(generatedItem);
         }
+
+        var spawnPosition = _heldItemPosition.position + itemVisuals.handPositionOffset;
+        var spawnRotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
+
+        _currentGenerator?.GeneratePlayerHeldItem(spawnPosition, spawnRotation, positionItem);
     }
 
+    public void ReleaseCart()
+    {
+        if(IsDrivingCart)
+        {
+            GetComponent<CartControls>()?.DetachShoppingCart();
+        }
+    }
 
     public void Teleport(Vector3 position, Vector3 eulerAngles = default)
     {
@@ -211,14 +220,12 @@ public class Player : NetworkBehaviour
 
     public void PlayerReset()
     {
-        if (IsDrivingCart)
+        if(IsDrivingCart)
         {
-            GetComponent<CartControls>().DetachShoppingCart();
+            GetComponent<CartControls>()?.DetachShoppingCart();
         }
 
         HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
-
-        HeldItem = null;
 
         IsDrivingCart = false;
 

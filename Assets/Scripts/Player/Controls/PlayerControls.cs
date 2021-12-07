@@ -151,9 +151,9 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         _lastInteractionTime = -InteractCooldown;
 
-        gameObject.TryGetComponent(out _rigidBody);
-        gameObject.TryGetComponent(out _playerNetAnimator);
-        gameObject.TryGetComponent(out _playerScript);
+        TryGetComponent(out _rigidBody);
+        TryGetComponent(out _playerNetAnimator);
+        TryGetComponent(out _playerScript);
 
         _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
         _initialCameraLocalRotation = _cameraPosition.transform.localRotation;

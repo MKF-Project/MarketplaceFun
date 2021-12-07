@@ -8,12 +8,11 @@ public class PlayerDisplay : MonoBehaviour
 {
     public GameObject NicknameCanvas;
     public Text NicknameText;
-    
+
     public SkinnedMeshRenderer MeshRenderer;
+    public List<SkinnedMeshRenderer> PlayerHeadComponents;
 
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         NicknameCanvas.transform.LookAt(Camera.main.transform.position);
     }

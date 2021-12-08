@@ -42,12 +42,11 @@
           <e p="Interactable.cs" t="Include" />
           <e p="Items" t="Include">
             <e p="Item.cs" t="Include" />
-            <e p="ItemGeneratorOld.cs" t="Include" />
             <e p="ItemGenerators" t="Include">
+              <e p="DistributedGenerator.cs" t="Include" />
               <e p="ItemGenerator.cs" t="Include" />
               <e p="PermanentRandomStartGenerator.cs" t="Include" />
               <e p="RandomCycleGenerator.cs" t="Include" />
-              <e p="RandomDistributedStartGenerator.cs" t="Include" />
             </e>
             <e p="ItemVisuals.cs" t="Include" />
           </e>

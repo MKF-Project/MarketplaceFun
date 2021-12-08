@@ -249,11 +249,11 @@ public class ScoreSceneManager : NetworkBehaviour
         NetworkAnimator playerAnimator =  NetworkController.SelfPlayer.GetComponent<NetworkAnimator>();
         if (NetworkController.SelfPlayer.GetComponent<PlayerInfo>().PlayerData.Color == _playerIndex)
         {
-            playerAnimator.SetTrigger("Vitoria");
+            playerAnimator.SetTrigger("P_Vitoria");
             return;
         }
        
-        playerAnimator.SetTrigger("Derrota");
+        playerAnimator.SetTrigger("P_Derrota");
     }
 
 }

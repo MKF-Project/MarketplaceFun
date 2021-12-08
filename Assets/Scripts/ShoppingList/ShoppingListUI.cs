@@ -35,7 +35,8 @@ public class ShoppingListUI : MonoBehaviour
             return;
         }
 
-        int i = 0;
+        //Jump first 
+        int i = 1;
 
         foreach (ShoppingListItem shoppingListItem in itemList)
         {

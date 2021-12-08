@@ -23,16 +23,16 @@ public abstract class PlayerControls : NetworkBehaviour
 
     protected static readonly int ANIM_JUMP_STATE         = Animator.StringToHash("Pulo");
     protected static readonly int ANIM_ITEM_JUMP_STATE    = Animator.StringToHash("Pulo_Com_Item");
-    protected static readonly int ANIM_JUMP               = Animator.StringToHash("Pular");
+    protected static readonly int ANIM_JUMP               = Animator.StringToHash("P_Pular");
     protected static readonly int ANIM_FALLING_STATE      = Animator.StringToHash("Caindo");
     protected static readonly int ANIM_ITEM_FALLING_STATE = Animator.StringToHash("Caindo_Com_Item");
-    protected static readonly int ANIM_FALLING            = Animator.StringToHash("Caindo");
-    protected static readonly int ANIM_LAND               = Animator.StringToHash("Pisa_No_Chao");
+    protected static readonly int ANIM_FALLING            = Animator.StringToHash("P_Caindo");
+    protected static readonly int ANIM_LAND               = Animator.StringToHash("P_Pisa_No_Chao");
 
-    protected static readonly int ANIM_INTERACT           = Animator.StringToHash("Interagiu");
-    protected static readonly int ANIM_HAS_CART           = Animator.StringToHash("Pegou_carrinho");
-    protected static readonly int ANIM_ITEM_IN_HAND       = Animator.StringToHash("Item_na_mao");
-    protected static readonly int ANIM_THROW              = Animator.StringToHash("Atirar_Item");
+    protected static readonly int ANIM_INTERACT           = Animator.StringToHash("P_Interagiu");
+    protected static readonly int ANIM_HAS_CART           = Animator.StringToHash("P_Pegou_carrinho");
+    protected static readonly int ANIM_ITEM_IN_HAND       = Animator.StringToHash("P_Item_na_mao");
+    protected static readonly int ANIM_THROW              = Animator.StringToHash("P_Atirar_Item");
 
     // This is the maximum speed the player is allowed to turn,
     // regardless of other factors. Keep this at a high value to allow fast mouse movement
@@ -151,9 +151,9 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         _lastInteractionTime = -InteractCooldown;
 
-        gameObject.TryGetComponent(out _rigidBody);
-        gameObject.TryGetComponent(out _playerNetAnimator);
-        gameObject.TryGetComponent(out _playerScript);
+        TryGetComponent(out _rigidBody);
+        TryGetComponent(out _playerNetAnimator);
+        TryGetComponent(out _playerScript);
 
         _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
         _initialCameraLocalRotation = _cameraPosition.transform.localRotation;

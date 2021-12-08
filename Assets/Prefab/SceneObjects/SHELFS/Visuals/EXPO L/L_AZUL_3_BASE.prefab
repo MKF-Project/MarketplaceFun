@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 2232633248626295754}
   - component: {fileID: 75150374840357654}
   - component: {fileID: 968009446669714878}
+  - component: {fileID: 2134847836812934488}
   m_Layer: 0
   m_Name: Expositor L_AZUL01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2232633248626295754
 Transform:
@@ -79,6 +80,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &2134847836812934488
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100247758600381366}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5000003, y: 0.49999994, z: 1.9999998}
+  m_Center: {x: -0.2500001, y: -0.24999997, z: 0.9999999}
 --- !u!1 &2110156170141477898
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +107,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &8221795858125994176
 Transform:

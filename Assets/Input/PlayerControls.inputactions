@@ -70,14 +70,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Put",
-                    "type": "Button",
-                    "id": "e680561f-e173-4a43-9c38-98af095f4532",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Drop",
                     "type": "Button",
                     "id": "d8b24887-ea3c-4861-b753-2b085c07976d",
@@ -271,17 +263,6 @@
                     "processors": "",
                     "groups": "Keyboard and Mouse",
                     "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e849527c-add5-4207-a20f-7287a1ae3737",
-                    "path": "<Keyboard>/p",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Put",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

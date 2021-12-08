@@ -12,19 +12,29 @@ public class SceneManager : MonoBehaviour
     public static event OnMainMenuLostConnectionDelegate OnMainMenuLostConnection;
 
     public delegate void OnSceneLoadedDelegate(string sceneName);
+    public delegate void OnSceneUnloadedDelegate(string sceneName);
     public static event OnSceneLoadedDelegate OnSceneLoaded;
+    public static event OnSceneUnloadedDelegate OnSceneUnloaded;
 
     public delegate void OnMenuLoadedDelegate();
+    public delegate void OnMenuUnloadedDelegate();
     public static event OnMenuLoadedDelegate OnMenuLoaded;
+    public static event OnMenuUnloadedDelegate OnMenuUnloaded;
 
     public delegate void OnLoadingSceneLoadedDelegate();
+    public delegate void OnLoadingSceneUnloadedDelegate();
     public static event OnLoadingSceneLoadedDelegate OnLoadingSceneLoaded;
+    public static event OnLoadingSceneUnloadedDelegate OnLoadingSceneUnloaded;
 
     public delegate void OnScoreLoadedDelegate();
+    public delegate void OnScoreUnloadedDelegate();
     public static event OnScoreLoadedDelegate OnScoreLoaded;
+    public static event OnScoreUnloadedDelegate OnScoreUnloaded;
 
     public delegate void OnMatchLoadedDelegate(string sceneName);
+    public delegate void OnMatchUnloadedDelegate(string sceneName);
     public static event OnMatchLoadedDelegate OnMatchLoaded;
+    public static event OnMatchUnloadedDelegate OnMatchUnloaded;
 
     public String MatchScene;
 
@@ -50,6 +60,7 @@ public class SceneManager : MonoBehaviour
         NetworkController.OnDisconnected += returnToMainMenu;
 
         UnityScene.SceneManager.sceneLoaded += TriggerSceneLoadEvent;
+        UnityScene.SceneManager.sceneUnloaded += TriggerSceneUnloadEvent;
 
         // If, after moving to DontDestroyOnLoad, we detect more than one
         // SceneManager object, that means we are the duplicate one that came after
@@ -64,7 +75,9 @@ public class SceneManager : MonoBehaviour
     {
         LobbyMenu.OnStartMatch -= loadMatch;
         NetworkController.OnDisconnected -= returnToMainMenu;
+
         UnityScene.SceneManager.sceneLoaded -= TriggerSceneLoadEvent;
+        UnityScene.SceneManager.sceneUnloaded -= TriggerSceneUnloadEvent;
     }
 
     private void returnToMainMenu(bool wasHost, bool connectionWasLost)
@@ -143,6 +156,30 @@ public class SceneManager : MonoBehaviour
 
             default:
                 OnMatchLoaded?.Invoke(scene.name);
+                break;
+        }
+    }
+
+    private void TriggerSceneUnloadEvent(UnityScene.Scene scene)
+    {
+        OnSceneUnloaded?.Invoke(scene.name);
+
+        switch(scene.name)
+        {
+            case MAIN_MENU_SCENE_NAME:
+                OnMenuUnloaded?.Invoke();
+                break;
+
+            case LOADING_SCENE_NAME:
+                OnLoadingSceneUnloaded?.Invoke();
+                break;
+
+            case SCORE_SCENE_NAME:
+                OnScoreUnloaded?.Invoke();
+                break;
+
+            default:
+                OnMatchUnloaded?.Invoke(scene.name);
                 break;
         }
     }

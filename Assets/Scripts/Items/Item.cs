@@ -16,6 +16,7 @@ public struct ShelfItemGroup
 public class Item : NetworkBehaviour
 {
     public const ulong NO_ITEMTYPE_CODE = ulong.MinValue;
+    public const float ITEM_DESTROY_DELAY = 4f;
 
     public GameObject Prefab => NetworkItemManager.NetworkItemPrefabs[ItemTypeCode];
 
@@ -25,9 +26,13 @@ public class Item : NetworkBehaviour
 
     private ItemVisuals _itemVisuals = null;
     private NetworkObject _networkObject;
+    private Rigidbody _rigidbody = null;
 
     [HideInInspector]
     public bool IsOnThrow;
+
+    private bool _isBeingDestroyed = false;
+    private WaitForSeconds _destroyTimeout = new WaitForSeconds(ITEM_DESTROY_DELAY);
 
     public ulong ItemTypeCode => NetworkObject.PrefabHash;
 
@@ -50,8 +55,19 @@ public class Item : NetworkBehaviour
     public TakeEffect takeEffect;
 
     public ulong ThrowerId;
-    //Object needs to be registered not before NetworkStart, like Awake
-    //Because before this the object doesn't have an networkId
+
+    private void Awake()
+    {
+        if(!TryGetComponent(out _rigidbody))
+        {
+            #if UNITY_EDITOR
+                Debug.LogError($"[{name}]: Rigidbody not found!");
+            #endif
+        }
+    }
+
+    // Object needs to be registered not before NetworkStart, like in Awake()
+    // Because before this the object doesn't have a networkID
     public override void NetworkStart()
     {
         _networkObject = GetComponent<NetworkObject>();
@@ -77,12 +93,9 @@ public class Item : NetworkBehaviour
 
     private void Update()
     {
-        if(IsOnThrow)
+        if(!_isBeingDestroyed && _rigidbody.velocity.sqrMagnitude <= 0.1)
         {
-            if(gameObject.GetComponent<Rigidbody>().velocity.sqrMagnitude <= 0.1)
-            {
-                TriggerDestroyItem();
-            }
+            TriggerDestroyItem();
         }
     }
 
@@ -138,12 +151,13 @@ public class Item : NetworkBehaviour
     private void TriggerDestroyItem()
     {
         IsOnThrow = false;
-        StartCoroutine(nameof(DestroyAfterSeconds), 4f);
+        _isBeingDestroyed = true;
+        StartCoroutine(nameof(DestroyAfterSeconds));
     }
 
-    private IEnumerator DestroyAfterSeconds(float seconds)
+    private IEnumerator DestroyAfterSeconds()
     {
-        yield return new WaitForSeconds(seconds);
+        yield return _destroyTimeout;
         DestroyItem_ServerRpc();
     }
 

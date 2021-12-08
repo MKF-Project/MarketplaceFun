@@ -51,12 +51,16 @@ public class MatchManager : NetworkBehaviour
     
     public delegate void OnMatchExitDelegate();
     public static event OnMatchExitDelegate OnMatchExit;
+    
+    public delegate void OnMatchStartDelegate();
+    public static event OnMatchStartDelegate OnMatchStart;
 
     public Camera SceneCamera;
 
 
     public void Start()
     {
+        OnMatchStart?.Invoke();
         _clientsFished = 0;
         _matchEnded = false;
         _timeStarted = false;
@@ -198,6 +202,7 @@ public class MatchManager : NetworkBehaviour
                     if (timeLeft > HurryTimeSeconds)
                     {           
                         MatchTimeMinutes -= timeLeft - HurryTimeSeconds;
+                        UpdateMatchTime_ClientRpc(MatchTimeMinutes);
                     }
                 }
             }
@@ -243,6 +248,12 @@ public class MatchManager : NetworkBehaviour
         playerGameObject.transform.position = CompleteSpot.position;
         playerGameObject.GetComponent<Player>().ShoppingCart.transform.position = CompleteSpot.position;
 
+    }
+
+    [ClientRpc]
+    private void UpdateMatchTime_ClientRpc(float newTime)
+    {
+        MatchTimeMinutes = newTime;
     }
 
 }

@@ -135,6 +135,7 @@
             <e p="ScorePoints.cs" t="Include" />
           </e>
           <e p="ShoppingList" t="Include">
+            <e p="PlayerProgress.cs" t="Include" />
             <e p="SerializedShoppingList.cs" t="Include" />
             <e p="ShoppingList.cs" t="Include" />
             <e p="ShoppingListItem.cs" t="Include" />

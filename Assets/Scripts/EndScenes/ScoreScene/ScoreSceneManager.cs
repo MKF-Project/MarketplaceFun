@@ -19,7 +19,7 @@ public class ScoreSceneManager : NetworkBehaviour
 
     private const string SCORE_CANVAS_TAG = "ScoreCanvas";
     
-    private const string WIN_SCENE_NAME = "WinScene";
+    //private const string WIN_SCENE_NAME = "WinScene";
     
     private const string MARKER_CONTROLLER_TAG = "PointMarkerController";
 

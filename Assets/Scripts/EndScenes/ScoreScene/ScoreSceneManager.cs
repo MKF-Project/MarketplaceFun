@@ -19,7 +19,7 @@ public class ScoreSceneManager : NetworkBehaviour
 
     private const string SCORE_CANVAS_TAG = "ScoreCanvas";
     
-    private const string WIN_SCENE_NAME = "WinScene";
+    //private const string WIN_SCENE_NAME = "WinScene";
     
     private const string MARKER_CONTROLLER_TAG = "PointMarkerController";
 
@@ -27,9 +27,20 @@ public class ScoreSceneManager : NetworkBehaviour
     
     public int _playersReady;
 
+    private bool _haveWinner;
+
     private ScoreController _scoreController;
     
     private PointMarkerController _pointMarkerController;
+
+    private int _playerIndex;
+    
+    private bool _canActivateReady;
+    
+    //public WinCamera WinCamera;
+    
+    public delegate void OnWinDelegate(int winnerIndex);
+    public static event OnWinDelegate OnWin;
 
 
     public NetworkVariable<SerializedScorePointList> scoreList = new NetworkVariable<SerializedScorePointList>(
@@ -41,6 +52,9 @@ public class ScoreSceneManager : NetworkBehaviour
     );
     public void Awake()
     {
+        _haveWinner = false;
+        _canActivateReady = false;
+        _playerIndex = -1;
         NetworkController.SelfPlayer.GetComponent<LobbyPosition>().EnterOnScore(Camera.position);
         
         _scoreCanvas = GameObject.FindGameObjectWithTag(SCORE_CANVAS_TAG).GetComponent<ScoreCanvas>();
@@ -58,26 +72,13 @@ public class ScoreSceneManager : NetworkBehaviour
             
         }
 
-        if (IsClient)
+        if (IsClient & !IsHost)
         {
+            _scoreCanvas.ShowButtonReady();
             scoreList.OnValueChanged += StartShowPoints;
         }
 
     }
-
-    private void Start()
-    {
-        if (IsServer)
-        {
-            if(_scoreController.VerifyWinner())
-            {
-                //Start Courotine to Win Scene
-                //StartCoroutine(nameof(WinSceneCoroutine));
-                GoToWinScene();
-            }
-        }
-    }
-    
 
     public void Update()
     {
@@ -88,6 +89,23 @@ public class ScoreSceneManager : NetworkBehaviour
                 _scoreCanvas.ActivateButtonStart();
             }
         }
+
+        if (_haveWinner)
+        {
+            _scoreCanvas.HideUI();
+            PlayWinLoseAnimation();
+            OnWin?.Invoke(_playerIndex);
+            _haveWinner = false;
+        }
+
+        if (IsClient & !IsHost)
+        {
+            if (_canActivateReady)
+            {
+                _scoreCanvas.ActivateButtonReady();
+                _canActivateReady = false;
+            }
+        }
     }
 
     
@@ -95,6 +113,7 @@ public class ScoreSceneManager : NetworkBehaviour
     {
         GenerateBeginMarkers();
         StartCoroutine(nameof(GenerateMarkersForPointType));
+        
     }
 
     private void StartShowPoints(SerializedScorePointList prev, SerializedScorePointList pos)
@@ -108,21 +127,30 @@ public class ScoreSceneManager : NetworkBehaviour
         ScorePoints[] scorePointsList = scoreList.Value.Array;
         Dictionary<ulong, Player> localPlayers = NetworkController.GetLocalPlayers();
 
+        bool haveScoreType;
         foreach (int scoreTypeId in ScoreConfig.ScoreTypeDictionary.Keys)
         {
-            yield return new WaitForSeconds(.5f);
+            haveScoreType = false;
+            //
             foreach (ScorePoints scorePoint in scorePointsList)
             {
                 foreach (DescriptivePoints descriptivePoints in scorePoint.LastMatchPoints)
                 {
                     if (descriptivePoints.ScoreTypeId == scoreTypeId)
                     {
+                        if (!haveScoreType)
+                        {
+                            ScoreType scoreType = ScoreConfig.ScoreTypeDictionary[scoreTypeId];
+                            _scoreCanvas.ShowScoreText(scoreType.Type, scoreType.ScoreColor.color);
+                        
+                            yield return new WaitForSeconds(0.5f);
+                            haveScoreType = true;
+                        }
+
                         int playerIndex = localPlayers[scorePoint.PlayerId]
                             .GetComponent<PlayerInfo>()
                             .PlayerData.Color;
                         Debug.Log("Generated " + descriptivePoints.ScoreTypeId + " Points:  " + descriptivePoints.Points + " --- at " + playerIndex);
-
-                        
                         
                         _pointMarkerController.SpawnMarker(playerIndex-1, descriptivePoints.ScoreTypeId, descriptivePoints.Points);
                         
@@ -136,19 +164,31 @@ public class ScoreSceneManager : NetworkBehaviour
                     
                 }
             }
+            if(haveScoreType){
+                yield return new WaitForSeconds(1f);
+            }
+            
         }
         
-        if (IsClient & !IsHost)
-        {
-            _scoreCanvas.ShowButtonReady();
-        }
-
         if (IsServer)
         {
             _scoreController.MoveToScoresToMainList();
             _scoreFinished = true;
-        }
+            //-----------------------------------------
+            if(_scoreController.VerifyWinner())
+            {
+                ulong winnerId = _scoreController.GetWinner();
+                _playerIndex = NetworkController.GetPlayerByID(winnerId).GetComponent<PlayerInfo>().PlayerData.Color;
+                HaveWinner_ClientRpc(_playerIndex);
+                _haveWinner = true;
+            }
+            else
+            {
+                CanActivateReadyButton_ClientRpc();
+            }
 
+            //-----------------------------------------
+        }
     }
 
     private void GenerateBeginMarkers()
@@ -179,31 +219,41 @@ public class ScoreSceneManager : NetworkBehaviour
         _scoreCanvas.InactivateButtonReady();
     }
 
+    [ClientRpc]
+    public void HaveWinner_ClientRpc(int winnerIndex)
+    {
+        _playerIndex = winnerIndex;
+        _haveWinner = true;
+    }
+    
+    [ClientRpc]
+    public void CanActivateReadyButton_ClientRpc()
+    {
+        _canActivateReady = true;
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void PlayerIsReady_ServerRpc()
     {
         _playersReady += 1;
     }
     
-    public void PlayerDisconnectedTurnIsReady()
-    {
-        _playersReady += 1;
-    }
 
     public void StartNewMatch()
     {
         NetworkController.switchNetworkScene(SceneManager.MatchSceneTag);
     }
 
-    IEnumerator WinSceneCoroutine()
+    public void PlayWinLoseAnimation()
     {
-        yield return new WaitForSeconds(1f);
-        GoToWinScene();
-    }
-
-    public void GoToWinScene()
-    {
-        NetworkController.switchNetworkScene(WIN_SCENE_NAME);
+        NetworkAnimator playerAnimator =  NetworkController.SelfPlayer.GetComponent<NetworkAnimator>();
+        if (NetworkController.SelfPlayer.GetComponent<PlayerInfo>().PlayerData.Color == _playerIndex)
+        {
+            playerAnimator.SetTrigger("P_Vitoria");
+            return;
+        }
+       
+        playerAnimator.SetTrigger("P_Derrota");
     }
 
 }

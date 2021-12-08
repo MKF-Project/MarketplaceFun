@@ -37,7 +37,7 @@ public class CameraScript : MonoBehaviour
         }
 
     }
-    
+
     //
     //private void LateUpdate()
     private void SetCameraOnPlayer()
@@ -83,20 +83,32 @@ public class CameraScript : MonoBehaviour
 
     public void SetCameraOnScene()
     {
+        if (_currentPlayer != null)
+        {
+            ShowPlayerHead(_currentPlayer);
+            _currentPlayer = null;
+        }
+
         transform.SetParent(null);
         transform.position = _initalPosition;
         transform.rotation = _initialRotation;
     }
-    
+
 
 
     public static void HidePlayerHead(Player player)
     {
-        // TODO: Implement
+        if(player.TryGetComponent(out PlayerDisplay display))
+        {
+            display.PlayerHeadComponents.ForEach(mesh => mesh.enabled = false);
+        }
     }
 
     public static void ShowPlayerHead(Player player)
     {
-        // TODO: Implement
+        if(player.TryGetComponent(out PlayerDisplay display))
+        {
+            display.PlayerHeadComponents.ForEach(mesh => mesh.enabled = true);
+        }
     }
 }

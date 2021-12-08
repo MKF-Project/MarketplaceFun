@@ -21,6 +21,9 @@
               <e p="ScoreSceneManager.cs" t="Include" />
               <e p="ScoreSceneManager_old.cs" t="Include" />
               <e p="SerializedScorePointList.cs" t="Include" />
+              <e p="Win" t="Include">
+                <e p="WinCamera.cs" t="Include" />
+              </e>
             </e>
             <e p="WinScene" t="Include">
               <e p="SerializedWinnersList.cs" t="Include" />
@@ -39,12 +42,11 @@
           <e p="Interactable.cs" t="Include" />
           <e p="Items" t="Include">
             <e p="Item.cs" t="Include" />
-            <e p="ItemGeneratorOld.cs" t="Include" />
             <e p="ItemGenerators" t="Include">
+              <e p="DistributedGenerator.cs" t="Include" />
               <e p="ItemGenerator.cs" t="Include" />
               <e p="PermanentRandomStartGenerator.cs" t="Include" />
               <e p="RandomCycleGenerator.cs" t="Include" />
-              <e p="RandomDistributedStartGenerator.cs" t="Include" />
             </e>
             <e p="ItemVisuals.cs" t="Include" />
           </e>
@@ -132,6 +134,7 @@
             <e p="ScorePoints.cs" t="Include" />
           </e>
           <e p="ShoppingList" t="Include">
+            <e p="PlayerProgress.cs" t="Include" />
             <e p="SerializedShoppingList.cs" t="Include" />
             <e p="ShoppingList.cs" t="Include" />
             <e p="ShoppingListItem.cs" t="Include" />

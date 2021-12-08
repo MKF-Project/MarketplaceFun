@@ -56,6 +56,9 @@ public class LobbyPosition : NetworkBehaviour
     {
         _isOnScore = true;
         _isOnLobby = true;
+        Quaternion rotation = transform.rotation;
+        rotation.y = 180;
+        transform.rotation = rotation;
 
     }
 }

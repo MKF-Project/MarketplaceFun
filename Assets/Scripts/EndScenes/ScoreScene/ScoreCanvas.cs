@@ -14,6 +14,8 @@ public class ScoreCanvas : MonoBehaviour
 
     private GameObject _buttonStart;
     private GameObject _buttonReady;
+    public GameObject ScorePanel;
+    private Text _scoreText;
     
 
     public void Awake()
@@ -24,6 +26,7 @@ public class ScoreCanvas : MonoBehaviour
         _buttonReady = gameObject.FindChildWithTag(BUTTON_READY_TAG);
         _buttonReady.SetActive(false);
 
+        _scoreText = ScorePanel.GetComponentInChildren<Text>();
     }
 
     public void ShowButtonStart()
@@ -36,15 +39,54 @@ public class ScoreCanvas : MonoBehaviour
         _buttonReady.SetActive(true);
 
     }
+    
+    public void HideButtonStart()
+    {
+        _buttonStart.SetActive(false);
+    }
+
+    public void HideButtonReady()
+    {
+        _buttonReady.SetActive(false);
+    }
+    
+    public void HideScoreText()
+    {
+        ScorePanel.SetActive(false);
+    }
+
+
+    public void HideUI()
+    {
+        HideButtonStart();
+        HideButtonReady();
+        HideScoreText();
+    }
+
 
     public void ActivateButtonStart()
     {
         _buttonStart.GetComponent<Button>().interactable = true;
     }
 
+    public void ActivateButtonReady()
+    {
+        _buttonReady.GetComponent<Button>().interactable = true;
+    }
+    
     public void InactivateButtonReady()
     {
         _buttonReady.GetComponent<Button>().interactable = false;
     }
+
+    public void ShowScoreText(String text)
+    {
+        _scoreText.text = text;
+    }
     
+    public void ShowScoreText(String text, Color color)
+    {
+        _scoreText.text = text;
+        _scoreText.color = color;
+    }
 }

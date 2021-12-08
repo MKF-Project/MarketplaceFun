@@ -114,9 +114,8 @@ public class InputController : MonoBehaviour
         watchInputAction(_playerControls, "Jump",     OnJumpAction);
         watchInputAction(_playerControls, "Interact", OnInteractAction);
         watchInputAction(_playerControls, "Throw",    OnThrowAction);
-        watchInputAction(_playerControls, "Drop",     OnDropAction);
-        watchInputAction(_playerControls, "Put",      OnPutAction);
-        watchInputAction(_playerControls, "Walk",     OnWalkAction);
+        // watchInputAction(_playerControls, "Drop",     OnDropAction); // Disabled for now
+        // watchInputAction(_playerControls, "Walk",     OnWalkAction); // Disabled for now
         watchInputAction(_playerControls, "Pause",    OnPauseAction);
 
         // Menu Actions
@@ -358,22 +357,6 @@ public class InputController : MonoBehaviour
 
         if(context.performed) {
             OnDrop?.Invoke();
-        }
-    }
-
-
-    public delegate void OnPutDelegate();
-    public static event OnPutDelegate OnPut;
-
-    private void OnPutAction(InputAction.CallbackContext context)
-    {
-        if(PlayerControlsFrozen)
-        {
-            return;
-        }
-
-        if(context.performed) {
-            OnPut?.Invoke();
         }
     }
 

@@ -44,7 +44,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gold/Fase 2/_Gold_2.unity
     guid: 9752a669e51c77549ae36f77f05ec4d4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WinScene.unity
     guid: a0f14cc5b5248214ca9b1a912eac582a
   m_configObjects:

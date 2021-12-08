@@ -13,7 +13,8 @@ public class ScoreAuditor : MonoBehaviour
     private const int SOLO_WINNER_ID = 3;
 
     private const int FIRST_TO_CHECK_OUT_ID = 5;
-
+    
+    private const int GAME_CHANGER_ID = 4;
 
     private void Awake()
     {
@@ -24,6 +25,14 @@ public class ScoreAuditor : MonoBehaviour
     {
         MatchManager matchManager = GameObject.FindGameObjectWithTag(MATCH_MANAGER_TAG).GetComponent<MatchManager>();
         List<ulong> listCompletedPlayers = matchManager.ListCompletedPlayers;
+
+        foreach (ulong playerId in NetworkController.GetLocalPlayers().Keys)
+        {
+            if (!listCompletedPlayers.Contains(playerId))
+            {
+                _scoreController.AddLostCounterToPlayer(playerId);
+            }
+        }
         
         if (listCompletedPlayers.Count == 0)
         {
@@ -47,6 +56,7 @@ public class ScoreAuditor : MonoBehaviour
 
     private void ScorePlayerPoints(ulong playerId)
     {
+        
         int totalPoints = CalculatePlayersPointsFromMatch(playerId, out var playerDescriptivePoints);
 
         _scoreController.AddPointsToPlayer(playerId, totalPoints, playerDescriptivePoints);
@@ -89,6 +99,14 @@ public class ScoreAuditor : MonoBehaviour
                 playerDescriptivePoints.Add(descriptivePoints);
                 totalPoints += scorePoints;
             }
+        }
+
+        if (_scoreController.IsGameChangingAvailable(playerId))
+        {
+            ScoreType scoreGameChanger = ScoreConfig.ScoreTypeDictionary[GAME_CHANGER_ID];
+            DescriptivePoints descriptivePoints = new DescriptivePoints(scoreGameChanger.Id, scoreGameChanger.Points);
+            playerDescriptivePoints.Add(descriptivePoints);
+            totalPoints +=  scoreGameChanger.Points;
         }
 
         return totalPoints;

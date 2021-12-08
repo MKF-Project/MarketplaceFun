@@ -13,7 +13,7 @@ public class ShoppingList : NetworkBehaviour
     public Dictionary<ulong, ShoppingListItem> ItemDictionary;
     public ShoppingListUI ShoppingListUi;
 
-    private int _quantityChecked;
+    public int _quantityChecked;
 
     private int _randomSeed;
 
@@ -144,6 +144,9 @@ public class ShoppingList : NetworkBehaviour
         ItemDictionary.Add(itemCode, listItem);
         ShoppingListUi.CheckItem(itemCode);
         _quantityChecked++;
+
+        WarnItemChecked_ServerRpc(NetworkController.SelfID);
+        
         return true;
     }
 
@@ -160,6 +163,8 @@ public class ShoppingList : NetworkBehaviour
         ItemDictionary.Add(itemCode, listItem);
         ShoppingListUi.UncheckItem(itemCode);
         _quantityChecked--;
+
+        WarnItemUnchecked_ServerRpc(NetworkController.SelfID);
     }
 
 
@@ -173,16 +178,28 @@ public class ShoppingList : NetworkBehaviour
         return false;
     }
 
-    // public void PrintList()
-    // {
-
-    //     String msg = "";
-    //     foreach (ShoppingListItem item in ItemDictionary.Values)
-    //     {
-    //         msg +=  ", " + ItemTypeList.ItemList[item.ItemCode].Name;
-    //     }
-    //     MatchMessages.Instance.EditMessage(msg, 10f);
-    //     MatchMessages.Instance.ShowMessage();
-    // }
-
+    [ServerRpc]
+    public void WarnItemChecked_ServerRpc(ulong playerId)
+    {
+        WarnItemChecked_ClientRpc(playerId);
+    }
+    
+    [ClientRpc]
+    public void WarnItemChecked_ClientRpc(ulong playerId)
+    {
+        PlayerProgress.Instance.AddItemToPlayer(playerId);
+    }
+    
+    
+    [ServerRpc]
+    public void WarnItemUnchecked_ServerRpc(ulong playerId)
+    {
+        WarnItemUnchecked_ClientRpc(playerId);
+    }
+    
+    [ClientRpc]
+    public void WarnItemUnchecked_ClientRpc(ulong playerId)
+    {
+        PlayerProgress.Instance.RemoveItemToPlayer(playerId);
+    }
 }

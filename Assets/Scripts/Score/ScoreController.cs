@@ -18,6 +18,14 @@ public class ScoreController : MonoBehaviour
 
     public int RoundsLoosing;
     
+    private const int FIRST_TO_CHECK_OUT_INDEX = 5;
+    
+    private const int CHECK_OUT_INDEX = 1;
+
+    private const int ENEMY_HIT_INDEX = 0;
+
+
+    
     void Awake()
     {
         if (!NetworkController.IsServer)
@@ -47,16 +55,21 @@ public class ScoreController : MonoBehaviour
         ScorePoints scorePoints = new ScorePoints(playerId);
         _playerPoints.Add(playerId, scorePoints);
         
-        /*
+        
         // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
         List<DescriptivePoints> descriptivePointsList = new List<DescriptivePoints>();
         DescriptivePoints descriptivePoints = new DescriptivePoints(6, 1);
         descriptivePointsList.Add(descriptivePoints);
         descriptivePointsList.Add(descriptivePoints);
+        descriptivePoints = new DescriptivePoints(1, 5);
+        descriptivePointsList.Add(descriptivePoints);
 
-        AddPointsToPlayer(playerId, 2, descriptivePointsList);
+        AddPointsToPlayer(playerId, 7, descriptivePointsList);
+        
+
+
         // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
-        */
+        
     }
 
     public void RemovePlayer(ulong playerId)
@@ -124,14 +137,15 @@ public class ScoreController : MonoBehaviour
     public void EndMatch()
     {
         _scoreAuditor.Audit();
-        //AdicionaParaTeste();
+        AdicionaParaTeste();
+        AdicionaParaTeste();
     }
 
     public bool VerifyWinner()
     {
         foreach (ScorePoints scorePoints in _playerPoints.Values)
         {
-            if (scorePoints.Points > PointsToWin)
+            if (scorePoints.Points >= PointsToWin)
             {
                 return true;
             }
@@ -140,10 +154,9 @@ public class ScoreController : MonoBehaviour
         return false;
     }
 
-    public List<ulong> GetWinnerList()
+    public ulong GetWinner()
     {
         ScorePoints winnerScorePoints = new ScorePoints(0);
-        List<ulong> winnersIdList = new List<ulong>();
         
         foreach (ScorePoints scorePoints in _playerPoints.Values)
         {
@@ -151,24 +164,79 @@ public class ScoreController : MonoBehaviour
             {
                 if (scorePoints.Points == winnerScorePoints.Points)
                 {
-                    winnersIdList.Add(scorePoints.PlayerId);
+                    winnerScorePoints = Tiebreaker(scorePoints, winnerScorePoints);
                 }
 
                 if (scorePoints.Points > winnerScorePoints.Points)
                 {
-                    winnersIdList = new List<ulong> {scorePoints.PlayerId};
                     winnerScorePoints = scorePoints;
                 }
             }
         }
-
-        return winnersIdList;
+        return winnerScorePoints.PlayerId;
     }
 
-    public SerializedWinnersList GetSerializedWinnersList()
+    public ScorePoints Tiebreaker(ScorePoints player1Score, ScorePoints player2Score)
     {
-        SerializedWinnersList serializedWinnersList = new SerializedWinnersList(GetWinnerList().ToArray());
-        return serializedWinnersList;
+        ulong playerId1 = player1Score.PlayerId;
+        ulong playerId2 = player2Score.PlayerId;
+            
+        int firstWins_Player1 = CountNumberOfScore(playerId1, FIRST_TO_CHECK_OUT_INDEX);
+        int firstWins_Player2 = CountNumberOfScore(playerId2, FIRST_TO_CHECK_OUT_INDEX);
+
+        if (firstWins_Player1 > firstWins_Player2)
+        {
+            return player1Score;
+        }
+
+        if (firstWins_Player1 < firstWins_Player2)
+        {
+            return player2Score;
+        }
+        
+        int checksOut_Player1 = CountNumberOfScore(playerId1, CHECK_OUT_INDEX);
+        int checksOut_Player2 = CountNumberOfScore(playerId2, CHECK_OUT_INDEX);
+
+        if (checksOut_Player1 > checksOut_Player2)
+        {
+            return player1Score;
+        }
+
+        if (checksOut_Player1 < checksOut_Player2)
+        {
+            return player2Score;
+        }
+
+        
+        int enemyHits_Player1 = CountNumberOfScore(playerId1, ENEMY_HIT_INDEX);
+        int enemyHits_Player2 = CountNumberOfScore(playerId2, ENEMY_HIT_INDEX);
+
+        if (enemyHits_Player1 > enemyHits_Player2)
+        {
+            return player1Score;
+        }
+
+        if (enemyHits_Player1 < enemyHits_Player2)
+        {
+            return player2Score;
+        }
+
+        return player1Score;
+
+    }
+
+    public int CountNumberOfScore(ulong playerId, int scoreTypeId)
+    {
+        int result = 0;
+        foreach (DescriptivePoints descriptivePoint in _playerPoints[playerId].PlayerPoints)
+        {
+            if (descriptivePoint.ScoreTypeId == scoreTypeId)
+            {
+                result += 1;
+            }
+        }
+
+        return result;
     }
 
     public void MoveToScoresToMainList()
@@ -192,7 +260,7 @@ public class ScoreController : MonoBehaviour
         DescriptivePoints descriptivePoints = new DescriptivePoints(1, 5);
         descriptivePointsList.Add(descriptivePoints);
 
-        AddPointsToPlayer(0, 5, descriptivePointsList);
+        AddPointsToPlayer(2, 5, descriptivePointsList);
 
     }
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------

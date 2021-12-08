@@ -39,12 +39,41 @@ public class ScoreCanvas : MonoBehaviour
         _buttonReady.SetActive(true);
 
     }
+    
+    public void HideButtonStart()
+    {
+        _buttonStart.SetActive(false);
+    }
+
+    public void HideButtonReady()
+    {
+        _buttonReady.SetActive(false);
+    }
+    
+    public void HideScoreText()
+    {
+        ScorePanel.SetActive(false);
+    }
+
+
+    public void HideUI()
+    {
+        HideButtonStart();
+        HideButtonReady();
+        HideScoreText();
+    }
+
 
     public void ActivateButtonStart()
     {
         _buttonStart.GetComponent<Button>().interactable = true;
     }
 
+    public void ActivateButtonReady()
+    {
+        _buttonReady.GetComponent<Button>().interactable = true;
+    }
+    
     public void InactivateButtonReady()
     {
         _buttonReady.GetComponent<Button>().interactable = false;

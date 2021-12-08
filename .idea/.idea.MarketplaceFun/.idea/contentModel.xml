@@ -21,6 +21,9 @@
               <e p="ScoreSceneManager.cs" t="Include" />
               <e p="ScoreSceneManager_old.cs" t="Include" />
               <e p="SerializedScorePointList.cs" t="Include" />
+              <e p="Win" t="Include">
+                <e p="WinCamera.cs" t="Include" />
+              </e>
             </e>
             <e p="WinScene" t="Include">
               <e p="SerializedWinnersList.cs" t="Include" />

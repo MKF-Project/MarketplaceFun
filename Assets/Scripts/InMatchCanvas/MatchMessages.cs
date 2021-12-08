@@ -25,13 +25,14 @@ public class MatchMessages : MonoBehaviour
             _messageText = MessageText.GetComponent<Text>();
             _messageOnDisplay = false;
             _waitToDisappear = .3f;
+            _defaultColor = _messageText.color;
         }
         else
         {
             DestroyImmediate(gameObject);
         }
 
-        _defaultColor = _messageText.color;
+        
 
 
 

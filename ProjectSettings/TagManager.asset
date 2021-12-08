@@ -28,6 +28,7 @@ TagManager:
   - PointMarkerController
   - PointMarkerSpawner
   - Dice
+  - WinSpot
   layers:
   - Default
   - TransparentFX

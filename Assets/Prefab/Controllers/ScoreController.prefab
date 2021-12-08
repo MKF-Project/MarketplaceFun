@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5484c2cebae336408118482b9d36322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PointsToWin: 25
+  PointsToWin: 20
   RoundsLoosing: 2
 --- !u!114 &5383552216265904450
 MonoBehaviour:

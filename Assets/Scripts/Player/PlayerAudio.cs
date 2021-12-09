@@ -1,24 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MLAPI;
 
-public class PlayerAudio : MonoBehaviour
+public class PlayerAudio : NetworkBehaviour
 {
     [Header("Sounds")]
     public List<AudioClip> Steps;
 
     private AudioSource _playerSource;
-    private Player _playerScript;
 
     private void Awake()
     {
-        TryGetComponent(out _playerScript);
         _playerSource = GetComponentInChildren<AudioSource>();
     }
 
     private void Start()
     {
-        if(_playerScript.IsOwner)
+        if(IsOwner)
         {
             _playerSource.spatialBlend = 0;
         }

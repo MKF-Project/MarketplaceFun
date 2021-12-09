@@ -126,6 +126,8 @@ public class ShoppingList : NetworkBehaviour
         }
     }
 
+    public bool AssertItemWillCompleteList(ulong itemCode) => ItemDictionary.ContainsKey(itemCode) && !ItemDictionary[itemCode].Caught && _quantityChecked + 1 >= ItemDictionary.Count;
+
     public bool CheckItem(ulong itemCode)
     {
         if(!ItemDictionary.ContainsKey(itemCode))
@@ -134,7 +136,7 @@ public class ShoppingList : NetworkBehaviour
         }
 
         ShoppingListItem listItem = ItemDictionary[itemCode];
-        if (listItem.Caught)
+        if(listItem.Caught)
         {
             return false;
         }
@@ -146,7 +148,7 @@ public class ShoppingList : NetworkBehaviour
         _quantityChecked++;
 
         WarnItemChecked_ServerRpc(NetworkController.SelfID);
-        
+
         return true;
     }
 
@@ -168,38 +170,49 @@ public class ShoppingList : NetworkBehaviour
     }
 
 
-    public bool IsListChecked()
-    {
-        if (_quantityChecked == ItemDictionary.Count)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    public bool IsListChecked() => _quantityChecked == ItemDictionary.Count;
 
     [ServerRpc]
     public void WarnItemChecked_ServerRpc(ulong playerId)
     {
+        if(!IsOwner)
+        {
+            _quantityChecked++;
+        }
+
         WarnItemChecked_ClientRpc(playerId);
     }
-    
+
     [ClientRpc]
     public void WarnItemChecked_ClientRpc(ulong playerId)
     {
+        if(!IsOwner && !IsServer)
+        {
+            _quantityChecked++;
+        }
+
         PlayerProgress.Instance.AddItemToPlayer(playerId);
     }
-    
-    
+
     [ServerRpc]
     public void WarnItemUnchecked_ServerRpc(ulong playerId)
     {
+        if(!IsOwner)
+        {
+            _quantityChecked--;
+        }
+
         WarnItemUnchecked_ClientRpc(playerId);
     }
-    
+
     [ClientRpc]
     public void WarnItemUnchecked_ClientRpc(ulong playerId)
     {
+        if(!IsOwner && !IsServer)
+        {
+            _quantityChecked--;
+        }
+
         PlayerProgress.Instance.RemoveItemToPlayer(playerId);
     }
 }

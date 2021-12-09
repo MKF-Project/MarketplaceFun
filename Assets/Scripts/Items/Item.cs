@@ -27,6 +27,7 @@ public class Item : NetworkBehaviour
     private ItemVisuals _itemVisuals = null;
     private NetworkObject _networkObject;
     private Rigidbody _rigidbody = null;
+    private AudioSource _itemSource;
 
     [HideInInspector]
     public bool IsOnThrow;
@@ -56,12 +57,22 @@ public class Item : NetworkBehaviour
 
     public ulong ThrowerId;
 
+    [Header("SFX")]
+    public List<AudioClip> ItemHitSounds;
+
     private void Awake()
     {
         if(!TryGetComponent(out _rigidbody))
         {
             #if UNITY_EDITOR
                 Debug.LogError($"[{name}]: Rigidbody not found!");
+            #endif
+        }
+
+        if(!TryGetComponent(out _itemSource))
+        {
+            #if UNITY_EDITOR
+                Debug.LogError($"[{name}]: AudioSource not found!");
             #endif
         }
     }
@@ -101,6 +112,11 @@ public class Item : NetworkBehaviour
 
     public void OnCollisionEnter(Collision other)
     {
+        if(other.gameObject.tag != ShoppingCartItem.SHOPPING_CART_TAG)
+        {
+            PlayHitSound();
+        }
+
         if(IsOnThrow)
         {
             GameObject hitObject = other.gameObject;
@@ -148,6 +164,8 @@ public class Item : NetworkBehaviour
         return itemNetworkObject;
     }
 
+    public void PlayHitSound() => _itemSource.PlayOneShot(ItemHitSounds[UnityEngine.Random.Range(0, ItemHitSounds.Count)]);
+
     private void TriggerDestroyItem()
     {
         IsOnThrow = false;
@@ -171,6 +189,8 @@ public class Item : NetworkBehaviour
     [ClientRpc]
     public void DestroyItem_ClientRpc()
     {
+
         Destroy(gameObject);
+
     }
 }

@@ -7,16 +7,18 @@ using MLAPI.Messaging;
 
 public static class NetworkExtensions
 {
-    public static ClientRpcParams ReturnRpcToSender(this ServerRpcParams serverRpc)
+    public static ClientRpcParams ToClientRpcParams(this ulong clientID)
     {
         return new ClientRpcParams
         {
             Send = new ClientRpcSendParams
             {
-                TargetClientIds = new ulong[] { serverRpc.Receive.SenderClientId }
+                TargetClientIds = new ulong[] { clientID }
             }
         };
     }
+
+    public static ClientRpcParams ReturnRpcToSender(this ServerRpcParams serverRpc) => serverRpc.Receive.SenderClientId.ToClientRpcParams();
 
     public static ClientRpcParams ReturnRpcToOthers(this ServerRpcParams serverRpc)
     {

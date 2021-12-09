@@ -76,6 +76,7 @@ public abstract class PlayerControls : NetworkBehaviour
     // Components
     protected Rigidbody _rigidBody;
     protected NetworkAnimator _playerNetAnimator;
+    protected PlayerAudio _playerAudioScript;
 
     protected Collider _currentLookingCollider = null;
     protected Collider _onInteractLookingCollider = null;
@@ -154,6 +155,7 @@ public abstract class PlayerControls : NetworkBehaviour
         TryGetComponent(out _rigidBody);
         TryGetComponent(out _playerNetAnimator);
         TryGetComponent(out _playerScript);
+        TryGetComponent(out _playerAudioScript);
 
         _cameraPosition = transform.Find(CAMERA_POSITION_NAME).gameObject;
         _initialCameraLocalRotation = _cameraPosition.transform.localRotation;
@@ -177,6 +179,11 @@ public abstract class PlayerControls : NetworkBehaviour
             if(_playerScript == null)
             {
                 Debug.LogError($"[{gameObject.name}::PlayerControls]: Player Script not Found!");
+            }
+
+            if(_playerAudioScript == null)
+            {
+                Debug.LogError($"[{gameObject.name}::PlayerControls]: PlayerAudio Script not Found!");
             }
         #endif
 
@@ -419,29 +426,34 @@ public abstract class PlayerControls : NetworkBehaviour
         {
             var contact = other.GetContact(i);
             var angle = 0f;
-                if(isFloorCollision(contact, out angle))
+            if(isFloorCollision(contact, out angle))
+            {
+                // Stop coroutine from previous frame from taking effect
+                StopCoroutine(nameof(clearGrounded));
+
+                if(isGrounded == false)
                 {
-                    // Stop coroutine from previous frame from taking effect
-                    StopCoroutine(nameof(clearGrounded));
-
-                    isGrounded = true;
-                    var currentAnimatorState = _playerNetAnimator.GetCurrentAnimatorStateInfo(0);
-                    if(currentAnimatorState.shortNameHash == ANIM_FALLING_STATE || currentAnimatorState.shortNameHash == ANIM_ITEM_FALLING_STATE)
-                    {
-                        _playerNetAnimator.SetTrigger(ANIM_LAND);
-                    }
-
-                    // Jump away from current surface (NYI)
-                    // jumpNormal = contact.normal;
+                    _playerAudioScript.PlayStep();
                 }
-                else if(angle > MaximumGroundSlope && angle <= 90)
+
+                isGrounded = true;
+                var currentAnimatorState = _playerNetAnimator.GetCurrentAnimatorStateInfo(0);
+                if(currentAnimatorState.shortNameHash == ANIM_FALLING_STATE || currentAnimatorState.shortNameHash == ANIM_ITEM_FALLING_STATE)
                 {
-
-                    StopCoroutine(nameof(clearWallCollision));
-
-                    isCollidingWithWall = true;
-                    _wallCollisionNormal = contact.normal;
+                    _playerNetAnimator.SetTrigger(ANIM_LAND);
                 }
+
+                // Jump away from current surface (NYI)
+                // jumpNormal = contact.normal;
+            }
+            else if(angle > MaximumGroundSlope && angle <= 90)
+            {
+
+                StopCoroutine(nameof(clearWallCollision));
+
+                isCollidingWithWall = true;
+                _wallCollisionNormal = contact.normal;
+            }
         }
     }
 

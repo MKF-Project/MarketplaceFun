@@ -10,7 +10,7 @@ public class TakeEffect : ScorableAction
     private Animator _animator;
     private Player _playerScript;
 
-    private static readonly int RECEIVE_HIT = Animator.StringToHash("Recebeu_Golpe");
+    private static readonly int RECEIVE_HIT = Animator.StringToHash("P_Recebeu_Golpe");
 
     private bool _isTakingEffect;
 

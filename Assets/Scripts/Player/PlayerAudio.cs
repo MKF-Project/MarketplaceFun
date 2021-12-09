@@ -5,14 +5,26 @@ using MLAPI;
 
 public class PlayerAudio : NetworkBehaviour
 {
+    private const float MUTE_TIMEOUT = 0.5f;
+
     [Header("Sounds")]
     public List<AudioClip> Steps;
 
     private AudioSource _playerSource;
+    private WaitForSeconds _muteTimeout = new WaitForSeconds(MUTE_TIMEOUT);
 
     private void Awake()
     {
         _playerSource = GetComponentInChildren<AudioSource>();
+
+        StartCoroutine(UnmuteAfterSeconds());
+
+        SceneManager.OnSceneLoaded += StartMuted;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.OnSceneLoaded -= StartMuted;
     }
 
     private void Start()
@@ -21,6 +33,17 @@ public class PlayerAudio : NetworkBehaviour
         {
             _playerSource.spatialBlend = 0;
         }
+    }
+
+    private void StartMuted(string scene) => StartCoroutine(UnmuteAfterSeconds());
+
+    private IEnumerator UnmuteAfterSeconds()
+    {
+        _playerSource.mute = true;
+
+        yield return _muteTimeout;
+
+        _playerSource.mute = false;
     }
 
     // Call Sound Functions

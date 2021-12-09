@@ -106,6 +106,12 @@ public class ScoreSceneManager : NetworkBehaviour
                 _canActivateReady = false;
             }
         }
+
+        if (InputController.playerInputEnabled)
+        {
+            InputController.RequestMenuControlsSwitch();
+        }
+
     }
 
     
@@ -186,7 +192,6 @@ public class ScoreSceneManager : NetworkBehaviour
             {
                 CanActivateReadyButton_ClientRpc();
             }
-
             //-----------------------------------------
         }
     }

@@ -98,6 +98,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Carrinho
       objectReference: {fileID: 0}
+    - target: {fileID: 3750067842734949869, guid: 838ba1413a8bab94491c1a37f84d802a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cd85b453fa3bf68439e7749e07bfe5c9, type: 2}
     - target: {fileID: 4694403432790717876, guid: 838ba1413a8bab94491c1a37f84d802a,
         type: 3}
       propertyPath: m_StaticEditorFlags

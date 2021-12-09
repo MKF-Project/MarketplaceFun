@@ -118,10 +118,10 @@ public class ShoppingCartItem : NetworkBehaviour
 
             if(index != -1)
             {
+                PlayItemSound(item);
+
                 setNextItem_ClientRpc(item.ItemTypeCode, index);
                 setNextItem(item.ItemTypeCode, index);
-
-                PlayItemSound(item);
             }
 
             _lastCollision = Time.unscaledTime;
@@ -130,19 +130,30 @@ public class ShoppingCartItem : NetworkBehaviour
 
     private void PlayItemSound(Item item)
     {
-        if(Owner.OwnerClientId != item.OwnerClientId)
+        if(_shoppingListBuffer == null)
         {
-            RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ItemOpponent, Owner.OwnerClientId.ToClientRpcParams());
-            return;
-        }
-
-        if(_shoppingListBuffer == null){
             if(!Owner.TryGetComponent(out _shoppingListBuffer))
             {
                 return;
             }
         }
 
+        // Test if list would be completed by this item
+        if(_shoppingListBuffer.AssertItemWillCompleteList(item.ItemTypeCode))
+        {
+            RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ListComplete, Owner.OwnerClientId.ToClientRpcParams());
+            return;
+        }
+
+        // Test if this item was thrown by another player
+        if(Owner.OwnerClientId != item.OwnerClientId)
+        {
+            RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ItemOpponent, Owner.OwnerClientId.ToClientRpcParams());
+            return;
+        }
+
+        // If not complete and thrown by the owner of the cart,
+        // test if the item is part of their shopping list or not
         if(_shoppingListBuffer.ItemDictionary.ContainsKey(item.ItemTypeCode))
         {
             RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ItemCorrect, Owner.OwnerClientId.ToClientRpcParams());
@@ -329,6 +340,10 @@ public class ShoppingCartItem : NetworkBehaviour
 
             case ShoppingListSFX.ItemOpponent:
                 SceneAudioController.PlayItemOpponentSFX();
+                break;
+
+            case ShoppingListSFX.ListComplete:
+                SceneAudioController.PlayListCompleteSFX();
                 break;
         }
     }

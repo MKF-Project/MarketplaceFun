@@ -83,8 +83,11 @@ public class CameraScript : MonoBehaviour
 
     public void SetCameraOnScene()
     {
-        ShowPlayerHead(_currentPlayer);
-        _currentPlayer = null;
+        if (_currentPlayer != null)
+        {
+            ShowPlayerHead(_currentPlayer);
+            _currentPlayer = null;
+        }
 
         transform.SetParent(null);
         transform.position = _initalPosition;

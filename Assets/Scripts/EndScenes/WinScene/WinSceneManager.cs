@@ -28,7 +28,7 @@ public class WinSceneManager : NetworkBehaviour
         if (IsServer)
         {
             ScoreController scoreController = GameObject.FindGameObjectWithTag("ScoreController").GetComponent<ScoreController>();
-            winnersList.Value = scoreController.GetSerializedWinnersList();
+            //winnersList.Value = scoreController.GetSerializedWinnersList();
             PopulateTextOnCanvas();
         }
 

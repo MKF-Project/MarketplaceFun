@@ -766,9 +766,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1fe3d7452b5a6468c031b616f7abb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Position1: {x: -1, y: 0.2, z: 0}
-  Position2: {x: 1, y: 0.2, z: 0}
-  Position3: {x: -3, y: 0.2, z: 0}
+  Position1: {x: -3, y: 0.2, z: 0}
+  Position2: {x: -1, y: 0.2, z: 0}
+  Position3: {x: 1, y: 0.2, z: 0}
   Position4: {x: 3, y: 0.2, z: 0}
 --- !u!114 &-2014535450862663308
 MonoBehaviour:

@@ -13,6 +13,8 @@ public class MatchMessages : MonoBehaviour
     private bool _messageOnDisplay;
     private float _waitToDisappear;
 
+    private Color _defaultColor;
+
 
     public void Awake()
     {
@@ -23,11 +25,14 @@ public class MatchMessages : MonoBehaviour
             _messageText = MessageText.GetComponent<Text>();
             _messageOnDisplay = false;
             _waitToDisappear = .3f;
+            _defaultColor = _messageText.color;
         }
         else
         {
             DestroyImmediate(gameObject);
         }
+
+        
 
 
 
@@ -41,6 +46,7 @@ public class MatchMessages : MonoBehaviour
             MessageText.SetActive(true);
             StartCoroutine(nameof(Fade));
         }
+        
 
     }
 
@@ -54,6 +60,10 @@ public class MatchMessages : MonoBehaviour
         _waitToDisappear = waitToDisappear;
     }
 
+    public void EditColorMessage(Color color)
+    {
+        _messageText.color = color;
+    }
 
     public void HideMessage()
     {
@@ -73,9 +83,9 @@ public class MatchMessages : MonoBehaviour
         }
         
         HideMessage();
-        Color color = _messageText.color;
-        color.a = 1f;
-        _messageText.color = color;
+        //Color color = _messageText.color;
+        //color.a = 1f;
+        _messageText.color = _defaultColor;
         
     }
 

@@ -90,7 +90,7 @@ PrefabInstance:
         type: 3}
       propertyPath: ShelfItemGroups.Array.data[0].ItemGroupPrefab
       value: 
-      objectReference: {fileID: 3756135022768983426, guid: 7eba877941cda2c41a43aa0b72dcd587,
+      objectReference: {fileID: 3756135022768983426, guid: 487b533b7b08a3042b71232ff8c5830b,
         type: 3}
     - target: {fileID: 5320326129464203329, guid: 6f6d2dd32353c9b43849828fa34e28af,
         type: 3}

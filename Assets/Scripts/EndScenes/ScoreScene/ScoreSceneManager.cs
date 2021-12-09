@@ -171,7 +171,7 @@ public class ScoreSceneManager : NetworkBehaviour
                 }
             }
             if(haveScoreType){
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(2f);
             }
             
         }

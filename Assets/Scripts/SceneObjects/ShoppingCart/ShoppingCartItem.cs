@@ -9,7 +9,7 @@ using MLAPI.NetworkVariable;
 [SelectionBase]
 public class ShoppingCartItem : NetworkBehaviour
 {
-    private const string SHOPPING_CART_TAG = "ShoppingCart";
+    public const string SHOPPING_CART_TAG = "ShoppingCart";
     private const string PLAYER_TAG = "Player";
     private const string ITEM_POSITIONS_TAG = "Item";
     private const string ITEM_TAG = "Item";
@@ -84,7 +84,7 @@ public class ShoppingCartItem : NetworkBehaviour
             Player player = NetworkController.GetPlayerByID(_ownerID.Value);
             Owner = player;
             player.ShoppingCart = gameObject;
-            
+
             if(Owner != NetworkController.SelfPlayer)
             {
                 return;

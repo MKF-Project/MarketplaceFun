@@ -119,7 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9309193b66b7a74fa5b5c76724bf191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingCheckedImage: {fileID: 0}
+  StartingCheckedImage: {fileID: 21300000, guid: be9aa9dec5397e046a082908df9edccb,
+    type: 3}
 --- !u!114 &6942099745126687709
 MonoBehaviour:
   m_ObjectHideFlags: 0

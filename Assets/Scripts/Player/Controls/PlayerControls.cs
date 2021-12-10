@@ -84,6 +84,8 @@ public abstract class PlayerControls : NetworkBehaviour
     private Interactable _interactableBuffer = null;
     private RaycastHit _raycastHitBuffer;
 
+    private bool _isSwitchingControls = false;
+
     protected Player _playerScript = null;
 
     protected GameObject _cameraPosition;
@@ -221,6 +223,7 @@ public abstract class PlayerControls : NetworkBehaviour
 
     private IEnumerator switchControlSchemeCoroutine()
     {
+        _isSwitchingControls = true;
         _interactableBuffer?.TriggerLookExit(_playerScript, _currentLookingCollider);
 
         yield return Utils.EndOfFrameWait;
@@ -241,6 +244,8 @@ public abstract class PlayerControls : NetworkBehaviour
                 _freeMovementControls.Move(transferDirection);
                 break;
         }
+
+        _isSwitchingControls = false;
     }
 
     private void initializeControlScheme()
@@ -302,7 +307,10 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        if(!_playerScript.CanInteract)
+        // Force LookExit and prevent further attempts to get new interact object
+        // if the player either can't interact with anything at the moment,
+        // or if we're in the middle of switching control schemes
+        if(!_playerScript.CanInteract || _isSwitchingControls)
         {
             if(_currentLookingCollider != null)
             {

@@ -34,7 +34,7 @@ public class PointMarker : MonoBehaviour
     {
         _pointType = pointType;
         _points = point;
-        transform.localScale = transform.localScale + (new Vector3(0.1f, 0.1f, 0.05f) * _points);
+        transform.localScale = new Vector3(0.2f, 0.2f, 0.2f) * _points;
 
         //Colocar cor
         if (point < 6)

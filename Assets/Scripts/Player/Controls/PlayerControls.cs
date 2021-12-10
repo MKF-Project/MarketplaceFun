@@ -216,7 +216,7 @@ public abstract class PlayerControls : NetworkBehaviour
     {
         // Delay this by one frame to prevent input events from
         // one control scheme to bleed over to the other in the same frame
-        StartCoroutine(nameof(switchControlSchemeCoroutine));
+        StartCoroutine(switchControlSchemeCoroutine());
     }
 
     private IEnumerator switchControlSchemeCoroutine()
@@ -311,6 +311,7 @@ public abstract class PlayerControls : NetworkBehaviour
                     _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
                 }
 
+                _interactableBuffer = null;
                 _currentLookingCollider = null;
             }
             return;
@@ -332,6 +333,8 @@ public abstract class PlayerControls : NetworkBehaviour
                 if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
                 {
                     _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
+
+                    _interactableBuffer = null;
                     _currentLookingCollider = null;
                 }
 
@@ -361,6 +364,8 @@ public abstract class PlayerControls : NetworkBehaviour
                 {
                     _interactableBuffer.TriggerLookEnter(_playerScript, _currentLookingCollider);
                 }
+
+                _interactableBuffer = null;
             }
         }
 
@@ -368,6 +373,8 @@ public abstract class PlayerControls : NetworkBehaviour
         else if(_currentLookingCollider != null && _currentLookingCollider.TryGetComponent(out _interactableBuffer))
         {
             _interactableBuffer.TriggerLookExit(_playerScript, _currentLookingCollider);
+
+            _interactableBuffer = null;
             _currentLookingCollider = null;
         }
     }

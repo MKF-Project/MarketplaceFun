@@ -7,6 +7,9 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
+          <e p="Audio" t="Include">
+            <e p="SceneAudioController.cs" t="Include" />
+          </e>
           <e p="CameraScript.cs" t="Include" />
           <e p="DeferredInteractable.cs" t="Include" />
           <e p="EndScenes" t="Include">
@@ -99,6 +102,7 @@
               <e p="PlayerInfo.cs" t="Include" />
             </e>
             <e p="Player.cs" t="Include" />
+            <e p="PlayerAudio.cs" t="Include" />
             <e p="PlayerManager.cs" t="Include" />
             <e p="Put.cs" t="Include" />
             <e p="Score" t="Include">

@@ -1643,18 +1643,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartingScoreTypeList:
-  - Type: Armadilha
-    Points: 1
-    Id: 0
-    ScorableAction: {fileID: 162437846829725900, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
-      type: 3}
-    ScoreColor: {fileID: 2100000, guid: f27b555ac63aaac4fae197c4047f049d, type: 2}
   - Type: Completou a Lista
     Points: 5
     Id: 0
     ScorableAction: {fileID: 492374440104628429, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
       type: 3}
     ScoreColor: {fileID: 2100000, guid: 1845c6e488453b94b94ce6b27cbb2246, type: 2}
+  - Type: Armadilha
+    Points: 1
+    Id: 0
+    ScorableAction: {fileID: 162437846829725900, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
+      type: 3}
+    ScoreColor: {fileID: 2100000, guid: f27b555ac63aaac4fae197c4047f049d, type: 2}
   - Type: Completou no Limite
     Points: 2
     Id: 0

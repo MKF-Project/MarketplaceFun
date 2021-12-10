@@ -9,7 +9,7 @@ using MLAPI.NetworkVariable;
 [SelectionBase]
 public class ShoppingCartItem : NetworkBehaviour
 {
-    private const string SHOPPING_CART_TAG = "ShoppingCart";
+    public const string SHOPPING_CART_TAG = "ShoppingCart";
     private const string PLAYER_TAG = "Player";
     private const string ITEM_POSITIONS_TAG = "Item";
     private const string ITEM_TAG = "Item";
@@ -22,6 +22,7 @@ public class ShoppingCartItem : NetworkBehaviour
     internal NetworkVariableULong _ownerID = new NetworkVariableULong(NO_OWNER_ID);
 
     private List<GameObject> _itemPositions;
+    private ShoppingList _shoppingListBuffer;
 
     // List of items needs to be of fixed size
     // So we keep track of count in addition to capacity
@@ -84,7 +85,7 @@ public class ShoppingCartItem : NetworkBehaviour
             Player player = NetworkController.GetPlayerByID(_ownerID.Value);
             Owner = player;
             player.ShoppingCart = gameObject;
-            
+
             if(Owner != NetworkController.SelfPlayer)
             {
                 return;
@@ -117,6 +118,8 @@ public class ShoppingCartItem : NetworkBehaviour
 
             if(index != -1)
             {
+                PlayItemSound(item);
+
                 setNextItem_ClientRpc(item.ItemTypeCode, index);
                 setNextItem(item.ItemTypeCode, index);
             }
@@ -125,7 +128,42 @@ public class ShoppingCartItem : NetworkBehaviour
         }
     }
 
-    private ShoppingList _shoppingListBuffer;
+    private void PlayItemSound(Item item)
+    {
+        if(_shoppingListBuffer == null)
+        {
+            if(!Owner.TryGetComponent(out _shoppingListBuffer))
+            {
+                return;
+            }
+        }
+
+        // Test if list would be completed by this item
+        if(_shoppingListBuffer.AssertItemWillCompleteList(item.ItemTypeCode))
+        {
+            RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ListComplete, Owner.OwnerClientId.ToClientRpcParams());
+            return;
+        }
+
+        // Test if this item was thrown by another player
+        if(Owner.OwnerClientId != item.OwnerClientId)
+        {
+            RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ItemOpponent, Owner.OwnerClientId.ToClientRpcParams());
+            return;
+        }
+
+        // If not complete and thrown by the owner of the cart,
+        // test if the item is part of their shopping list or not
+        if(_shoppingListBuffer.ItemDictionary.ContainsKey(item.ItemTypeCode))
+        {
+            RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ItemCorrect, Owner.OwnerClientId.ToClientRpcParams());
+        }
+        else
+        {
+            RequestPlayCartSFX_ClientRpc(ShoppingListSFX.ItemIncorrect, Owner.OwnerClientId.ToClientRpcParams());
+        }
+    }
+
     private int GetItemCartIndex(Item item)
     {
         if(!IsServer)
@@ -174,7 +212,7 @@ public class ShoppingCartItem : NetworkBehaviour
         // If the player that threw the item was not the cart onwer,
         // or no suitable advantageous position was found,
         // we simply select a random position in the shopping cart
-        return Random.Range(0, _itemCount);;
+        return Random.Range(0, _itemCount);
 
     }
 
@@ -285,5 +323,28 @@ public class ShoppingCartItem : NetworkBehaviour
     private void setCartColor_ClientRpc(int colorNumber)
     {
         UpdateCartColor(colorNumber);
+    }
+
+    [ClientRpc]
+    private void RequestPlayCartSFX_ClientRpc(ShoppingListSFX sfx, ClientRpcParams clientRpcParams = default)
+    {
+        switch(sfx)
+        {
+            case ShoppingListSFX.ItemCorrect:
+                SceneAudioController.PlayItemCorrectSFX();
+                break;
+
+            case ShoppingListSFX.ItemIncorrect:
+                SceneAudioController.PlayItemIncorrectSFX();
+                break;
+
+            case ShoppingListSFX.ItemOpponent:
+                SceneAudioController.PlayItemOpponentSFX();
+                break;
+
+            case ShoppingListSFX.ListComplete:
+                SceneAudioController.PlayListCompleteSFX();
+                break;
+        }
     }
 }

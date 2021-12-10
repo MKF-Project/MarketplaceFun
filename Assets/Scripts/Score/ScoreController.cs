@@ -54,22 +54,6 @@ public class ScoreController : MonoBehaviour
     {
         ScorePoints scorePoints = new ScorePoints(playerId);
         _playerPoints.Add(playerId, scorePoints);
-        
-        
-        // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
-        List<DescriptivePoints> descriptivePointsList = new List<DescriptivePoints>();
-        DescriptivePoints descriptivePoints = new DescriptivePoints(6, 1);
-        descriptivePointsList.Add(descriptivePoints);
-        descriptivePointsList.Add(descriptivePoints);
-        descriptivePoints = new DescriptivePoints(1, 5);
-        descriptivePointsList.Add(descriptivePoints);
-
-        AddPointsToPlayer(playerId, 7, descriptivePointsList);
-        
-
-
-        // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
-        
     }
 
     public void RemovePlayer(ulong playerId)
@@ -85,13 +69,9 @@ public class ScoreController : MonoBehaviour
         if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
         {
             scorePoints.Points += points;
-            // MUDAR DEPOIS ---------------------------------------------------------------------------------------------------------------------------
-
-            scorePoints.LastMatchPoints.AddRange(playerDescriptivePoints);
-            //scorePoints.LastMatchPoints = playerDescriptivePoints;
-
-            // MUDAR DEPOIS ---------------------------------------------------------------------------------------------------------------------------
-
+            //scorePoints.LastMatchPoints.AddRange(playerDescriptivePoints);
+            scorePoints.LastMatchPoints = playerDescriptivePoints;
+            
             _playerPoints.Remove(playerId);
             _playerPoints.Add(playerId, scorePoints);
         }
@@ -137,8 +117,6 @@ public class ScoreController : MonoBehaviour
     public void EndMatch()
     {
         _scoreAuditor.Audit();
-        AdicionaParaTeste();
-        AdicionaParaTeste();
     }
 
     public bool VerifyWinner()
@@ -252,6 +230,7 @@ public class ScoreController : MonoBehaviour
         _playerPoints[playerId].PlayerPoints.Add(descriptivePoints);
     }
 
+    /*
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
 
     private void AdicionaParaTeste()
@@ -265,5 +244,5 @@ public class ScoreController : MonoBehaviour
     }
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
 
-
+    */
 }

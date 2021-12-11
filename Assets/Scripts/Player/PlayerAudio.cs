@@ -8,6 +8,7 @@ public class PlayerAudio : NetworkBehaviour
 {
     private const float MUTE_TIMEOUT = 0.5f;
 
+    // GAMBIARRA master aqui
     // TODO: find a better solution for this. Currently, we detect diagonal walk with
     // item in hand by initializing the float with a VERY specfic byte sequence
     private readonly float WALK_ITEM_WEIGHT = BitConverter.ToSingle(new byte[] {0xDF, 0xD3, 0xE1, 0x3E}, 0);

@@ -89,6 +89,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraOnPlayer: 1
+  OverviewCollision:
+    serializedVersion: 2
+    m_Bits: 4286644737
 --- !u!81 &2505987365554963168
 AudioListener:
   m_ObjectHideFlags: 0

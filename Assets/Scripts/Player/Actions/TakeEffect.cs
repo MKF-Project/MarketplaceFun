@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class TakeEffect : ScorableAction
 {
+    public float InvicibilityPeriod = 1;
+    private float _lastHitTime;
+
     private Animator _animator;
     private Player _playerScript;
 
@@ -29,10 +32,18 @@ public class TakeEffect : ScorableAction
         }
 
         _isTakingEffect = false;
+        _lastHitTime = Time.time - InvicibilityPeriod;
     }
 
     public void OnTakeEffect(int effectCode, ulong throwerId)
     {
+        // Ignore hits that happenn too soon after the
+        // player recovered from another hit
+        if(Time.time - _lastHitTime < InvicibilityPeriod)
+        {
+            return;
+        }
+
         switch(effectCode)
         {
             case  0:
@@ -81,5 +92,6 @@ public class TakeEffect : ScorableAction
     public void NoTakingEffect_ServerRpc()
     {
         _isTakingEffect = false;
+        _lastHitTime = Time.time;
     }
 }

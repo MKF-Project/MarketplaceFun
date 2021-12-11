@@ -37,6 +37,10 @@ public class NetworkController : MonoBehaviour
     internal const ulong NO_CLIENT_ID = ulong.MaxValue;
     private const ushort _port = 53658;
 
+    // Photon seems to parse being disconnected from the server as
+    // if a client with ID 2 has disconnected
+    private const ulong PHOTON_SERVER_CLIENT_ID = 2;
+
     private NetworkManager _netManager;
     private UNetTransport _ipTransport;
     private PhotonRealtimeTransport _relayedTransport;
@@ -231,7 +235,16 @@ public class NetworkController : MonoBehaviour
         {
             if(isDisconnect)
             {
-                OnOtherClientDisconnected?.Invoke(clientID);
+                // Local client has lost connection to remote host
+                // this condition is here due to Photon detection of Host disconnect
+                if(clientID == PHOTON_SERVER_CLIENT_ID && _transportType == NetworkTransportTypes.Relayed)
+                {
+                    OnDisconnected?.Invoke(false, true);
+                }
+                else
+                {
+                    OnOtherClientDisconnected?.Invoke(clientID);
+                }
             }
             else
             {

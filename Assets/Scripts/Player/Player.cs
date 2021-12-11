@@ -218,6 +218,24 @@ public class Player : NetworkBehaviour
         }
     }
 
+    public void UseFirstPersonView()
+    {
+        var cameraScript = GetComponentInChildren<CameraScript>();
+        if(cameraScript != null)
+        {
+            cameraScript.SetCameraOnPlayer();
+        }
+    }
+
+    public void UseThirdPersonView()
+    {
+        var cameraScript = GetComponentInChildren<CameraScript>();
+        if(cameraScript != null)
+        {
+            cameraScript.SetCameraOnPlayerOverview();
+        }
+    }
+
     public void PlayerReset()
     {
         if(IsDrivingCart)

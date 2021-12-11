@@ -124,6 +124,8 @@ public class InputController : MonoBehaviour
         _menuControls = _playerInput.actions.FindActionMap("MenuControls");
         watchInputAction(_menuControls, "Unpause", OnUnpauseAction);
 
+        NetworkController.OnDisconnected += EnsureControlsOnDisconnect;
+
         if(_playerInput.defaultActionMap == _menuControls.name)
         {
             SwitchToMenuControls();
@@ -141,6 +143,7 @@ public class InputController : MonoBehaviour
 
         if(_instance == this)
         {
+            NetworkController.OnDisconnected -= EnsureControlsOnDisconnect;
             _instance = null;
         }
     }
@@ -174,6 +177,8 @@ public class InputController : MonoBehaviour
 
         OnDestroyController += autoUnsubscribeOnDestroy;
     }
+
+    private void EnsureControlsOnDisconnect(bool wasHost, bool connectionLost) => instanceSwitchToMenuControls();
 
     // Allow/Deny input propagation to event subscribers
     public static void FreezePlayerControls() => PlayerControlsFrozen = true;

@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class ShoppingListUI : MonoBehaviour
 {
 
+    private static ShoppingListUI _instance = null;
+
     //public List<Image> UIItemsList;
     public Dictionary<ulong, GameObject> UIItemsDictionary;
 
@@ -14,12 +16,26 @@ public class ShoppingListUI : MonoBehaviour
     private Sprite StartingCheckedImage;
     public static Sprite CheckedImage { get; private set; }
 
-    private Item _itemScriptPlacement = null;
-
     private void Awake()
     {
+        if(_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
+
         CheckedImage = StartingCheckedImage;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if(_instance == this)
+        {
+            _instance = null;
+        }
     }
 
     private void Start()
@@ -28,52 +44,64 @@ public class ShoppingListUI : MonoBehaviour
         //FillUIItems();
     }
 
-    public void FillUIItems(List<ShoppingListItem> itemList)
+    public static void FillUIItems(List<ShoppingListItem> itemList)
     {
-        if (itemList.Count > transform.childCount)
+        if (itemList.Count > _instance.transform.childCount)
         {
             return;
         }
 
-        //Jump first 
+        //Jump first
         int i = 1;
 
         foreach (ShoppingListItem shoppingListItem in itemList)
         {
-            GameObject itemUI = transform.GetChild(i).gameObject;
+            GameObject itemUI = _instance.transform.GetChild(i).gameObject;
             Image itemImageUI = itemUI.GetComponent<Image>();
 
-            NetworkItemManager.NetworkItemPrefabs[shoppingListItem.ItemCode].TryGetComponent<Item>(out _itemScriptPlacement);
-            itemImageUI.sprite = _itemScriptPlacement.UISticker;
+            itemImageUI.sprite = NetworkItemManager.GetItemPrefabScript(shoppingListItem.ItemCode).UISticker;
 
             itemImageUI.enabled = true;
-            UIItemsDictionary.Add(shoppingListItem.ItemCode, itemUI);
+            _instance.UIItemsDictionary.Add(shoppingListItem.ItemCode, itemUI);
 
             i++;
         }
     }
 
-    public void EraseItems()
+    public static void EraseItems()
     {
-        UIItemsDictionary = new Dictionary<ulong, GameObject>();
-        foreach (Image image in GetComponentsInChildren<Image>())
+        _instance.UIItemsDictionary = new Dictionary<ulong, GameObject>();
+        for(int i = 0; i < _instance.transform.childCount; i++)
         {
-            image.sprite = null;
-            image.enabled = false;
+            var childTransform = _instance.transform.GetChild(i);
+            if(i == 0)
+            {
+                childTransform.gameObject.SetActive(false);
+            }
+            else
+            {
+                var itemUI = childTransform.GetComponent<Image>();
+                itemUI.sprite = null;
+                itemUI.enabled = false;
+
+                var checkMark = itemUI.transform.GetChild(0).GetComponent<Image>();
+                checkMark.sprite = null;
+                checkMark.enabled = false;
+            }
         }
     }
 
-    public void CheckItem(ulong itemCode)
+    public static void CheckItem(ulong itemCode)
     {
-        GameObject itemUI = UIItemsDictionary[itemCode];
+        GameObject itemUI = _instance.UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();
         imageCheckUI.sprite = CheckedImage;
         imageCheckUI.enabled = true;
     }
 
-    public void UncheckItem(ulong itemCode)
+    public static void UncheckItem(ulong itemCode)
     {
-        GameObject itemUI = UIItemsDictionary[itemCode];
+        GameObject itemUI = _instance.UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();
         imageCheckUI.sprite = null;
         imageCheckUI.enabled = false;

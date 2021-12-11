@@ -239,6 +239,8 @@ public class NetworkController : MonoBehaviour
                 // this condition is here due to Photon detection of Host disconnect
                 if(clientID == PHOTON_SERVER_CLIENT_ID && _transportType == NetworkTransportTypes.Relayed)
                 {
+                    _localPlayers.Clear();
+                    _netManager.StopClient();
                     OnDisconnected?.Invoke(false, true);
                 }
                 else

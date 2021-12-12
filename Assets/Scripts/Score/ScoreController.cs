@@ -68,9 +68,10 @@ public class ScoreController : MonoBehaviour
     {
         if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
         {
-            scorePoints.Points += points;
+            //scorePoints.TotalPoints += points;
+            scorePoints.LastMatchPoints = points;
             //scorePoints.LastMatchPoints.AddRange(playerDescriptivePoints);
-            scorePoints.LastMatchPoints = playerDescriptivePoints;
+            scorePoints.LastMatchDescriptivePoints = playerDescriptivePoints;
             
             _playerPoints.Remove(playerId);
             _playerPoints.Add(playerId, scorePoints);
@@ -117,13 +118,14 @@ public class ScoreController : MonoBehaviour
     public void EndMatch()
     {
         _scoreAuditor.Audit();
+        AdicionaParaTeste();
     }
 
     public bool VerifyWinner()
     {
         foreach (ScorePoints scorePoints in _playerPoints.Values)
         {
-            if (scorePoints.Points >= PointsToWin)
+            if (scorePoints.TotalPoints >= PointsToWin)
             {
                 return true;
             }
@@ -138,14 +140,14 @@ public class ScoreController : MonoBehaviour
         
         foreach (ScorePoints scorePoints in _playerPoints.Values)
         {
-            if (scorePoints.Points > PointsToWin)
+            if (scorePoints.TotalPoints > PointsToWin)
             {
-                if (scorePoints.Points == winnerScorePoints.Points)
+                if (scorePoints.TotalPoints == winnerScorePoints.TotalPoints)
                 {
                     winnerScorePoints = Tiebreaker(scorePoints, winnerScorePoints);
                 }
 
-                if (scorePoints.Points > winnerScorePoints.Points)
+                if (scorePoints.TotalPoints > winnerScorePoints.TotalPoints)
                 {
                     winnerScorePoints = scorePoints;
                 }
@@ -230,19 +232,32 @@ public class ScoreController : MonoBehaviour
         _playerPoints[playerId].PlayerPoints.Add(descriptivePoints);
     }
 
-    /*
+    public void AddToTotalPoints()
+    {
+        List<ulong> playerIdList = _playerPoints.Keys.ToList();
+        foreach (ulong playerId in playerIdList)
+        {
+            ScorePoints scorePoints = _playerPoints[playerId];
+            scorePoints.TotalPoints += scorePoints.LastMatchPoints;
+            scorePoints.LastMatchPoints = 0;
+            _playerPoints.Remove(playerId);
+            _playerPoints.Add(playerId, scorePoints);
+        }
+    }
+
+
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
 
     private void AdicionaParaTeste()
     {
         List<DescriptivePoints> descriptivePointsList = new List<DescriptivePoints>();
-        DescriptivePoints descriptivePoints = new DescriptivePoints(1, 5);
+        DescriptivePoints descriptivePoints = new DescriptivePoints(0, 5);
         descriptivePointsList.Add(descriptivePoints);
 
-        AddPointsToPlayer(2, 5, descriptivePointsList);
+        AddPointsToPlayer(0, 5, descriptivePointsList);
 
     }
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
 
-    */
+    
 }

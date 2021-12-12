@@ -51,7 +51,6 @@ public class PointMarker : MonoBehaviour
 
             Material[] materials = meshRenderer.materials;
             materials[colorIndex] = ScoreConfig.ScoreTypeDictionary[pointType].ScoreColor;
-            ;
             meshRenderer.materials = materials;
         }
 

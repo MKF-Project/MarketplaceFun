@@ -2212,7 +2212,7 @@ PrefabInstance:
     - target: {fileID: 3153268531660502164, guid: b62791d34dc061c4a919fe09ea87ff19,
         type: 3}
       propertyPath: MatchTimeMinutes
-      value: 90
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 3153268531660502164, guid: b62791d34dc061c4a919fe09ea87ff19,
         type: 3}

@@ -10,13 +10,13 @@ public class MenuCameraManager : MonoBehaviour
     private void Awake()
     {
         LobbyMenu.OnEnterLobby += EnableLobbyCamera;
-        LobbyMenu.OnCancelMatch += EnableMenuCamera;
+        NetworkController.OnDisconnected += MenuCameraDisconnect;
     }
 
     private void OnDestroy()
     {
         LobbyMenu.OnEnterLobby -= EnableLobbyCamera;
-        LobbyMenu.OnCancelMatch -= EnableMenuCamera;
+        NetworkController.OnDisconnected -= MenuCameraDisconnect;
     }
 
     private void Start()
@@ -30,6 +30,7 @@ public class MenuCameraManager : MonoBehaviour
         _lobbyCamera.enabled = false;
     }
 
+    private void MenuCameraDisconnect(bool wasHost, bool lostConnection) => EnableMenuCamera();
     private void EnableLobbyCamera()
     {
         _menuCamera.enabled = false;

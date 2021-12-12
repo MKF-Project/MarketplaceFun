@@ -132,7 +132,7 @@ public class ShoppingCartItem : NetworkBehaviour
     {
         if(_shoppingListBuffer == null)
         {
-            if(!Owner.TryGetComponent(out _shoppingListBuffer))
+            if(Owner == null || !Owner.TryGetComponent(out _shoppingListBuffer))
             {
                 return;
             }

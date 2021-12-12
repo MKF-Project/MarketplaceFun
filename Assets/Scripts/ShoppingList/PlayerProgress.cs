@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerProgress : MonoBehaviour
 {
     public static PlayerProgress Instance;
-    
+
     public Image OwnProgressBar;
 
     public Image EnemyProgressBar1;
@@ -14,14 +14,14 @@ public class PlayerProgress : MonoBehaviour
     public Image EnemyProgressBar3;
 
     public GameObject UIShoppingList;
-    
+
     private const float AMOUNT_PER_ITEM = 0.2f;
 
 
     private Dictionary<ulong, Image> _playerBars;
 
     private bool _barsAlreadyInitialized;
-    
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -32,38 +32,42 @@ public class PlayerProgress : MonoBehaviour
         }
 
         _playerBars = new Dictionary<ulong, Image>();
-        
+
         MatchManager.OnMatchStart += InitializeBars;
         MatchManager.OnMatchExit += HideUIShoppingList;
-        
+        SceneManager.OnMenuLoaded += HideUIShoppingList;
+
     }
 
     private void OnDestroy()
     {
         MatchManager.OnMatchStart -= InitializeBars;
         MatchManager.OnMatchExit -= HideUIShoppingList;
+        SceneManager.OnMenuLoaded -= HideUIShoppingList;
     }
-    
+
     private void InitializeBars()
     {
         UIShoppingList.SetActive(true);
-        if (_barsAlreadyInitialized)
-        {
-            return;
-        }
+
 
         OwnProgressBar.fillAmount = 0;
         EnemyProgressBar1.fillAmount = 0;
         EnemyProgressBar2.fillAmount = 0;
         EnemyProgressBar3.fillAmount = 0;
-        
+
         int playerColor = NetworkController.SelfPlayer.GetComponent<PlayerInfo>().PlayerData.Color;
         OwnProgressBar.color = ColorManager.Instance.GetColor(playerColor).color;
 
+        if (_barsAlreadyInitialized)
+        {
+            return;
+        }
+
         _playerBars.Add(NetworkController.SelfID, OwnProgressBar);
-        
+
         int nextAvailableBar = 0;
-        
+
         foreach (ulong playerId in NetworkController.GetLocalPlayers().Keys)
         {
             if (playerId != NetworkController.SelfID)
@@ -71,7 +75,7 @@ public class PlayerProgress : MonoBehaviour
                 Image progressBar = GetNextAvailableBar(nextAvailableBar);
                 playerColor = NetworkController.GetPlayerByID(playerId).GetComponent<PlayerInfo>().PlayerData.Color;
                 progressBar.color = ColorManager.Instance.GetColor(playerColor).color;
-                
+
                 _playerBars.Add(playerId, progressBar);
                 nextAvailableBar++;
             }
@@ -99,7 +103,7 @@ public class PlayerProgress : MonoBehaviour
     {
         _playerBars[playerId].fillAmount += AMOUNT_PER_ITEM;
     }
-    
+
     public void RemoveItemToPlayer(ulong playerId)
     {
         _playerBars[playerId].fillAmount -= AMOUNT_PER_ITEM;

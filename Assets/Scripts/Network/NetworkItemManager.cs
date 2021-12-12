@@ -134,7 +134,11 @@ public class NetworkItemManager : MonoBehaviour
     {
         print("S " + prefabHash + " - " + id);
 
-        return SpawnedItemList[StringifyKey(prefabHash, id)];
+        if(SpawnedItemList.TryGetValue(StringifyKey(prefabHash, id), out var res))
+        {
+            return res;
+        }
+        return null;
     }
 
     // This one is intended to be used when a player disconnects while holding an item

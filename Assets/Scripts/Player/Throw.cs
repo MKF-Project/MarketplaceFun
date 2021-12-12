@@ -11,7 +11,7 @@ public class Throw : NetworkBehaviour
     private Player _player;
     private Item _itemToThrow = null;
 
-    
+
     public float Strength;
     public float Distance;
 
@@ -49,7 +49,7 @@ public class Throw : NetworkBehaviour
         _itemToThrow.gameObject.SetActive(true);
         _itemToThrow.IsOnThrow = true;
         _itemToThrow.ThrowerId = OwnerClientId;
-            
+
         var direction = target - _itemToThrow.transform.position;
         itemRigidbody.velocity = direction.normalized * Strength;
     }

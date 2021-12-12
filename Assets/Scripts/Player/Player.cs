@@ -83,8 +83,6 @@ public class Player : NetworkBehaviour
         MatchManager.OnMatchExit += PlayerReset;
     }
 
-
-
     public delegate void OnBeforeDestroyDelegate(Player player);
     public event OnBeforeDestroyDelegate OnBeforeDestroy;
     private void OnDestroy()
@@ -101,11 +99,8 @@ public class Player : NetworkBehaviour
 
     private void OnHeldItemChange(ulong previousItemType, ulong newItemType)
     {
-        if(previousItemType != Item.NO_ITEMTYPE_CODE)
-        {
-            // Clear previously held item
-            _heldItemPosition.DestroyAllChildren();
-        }
+        // Clear previously held item
+        _heldItemPosition.DestroyAllChildren();
 
         if(newItemType != Item.NO_ITEMTYPE_CODE)
         {
@@ -169,22 +164,18 @@ public class Player : NetworkBehaviour
 
         var itemVisuals = _heldItemPosition.GetComponentInChildren<ItemVisuals>();
 
+
         void positionItem(Item generatedItem)
         {
-            if(!generatedItem.IsOwner)
+            if(generatedItem.IsOwner)
             {
-                return;
+                // We update position and rotation after it has been released
+                // to account for the player movement
+                generatedItem.transform.position = _heldItemPosition.position + itemVisuals.handPositionOffset;
+                generatedItem.transform.rotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
             }
 
-            // We update position and rotation after it has been released
-            // to account for the player movement
-            generatedItem.transform.position = _heldItemPosition.position + itemVisuals.handPositionOffset;
-            generatedItem.transform.rotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
-
-            HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
-
             AimCanvas.Instance.DisableAim();
-
             itemAction?.Invoke(generatedItem);
         }
 
@@ -192,6 +183,7 @@ public class Player : NetworkBehaviour
         var spawnRotation = _heldItemPosition.rotation * Quaternion.Euler(itemVisuals.handRotationOffset);
 
         _currentGenerator?.GeneratePlayerHeldItem(spawnPosition, spawnRotation, positionItem);
+        HeldItemType.Value = Item.NO_ITEMTYPE_CODE;
     }
 
     public void ReleaseCart()
@@ -215,6 +207,24 @@ public class Player : NetworkBehaviour
         {
             var newRotation = eulerAngles + _rigidbody.rotation.eulerAngles;
             _rigidbody.rotation = Quaternion.Euler(newRotation);
+        }
+    }
+
+    public void UseFirstPersonView()
+    {
+        var cameraScript = GetComponentInChildren<CameraScript>();
+        if(cameraScript != null)
+        {
+            cameraScript.SetCameraOnPlayer();
+        }
+    }
+
+    public void UseThirdPersonView()
+    {
+        var cameraScript = GetComponentInChildren<CameraScript>();
+        if(cameraScript != null)
+        {
+            cameraScript.SetCameraOnPlayerOverview();
         }
     }
 

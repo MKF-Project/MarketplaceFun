@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 public class MatchManager : NetworkBehaviour
 {
+    private const string MATCH_CANVAS_TAG = "MatchCanvas";
+    private static readonly int MATCH_CANVAS_ANIMATION_PARAM = Animator.StringToHash("P_Hurry");
+
     //Player Complete Lists
     [HideInInspector]
     public List<ulong> ListCompletedPlayers;
@@ -20,22 +23,28 @@ public class MatchManager : NetworkBehaviour
     public Color TimeColor;
 
     public Color HurryColor;
-    
+
     public float HurryTimeSeconds;
 
-    
+
     //Time variables
     public float MatchTimeMinutes;
+
+    private GameObject _clockCanvas;
     private Text _clockText;
+    private Animator _clockAnimator;
+    private bool _hasSetHurry = false;
+
     private float _startTime;
     private bool _timeStarted;
     private bool _matchEnded;
 
     private int _clientsFished;
-    
+
     public int ThresholdSeconds;
 
-    public NetworkVariableFloat NetworkTimeSpent = new NetworkVariableFloat(
+    public NetworkVariableFloat NetworkTimeSpent = new NetworkVariableFloat
+    (
         new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
@@ -47,11 +56,9 @@ public class MatchManager : NetworkBehaviour
     private const string SCORE_CONTROLLER_TAG = "ScoreController";
     private const string SCORE_SCENE_NAME = "ScoreScene";
 
-
-    
     public delegate void OnMatchExitDelegate();
     public static event OnMatchExitDelegate OnMatchExit;
-    
+
     public delegate void OnMatchStartDelegate();
     public static event OnMatchStartDelegate OnMatchStart;
 
@@ -64,14 +71,18 @@ public class MatchManager : NetworkBehaviour
         _clientsFished = 0;
         _matchEnded = false;
         _timeStarted = false;
-        MatchTimeMinutes = MatchTimeMinutes * 60; 
-        _clockText = GameObject.FindGameObjectWithTag("MatchCanvas").GetComponentInChildren<Text>();
+
+        MatchTimeMinutes = MatchTimeMinutes * 60;
+
+        _clockCanvas = GameObject.FindGameObjectWithTag(MATCH_CANVAS_TAG);
+        _clockAnimator = _clockCanvas.GetComponent<Animator>();
+        _clockText = _clockCanvas.GetComponentInChildren<Text>();
         _clockText.text = "";
 
         _clockText.color = TimeColor;
 
         SpawnController.OnSpawnOpened += InitiateStartTime;
-        if (IsServer)
+        if(IsServer)
         {
             ListCompletedPlayers = new List<ulong>(4);
             _scoreController = GameObject.FindGameObjectWithTag(SCORE_CONTROLLER_TAG).GetComponent<ScoreController>();
@@ -84,7 +95,6 @@ public class MatchManager : NetworkBehaviour
     {
         SpawnController.OnSpawnOpened -= InitiateStartTime;
     }
-    
 
     public void InitiateStartTime()
     {
@@ -95,26 +105,25 @@ public class MatchManager : NetworkBehaviour
 
     private void Update()
     {
-        if (IsServer)
+        if(IsServer)
         {
-            if (_timeStarted)
+            if(_timeStarted)
             {
                 float timeSpent = Time.time - _startTime;
                 int secondsLeft = (int) (MatchTimeMinutes - timeSpent) % 60;
                 int networkSeconds = (int) (MatchTimeMinutes - NetworkTimeSpent.Value) % 60;
-                if (!secondsLeft.Equals(networkSeconds))
+                if(!secondsLeft.Equals(networkSeconds))
                 {
                     NetworkTimeSpent.Value = timeSpent;
                 }
             }
 
-            if (_matchEnded)
+            if(_matchEnded)
             {
-                if (_clientsFished == NetworkManager.ConnectedClientsList.Count)
+                if(_clientsFished == NetworkManager.ConnectedClientsList.Count)
                 {
                     NetworkController.switchNetworkScene(SCORE_SCENE_NAME);
                 }
-                
             }
         }
     }
@@ -127,19 +136,20 @@ public class MatchManager : NetworkBehaviour
         String secondsLeftText = secondsLeft > 9 ? "" + secondsLeft : "0" + secondsLeft;
 
         _clockText.text = "" + minutesLeftText + ":" + secondsLeftText;
-        
-        if (minutesLeft <= 0 && secondsLeft <= HurryTimeSeconds)
+
+        if(!_hasSetHurry && minutesLeft <= 0 && secondsLeft <= HurryTimeSeconds)
         {
+            _hasSetHurry = true;
+
             _clockText.color = HurryColor;
+            _clockAnimator.SetBool(MATCH_CANVAS_ANIMATION_PARAM, true);
         }
 
-        if (minutesLeft <= 0 && secondsLeft <= 0)
+        if(minutesLeft <= 0 && secondsLeft <= 0)
         {
             EndMatch();
         }
     }
-
-    
 
     private void EndMatch()
     {
@@ -162,7 +172,6 @@ public class MatchManager : NetworkBehaviour
             }
 
             Debug.Log("Match Ended");
-            
         }
     }
 
@@ -178,29 +187,28 @@ public class MatchManager : NetworkBehaviour
     {
         _clientsFished += 1;
     }
-    
 
     [ServerRpc(RequireOwnership = false)]
     public void CheckOutPlayer_ServerRpc(ulong playerId)
     {
-        if (!_matchEnded)
+        if(!_matchEnded)
         {
-            if (!VerifyPlayerAlreadyComplete(playerId))
+            if(!VerifyPlayerAlreadyComplete(playerId))
             {
                 ListCompletedPlayers.Add(playerId);
                 WarnPlayerCheckOut_ClientRpc(playerId);
                 GameObject playerGameObject = NetworkManager.ConnectedClients[playerId].PlayerObject.gameObject;
                 playerGameObject.GetComponent<CheckOut>().ScoreCheckOut_OnlyServer();
-                if (ThresholdSeconds > NetworkTimeSpent.Value)
+                if(ThresholdSeconds > NetworkTimeSpent.Value)
                 {
                     playerGameObject.GetComponent<CheckedOutAtTheLimit>().ScoreAtTheLimit_OnlyServer();
                 }
 
-                if (MatchHurry)
-                {              
+                if(MatchHurry)
+                {
                     float timeLeft = MatchTimeMinutes - NetworkTimeSpent.Value;
-                    if (timeLeft > HurryTimeSeconds)
-                    {           
+                    if(timeLeft > HurryTimeSeconds)
+                    {
                         MatchTimeMinutes -= timeLeft - HurryTimeSeconds;
                         UpdateMatchTime_ClientRpc(MatchTimeMinutes);
                     }
@@ -208,7 +216,7 @@ public class MatchManager : NetworkBehaviour
             }
         }
     }
-    
+
 
     private bool VerifyPlayerAlreadyComplete(ulong playerId)
     {
@@ -234,7 +242,7 @@ public class MatchManager : NetworkBehaviour
         MatchMessages.Instance.EditColorMessage(color);
 
         MatchMessages.Instance.ShowMessage();
-        if (NetworkManager.LocalClientId == playerId)
+        if(NetworkManager.LocalClientId == playerId)
         {
             playerGameObject.GetComponent<CheckOut>().ConfirmCheckOut();
             PlayerStandBy(playerGameObject);
@@ -247,7 +255,6 @@ public class MatchManager : NetworkBehaviour
         InputController.RequestMenuControlsSwitch();
         playerGameObject.transform.position = CompleteSpot.position;
         playerGameObject.GetComponent<Player>().ShoppingCart.transform.position = CompleteSpot.position;
-
     }
 
     [ClientRpc]
@@ -255,5 +262,4 @@ public class MatchManager : NetworkBehaviour
     {
         MatchTimeMinutes = newTime;
     }
-
 }

@@ -90,6 +90,7 @@ GameObject:
   - component: {fileID: 6759752239594525920}
   - component: {fileID: 6759752239594525927}
   - component: {fileID: 6759752239594525926}
+  - component: {fileID: 2603331395530305314}
   m_Layer: 5
   m_Name: MatchCanvas
   m_TagString: MatchCanvas
@@ -177,3 +178,22 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!95 &2603331395530305314
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6759752239594525924}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d867eca836cfc3449cbbe411df0bc87, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

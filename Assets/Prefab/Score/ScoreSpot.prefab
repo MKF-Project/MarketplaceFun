@@ -103,7 +103,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &3855449303697186503
 Transform:
@@ -192,16 +192,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1915059067907814679}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.005}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0046}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5402361504852037451}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -16.7, y: 10}
-  m_SizeDelta: {x: 908.9276, y: 269.4803}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 1.1000061, y: 9.1}
+  m_SizeDelta: {x: 1.3188477, y: 15.598785}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1800560644231946200
 CanvasRenderer:
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.60048056, g: 0.655474, b: 0.735849, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -232,8 +232,8 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: bbdca3f2d07da3245adcf02ab06be039, type: 3}
-    m_FontSize: 200
-    m_FontStyle: 1
+    m_FontSize: 56
+    m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 300
@@ -260,7 +260,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &7896529021107070755
 Transform:
@@ -341,7 +341,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6636049114004985923
 Transform:
@@ -434,7 +434,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1471597512029121663
 Transform:
@@ -526,7 +526,7 @@ RectTransform:
   m_GameObject: {fileID: 7644840987519641727}
   m_LocalRotation: {x: -0, y: 0.9743403, z: -0.22508001, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -0.411}
-  m_LocalScale: {x: 0.0009999999, y: 0.0009999999, z: 1}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 1}
   m_Children:
   - {fileID: 4790052778790097051}
   m_Father: {fileID: 143914948531140521}
@@ -534,8 +534,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 26.015001, y: 180.00002, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.0059, y: 0.6606}
-  m_SizeDelta: {x: 980.02185, y: 291.09656}
+  m_AnchoredPosition: {x: -0.0015, y: 0.6639}
+  m_SizeDelta: {x: 994.8257, y: 312.78217}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4126196233361850715
 Canvas:
@@ -614,7 +614,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6229953242298345764
 Transform:

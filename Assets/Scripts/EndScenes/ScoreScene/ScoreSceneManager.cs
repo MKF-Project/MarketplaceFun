@@ -275,7 +275,8 @@ public class ScoreSceneManager : NetworkBehaviour
     public void StartNewMatch()
     {
         PutMatchListIntoMainList();
-        NetworkController.switchNetworkScene(SceneManager.MatchSceneTag);
+        SceneManager.LoadMatch();
+        //NetworkController.switchNetworkScene(SceneManager.MatchSceneTag);
     }
 
     public void PlayWinLoseAnimation()

@@ -141,9 +141,6 @@ public abstract class PlayerControls : NetworkBehaviour
     public float MoveSpeed;
     public float WalkSpeed;
 
-    [Header("Camera")]
-    public float Sensitivity;
-
     [Header("Interaction")]
     public float InteractionDistance;
 
@@ -519,7 +516,7 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        _nextRotation = direction * Sensitivity;
+        _nextRotation = direction * ConfigMenu.Sensitivity;
     }
 
     public virtual void Jump()

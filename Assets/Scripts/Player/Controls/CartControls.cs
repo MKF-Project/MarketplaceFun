@@ -95,7 +95,7 @@ public class CartControls : PlayerControls
 
         // Rotation
         var targetRotation = _currentDirection.x * Time.fixedDeltaTime;
-        var targetHorizontalRotation = Vector3.up * targetRotation * Sensitivity;
+        var targetHorizontalRotation = Vector3.up * targetRotation * ConfigMenu.Sensitivity;
 
         if(_currentDirection.sqrMagnitude > 0)
         {

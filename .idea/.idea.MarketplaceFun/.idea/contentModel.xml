@@ -23,6 +23,10 @@
               <e p="ScoreCanvas.cs" t="Include" />
               <e p="ScoreSceneManager.cs" t="Include" />
               <e p="ScoreSceneManager_old.cs" t="Include" />
+              <e p="ScoreSign" t="Include">
+                <e p="ScoreSpot.cs" t="Include" />
+                <e p="ScoreSpotController.cs" t="Include" />
+              </e>
               <e p="SerializedScorePointList.cs" t="Include" />
               <e p="Win" t="Include">
                 <e p="WinCamera.cs" t="Include" />

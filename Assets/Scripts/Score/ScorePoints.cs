@@ -6,31 +6,34 @@ using MLAPI.Serialization;
 public struct ScorePoints : INetworkSerializable
 {
     public ulong PlayerId;
-    public int Points;
+    public int TotalPoints;
+    public int LastMatchPoints;
     public int LostCounter;
     public List<DescriptivePoints> PlayerPoints;
-    public List<DescriptivePoints> LastMatchPoints;
+    public List<DescriptivePoints> LastMatchDescriptivePoints;
 
 
     public ScorePoints(ulong playerId)
     {
         PlayerId = playerId;
-        Points = 0;
+        TotalPoints = 0;
         LostCounter = 0;
+        LastMatchPoints = 0;
         PlayerPoints = new List<DescriptivePoints>();
-        LastMatchPoints = new List<DescriptivePoints>();
+        LastMatchDescriptivePoints = new List<DescriptivePoints>();
     }
 
     public void ClearLastMatchPoints()
     {
         //PlayerPoints.AddRange(LastMatchPoints);
-        LastMatchPoints.Clear();
+        LastMatchDescriptivePoints.Clear();
     }
 
     public void NetworkSerialize(NetworkSerializer serializer)
     {
         serializer.Serialize(ref PlayerId);
-        serializer.Serialize(ref Points);
+        serializer.Serialize(ref TotalPoints);
+        serializer.Serialize(ref LastMatchPoints);
         serializer.Serialize(ref LostCounter);
 
         SerializeLastMatchPoints(serializer);
@@ -45,7 +48,7 @@ public struct ScorePoints : INetworkSerializable
         DescriptivePoints[] Array = new DescriptivePoints[1];
         if (!serializer.IsReading)
         {
-            Array = LastMatchPoints.ToArray();
+            Array = LastMatchDescriptivePoints.ToArray();
             length = Array.Length;
         }
 
@@ -64,7 +67,7 @@ public struct ScorePoints : INetworkSerializable
         
         if (serializer.IsReading)
         {
-            LastMatchPoints = Array.ToList();
+            LastMatchDescriptivePoints = Array.ToList();
         }
     }
     

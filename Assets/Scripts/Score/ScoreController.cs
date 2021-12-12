@@ -11,24 +11,20 @@ public class ScoreController : MonoBehaviour
     //This class is used to guard the score information from each player
     //for the hole tournament, there for it is only instantiated on the Server
     private Dictionary<ulong, ScorePoints> _playerPoints;
-    
+
     private ScoreAuditor _scoreAuditor;
 
     public int PointsToWin;
 
     public int RoundsLoosing;
-    
-    private const int FIRST_TO_CHECK_OUT_INDEX = 5;
-    
-    private const int CHECK_OUT_INDEX = 1;
 
+    private const int FIRST_TO_CHECK_OUT_INDEX = 5;
+    private const int CHECK_OUT_INDEX = 1;
     private const int ENEMY_HIT_INDEX = 0;
 
-
-    
-    void Awake()
+    private void Awake()
     {
-        if (!NetworkController.IsServer)
+        if(!NetworkController.IsServer)
         {
             Destroy(gameObject);
         }
@@ -38,27 +34,33 @@ public class ScoreController : MonoBehaviour
         InitiatePlayerPoints(NetworkController.SelfID);
 
         _scoreAuditor = GetComponent<ScoreAuditor>();
-        
+
         NetworkController.OnOtherClientConnected += InitiatePlayerPoints;
         NetworkController.OnOtherClientDisconnected += RemovePlayer;
-
+        NetworkController.OnDisconnected += DestroyOnDisconnect;
     }
 
     private void OnDestroy()
     {
         NetworkController.OnOtherClientConnected += InitiatePlayerPoints;
         NetworkController.OnOtherClientDisconnected += RemovePlayer;
+        NetworkController.OnDisconnected -= DestroyOnDisconnect;
     }
 
     public void InitiatePlayerPoints(ulong playerId)
     {
-        ScorePoints scorePoints = new ScorePoints(playerId);
-        _playerPoints.Add(playerId, scorePoints);
+        if(!_playerPoints.ContainsKey(playerId))
+        {
+            ScorePoints scorePoints = new ScorePoints(playerId);
+            _playerPoints.Add(playerId, scorePoints);
+        }
     }
+
+    private void DestroyOnDisconnect(bool wasHost, bool connectionWasLost) => Destroy(gameObject);
 
     public void RemovePlayer(ulong playerId)
     {
-        if (_playerPoints.ContainsKey(playerId))
+        if(_playerPoints.ContainsKey(playerId))
         {
             _playerPoints.Remove(playerId);
         }
@@ -66,13 +68,13 @@ public class ScoreController : MonoBehaviour
 
     public void AddPointsToPlayer(ulong playerId, int points, List<DescriptivePoints> playerDescriptivePoints)
     {
-        if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
+        if(_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints))
         {
             //scorePoints.TotalPoints += points;
             scorePoints.LastMatchPoints = points;
             //scorePoints.LastMatchPoints.AddRange(playerDescriptivePoints);
             scorePoints.LastMatchDescriptivePoints = playerDescriptivePoints;
-            
+
             _playerPoints.Remove(playerId);
             _playerPoints.Add(playerId, scorePoints);
         }
@@ -80,7 +82,7 @@ public class ScoreController : MonoBehaviour
 
     public void AddLostCounterToPlayer(ulong playerId)
     {
-        if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
+        if(_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints))
         {
             scorePoints.LostCounter += 1;
             _playerPoints.Remove(playerId);
@@ -90,7 +92,7 @@ public class ScoreController : MonoBehaviour
 
     public void ResetLostCounterToPlayer(ulong playerId)
     {
-        if (_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints ))
+        if(_playerPoints.TryGetValue(playerId, out ScorePoints scorePoints))
         {
             scorePoints.LostCounter = 0;
             _playerPoints.Remove(playerId);
@@ -100,7 +102,7 @@ public class ScoreController : MonoBehaviour
 
     public bool IsGameChangingAvailable(ulong playerId)
     {
-        if (_playerPoints[playerId].LostCounter >= RoundsLoosing)
+        if(_playerPoints[playerId].LostCounter >= RoundsLoosing)
         {
             return true;
         }
@@ -123,9 +125,9 @@ public class ScoreController : MonoBehaviour
 
     public bool VerifyWinner()
     {
-        foreach (ScorePoints scorePoints in _playerPoints.Values)
+        foreach(ScorePoints scorePoints in _playerPoints.Values)
         {
-            if (scorePoints.TotalPoints >= PointsToWin)
+            if(scorePoints.TotalPoints >= PointsToWin)
             {
                 return true;
             }
@@ -137,17 +139,17 @@ public class ScoreController : MonoBehaviour
     public ulong GetWinner()
     {
         ScorePoints winnerScorePoints = new ScorePoints(0);
-        
-        foreach (ScorePoints scorePoints in _playerPoints.Values)
+
+        foreach(ScorePoints scorePoints in _playerPoints.Values)
         {
-            if (scorePoints.TotalPoints > PointsToWin)
+            if(scorePoints.TotalPoints > PointsToWin)
             {
-                if (scorePoints.TotalPoints == winnerScorePoints.TotalPoints)
+                if(scorePoints.TotalPoints == winnerScorePoints.TotalPoints)
                 {
                     winnerScorePoints = Tiebreaker(scorePoints, winnerScorePoints);
                 }
 
-                if (scorePoints.TotalPoints > winnerScorePoints.TotalPoints)
+                if(scorePoints.TotalPoints > winnerScorePoints.TotalPoints)
                 {
                     winnerScorePoints = scorePoints;
                 }
@@ -160,43 +162,43 @@ public class ScoreController : MonoBehaviour
     {
         ulong playerId1 = player1Score.PlayerId;
         ulong playerId2 = player2Score.PlayerId;
-            
+
         int firstWins_Player1 = CountNumberOfScore(playerId1, FIRST_TO_CHECK_OUT_INDEX);
         int firstWins_Player2 = CountNumberOfScore(playerId2, FIRST_TO_CHECK_OUT_INDEX);
 
-        if (firstWins_Player1 > firstWins_Player2)
+        if(firstWins_Player1 > firstWins_Player2)
         {
             return player1Score;
         }
 
-        if (firstWins_Player1 < firstWins_Player2)
+        if(firstWins_Player1 < firstWins_Player2)
         {
             return player2Score;
         }
-        
+
         int checksOut_Player1 = CountNumberOfScore(playerId1, CHECK_OUT_INDEX);
         int checksOut_Player2 = CountNumberOfScore(playerId2, CHECK_OUT_INDEX);
 
-        if (checksOut_Player1 > checksOut_Player2)
+        if(checksOut_Player1 > checksOut_Player2)
         {
             return player1Score;
         }
 
-        if (checksOut_Player1 < checksOut_Player2)
+        if(checksOut_Player1 < checksOut_Player2)
         {
             return player2Score;
         }
 
-        
+
         int enemyHits_Player1 = CountNumberOfScore(playerId1, ENEMY_HIT_INDEX);
         int enemyHits_Player2 = CountNumberOfScore(playerId2, ENEMY_HIT_INDEX);
 
-        if (enemyHits_Player1 > enemyHits_Player2)
+        if(enemyHits_Player1 > enemyHits_Player2)
         {
             return player1Score;
         }
 
-        if (enemyHits_Player1 < enemyHits_Player2)
+        if(enemyHits_Player1 < enemyHits_Player2)
         {
             return player2Score;
         }
@@ -208,9 +210,9 @@ public class ScoreController : MonoBehaviour
     public int CountNumberOfScore(ulong playerId, int scoreTypeId)
     {
         int result = 0;
-        foreach (DescriptivePoints descriptivePoint in _playerPoints[playerId].PlayerPoints)
+        foreach(DescriptivePoints descriptivePoint in _playerPoints[playerId].PlayerPoints)
         {
-            if (descriptivePoint.ScoreTypeId == scoreTypeId)
+            if(descriptivePoint.ScoreTypeId == scoreTypeId)
             {
                 result += 1;
             }
@@ -221,7 +223,7 @@ public class ScoreController : MonoBehaviour
 
     public void MoveToScoresToMainList()
     {
-        foreach (ulong playerId in _playerPoints.Keys)
+        foreach(ulong playerId in _playerPoints.Keys)
         {
             _playerPoints[playerId].ClearLastMatchPoints();
         }
@@ -259,5 +261,5 @@ public class ScoreController : MonoBehaviour
     }
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
 
-    
+
 }

@@ -49,10 +49,7 @@ public class PlayerProgress : MonoBehaviour
     private void InitializeBars()
     {
         UIShoppingList.SetActive(true);
-        if (_barsAlreadyInitialized)
-        {
-            return;
-        }
+
 
         OwnProgressBar.fillAmount = 0;
         EnemyProgressBar1.fillAmount = 0;
@@ -61,6 +58,11 @@ public class PlayerProgress : MonoBehaviour
 
         int playerColor = NetworkController.SelfPlayer.GetComponent<PlayerInfo>().PlayerData.Color;
         OwnProgressBar.color = ColorManager.Instance.GetColor(playerColor).color;
+
+        if (_barsAlreadyInitialized)
+        {
+            return;
+        }
 
         _playerBars.Add(NetworkController.SelfID, OwnProgressBar);
 
@@ -114,8 +116,6 @@ public class PlayerProgress : MonoBehaviour
         {
             ClearBar(playerId);
         }
-
-        _barsAlreadyInitialized = false;
     }
 
     private void ClearBar(ulong playerId)

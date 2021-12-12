@@ -36,9 +36,12 @@ public class SceneManager : MonoBehaviour
     public static event OnMatchLoadedDelegate OnMatchLoaded;
     public static event OnMatchUnloadedDelegate OnMatchUnloaded;
 
-    public String MatchScene;
+    public List<String> MatchSceneList;
+    
+    public static List<String> MatchSceneListStatic;
 
-    public static String MatchSceneTag;
+    private static int _currentMatchSceneIndex;    
+    //public static String MatchSceneTag;
 
     public const string SELF_TAG = "SceneManager";
     public const string MAIN_MENU_SCENE_NAME = "MainMenu";
@@ -54,8 +57,9 @@ public class SceneManager : MonoBehaviour
     {
         Object.DontDestroyOnLoad(gameObject);
 
-        MatchSceneTag = MatchScene;
-        LobbyMenu.OnStartMatch += loadMatch;
+        MatchSceneListStatic = MatchSceneList;
+        _currentMatchSceneIndex = 0;
+        LobbyMenu.OnStartMatch += LoadMatch;
 
         NetworkController.OnDisconnected += returnToMainMenu;
 
@@ -73,7 +77,7 @@ public class SceneManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        LobbyMenu.OnStartMatch -= loadMatch;
+        LobbyMenu.OnStartMatch -= LoadMatch;
         NetworkController.OnDisconnected -= returnToMainMenu;
 
         UnityScene.SceneManager.sceneLoaded -= TriggerSceneLoadEvent;
@@ -119,10 +123,20 @@ public class SceneManager : MonoBehaviour
         UnityScene.SceneManager.LoadScene(MAIN_MENU_SCENE_NAME);
     }
 
-    private void loadMatch()
+
+    public static void LoadMatch()
     {
         // TODO get scene name from lobby
-        NetworkController.switchNetworkScene(MatchScene);
+        NetworkController.switchNetworkScene(MatchSceneListStatic[_currentMatchSceneIndex]);
+
+        if (_currentMatchSceneIndex == MatchSceneListStatic.Count - 1)
+        {
+            _currentMatchSceneIndex = 0;
+        }
+        else
+        {
+            _currentMatchSceneIndex++;
+        }
 
         // Set the expected number of players that should be moved to spawn
         // areas during the next match

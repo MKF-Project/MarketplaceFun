@@ -141,9 +141,6 @@ public abstract class PlayerControls : NetworkBehaviour
     public float MoveSpeed;
     public float WalkSpeed;
 
-    [Header("Camera")]
-    public float Sensitivity;
-
     [Header("Interaction")]
     public float InteractionDistance;
 
@@ -519,7 +516,7 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        _nextRotation = direction * Sensitivity;
+        _nextRotation = direction * ConfigMenu.Sensitivity;
     }
 
     public virtual void Jump()
@@ -592,11 +589,12 @@ public abstract class PlayerControls : NetworkBehaviour
 
     private void ExecuteThrow()
     {
-        _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
-
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after
-        _playerScript.ThrowItem((item) => _currentLookingCollider = null);
+        _playerScript.ThrowItem((item) => {
+            _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+            _currentLookingCollider = null;
+        });
     }
 
     public virtual void Drop()
@@ -607,10 +605,11 @@ public abstract class PlayerControls : NetworkBehaviour
             return;
         }
 
-        _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
-
         // On callback, unset currentLookingObject so that we
         // update it again in the frame after
-        _playerScript.DropItem((item) => _currentLookingCollider = null);
+        _playerScript.DropItem((item) => {
+            _playerNetAnimator.SetBool(ANIM_ITEM_IN_HAND, false);
+            _currentLookingCollider = null;
+        });
     }
 }

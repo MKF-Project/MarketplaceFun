@@ -104,9 +104,13 @@ public class Item : NetworkBehaviour
 
     private void Update()
     {
-        if(!_isBeingDestroyed && _rigidbody.velocity.sqrMagnitude <= 0.1)
+        if(_rigidbody.velocity.sqrMagnitude <= 0.1)
         {
-            TriggerDestroyItem();
+            IsOnThrow = false;
+            if(IsOwner && !_isBeingDestroyed)
+            {
+                TriggerDestroyItem();
+            }
         }
     }
 
@@ -124,7 +128,12 @@ public class Item : NetworkBehaviour
             {
                 takeEffect = hitObject.GetComponent<TakeEffect>();
                 takeEffect.OnTakeEffect(0, ThrowerId);
-                TriggerDestroyItem();
+
+                IsOnThrow = false;
+                if(IsOwner && !_isBeingDestroyed)
+                {
+                    TriggerDestroyItem();
+                }
             }
         }
     }
@@ -168,7 +177,6 @@ public class Item : NetworkBehaviour
 
     private void TriggerDestroyItem()
     {
-        IsOnThrow = false;
         _isBeingDestroyed = true;
         StartCoroutine(nameof(DestroyAfterSeconds));
     }

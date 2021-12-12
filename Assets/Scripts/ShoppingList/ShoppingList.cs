@@ -8,10 +8,11 @@ using Random = System.Random;
 
 public class ShoppingList : NetworkBehaviour
 {
+    private static System.Random _rng = null;
+
     public const int ITEM_LIST_AMOUNT = 5;
 
     public Dictionary<ulong, ShoppingListItem> ItemDictionary;
-    public ShoppingListUI ShoppingListUi;
 
     public int _quantityChecked;
 
@@ -24,7 +25,6 @@ public class ShoppingList : NetworkBehaviour
 
         if (IsOwner)
         {
-            ShoppingListUi = GameObject.FindGameObjectsWithTag("ShoppingListUI")[0].GetComponent<ShoppingListUI>();
             Debug.Log("Colocou Owner");
             NetworkController.OnDisconnected += EraseListClient;
         }
@@ -35,7 +35,7 @@ public class ShoppingList : NetworkBehaviour
             _randomSeed = (int) Time.time;
             NetworkController.OnOtherClientDisconnected += EraseListServer;
 
-            ItemGenerator.OnGeneratablesDefined += GenerateList;
+            ItemGenerator.OnGeneratablesDefined += GeneratePlayerLists;
         }
 
         MatchManager.OnMatchExit += EraseSelfList;
@@ -48,66 +48,66 @@ public class ShoppingList : NetworkBehaviour
         NetworkController.OnOtherClientDisconnected -= EraseListServer;
         MatchManager.OnMatchExit -= EraseSelfList;
 
-        ItemGenerator.OnGeneratablesDefined -= GenerateList;
+        ItemGenerator.OnGeneratablesDefined -= GeneratePlayerLists;
     }
 
     // Only on server
-    public void GenerateList(IEnumerable<ulong> setOfPossibleItems)
+    public void GeneratePlayerLists(IEnumerable<ulong> setOfPossibleItems)
     {
         if(!IsServer)
         {
             return;
         }
 
-        var random = new Random(_randomSeed);
-        var itemList = new List<ulong>(setOfPossibleItems);
-
-        var numberOfItems = Mathf.Min(ITEM_LIST_AMOUNT, itemList.Count);
-        while(numberOfItems > 0)
+        if(_rng == null)
         {
-            int randomIndex = random.Next(0, itemList.Count);
-
-            ShoppingListItem shoppingListItem = new ShoppingListItem(itemList[randomIndex]);
-
-            // Debug.Log(GetComponent<NetworkObject>().OwnerClientId + ": " + allItemsList[randomIndex].Name);
-
-            ItemDictionary.Add(itemList[randomIndex], shoppingListItem);
-            itemList.RemoveAt(randomIndex);
-            numberOfItems--;
+            _rng = new System.Random();
         }
 
-        SerializedShoppingList serializedShoppingList = new SerializedShoppingList(ItemDictionary.Values.ToList());
-        ReceiveList_ClientRpc(serializedShoppingList);
+        var itemList = new List<ulong>(setOfPossibleItems);
+        var itemAmount = Math.Min(ITEM_LIST_AMOUNT, itemList.Count);
 
+        var shoppingList = new List<ShoppingListItem>(itemAmount);
+        while(shoppingList.Count < itemAmount)
+        {
+            var randomIndex = _rng.Next(itemList.Count);
+
+            var listItem = new ShoppingListItem(itemList[randomIndex]);
+            shoppingList.Add(listItem);
+            ItemDictionary.Add(itemList[randomIndex], listItem);
+
+            itemList.RemoveAt(randomIndex);
+        }
+
+        ReceiveList_ClientRpc(new SerializedShoppingList(shoppingList));
     }
 
     // Populate List on Client RPC
     [ClientRpc]
-    public void ReceiveList_ClientRpc(SerializedShoppingList serializedShoppingList)
+    private void ReceiveList_ClientRpc(SerializedShoppingList serializedShoppingList)
     {
-
-        List<ShoppingListItem> itemList = serializedShoppingList.Array.ToList();
-        if (!IsServer)
+        var itemList = serializedShoppingList.Array.ToList();
+        if(!IsServer)
         {
-            foreach (ShoppingListItem item in itemList)
+            foreach(ShoppingListItem item in itemList)
             {
                 ItemDictionary.Add(item.ItemCode, item);
             }
         }
 
-        if (IsOwner)
+        if(IsOwner)
         {
             Debug.Log("Im owner: " + GetComponent<NetworkObject>().OwnerClientId);
-            ShoppingListUi.FillUIItems(itemList);
+            ShoppingListUI.FillUIItems(itemList);
         }
     }
 
     public void EraseSelfList()
     {
         ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
-        if (IsOwner)
+        if(IsOwner)
         {
-            ShoppingListUi.EraseItems();
+            ShoppingListUI.EraseItems();
         }
         _quantityChecked = 0;
     }
@@ -120,9 +120,9 @@ public class ShoppingList : NetworkBehaviour
     public void EraseListClient(bool wasHost, bool connectionWasLost)
     {
         ItemDictionary = new Dictionary<ulong, ShoppingListItem>();
-        if (IsOwner)
+        if(IsOwner)
         {
-            ShoppingListUi.EraseItems();
+            ShoppingListUI.EraseItems();
         }
     }
 
@@ -144,7 +144,7 @@ public class ShoppingList : NetworkBehaviour
         listItem.Caught = true;
         ItemDictionary.Remove(itemCode);
         ItemDictionary.Add(itemCode, listItem);
-        ShoppingListUi.CheckItem(itemCode);
+        ShoppingListUI.CheckItem(itemCode);
         _quantityChecked++;
 
         WarnItemChecked_ServerRpc(NetworkController.SelfID);
@@ -163,7 +163,7 @@ public class ShoppingList : NetworkBehaviour
         listItem.Caught = false;
         ItemDictionary.Remove(itemCode);
         ItemDictionary.Add(itemCode, listItem);
-        ShoppingListUi.UncheckItem(itemCode);
+        ShoppingListUI.UncheckItem(itemCode);
         _quantityChecked--;
 
         WarnItemUnchecked_ServerRpc(NetworkController.SelfID);

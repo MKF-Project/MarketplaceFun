@@ -133,7 +133,7 @@ public class FreeMovementControls : PlayerControls
         // and since rotation to the sides requires Physics movement,
         // this method MUST run on FixedUpdate.
         // The rotation for the in-between frames is interpolated.
-        _targetHorizontalRotation = Vector3.up * _nextRotation.x * Sensitivity;
+        _targetHorizontalRotation = Vector3.up * _nextRotation.x * ConfigMenu.Sensitivity;
         _targetHorizontalRotation = (_targetHorizontalRotation - _rigidBody.angularVelocity);
         _rigidBody.AddTorque(_targetHorizontalRotation, ForceMode.VelocityChange);
     }

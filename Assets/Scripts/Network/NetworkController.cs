@@ -262,6 +262,7 @@ public class NetworkController : MonoBehaviour
             {
                 // Local Client has lost connection to the remote Host
                 // Intended disconnection is handled on the disconnect() method
+                _localPlayers.Clear();
                 OnDisconnected?.Invoke(false, true);
             }
         }

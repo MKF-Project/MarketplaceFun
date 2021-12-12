@@ -3139,7 +3139,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 1
+  m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -3378,7 +3378,7 @@ PrefabInstance:
     - target: {fileID: 7864047924722094715, guid: 544b8ccc802de154fac238b9c290f6a6,
         type: 3}
       propertyPath: m_TargetDisplay
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7864047924722094718, guid: 544b8ccc802de154fac238b9c290f6a6,
         type: 3}

@@ -2670,6 +2670,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &1377120992 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5289194821687003088, guid: 66c840212bce8114c8336be63ccb9c58,
+    type: 3}
+  m_PrefabInstance: {fileID: 1384767410}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1384767410
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2787,10 +2793,15 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5289194821687003088, guid: 66c840212bce8114c8336be63ccb9c58,
+    - target: {fileID: 5289194821687003094, guid: 66c840212bce8114c8336be63ccb9c58,
         type: 3}
-      propertyPath: m_TargetDisplay
-      value: 0
+      propertyPath: m_Name
+      value: Camera Lobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 5289194821687003094, guid: 66c840212bce8114c8336be63ccb9c58,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5289194822083635698, guid: 66c840212bce8114c8336be63ccb9c58,
         type: 3}
@@ -3089,7 +3100,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1820254249}
   - component: {fileID: 1820254248}
-  - component: {fileID: 1820254247}
   m_Layer: 0
   m_Name: Camera Menu
   m_TagString: MainCamera
@@ -3097,14 +3107,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1820254247
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820254246}
-  m_Enabled: 1
 --- !u!20 &1820254248
 Camera:
   m_ObjectHideFlags: 0
@@ -3139,7 +3141,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 1
+  m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -3250,6 +3252,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 796678123343814027, guid: 544b8ccc802de154fac238b9c290f6a6,
+        type: 3}
+      propertyPath: _menuCamera
+      value: 
+      objectReference: {fileID: 1820254248}
+    - target: {fileID: 796678123343814027, guid: 544b8ccc802de154fac238b9c290f6a6,
+        type: 3}
+      propertyPath: _lobbyCamera
+      value: 
+      objectReference: {fileID: 1377120992}
     - target: {fileID: 815710074739695370, guid: 544b8ccc802de154fac238b9c290f6a6,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3374,11 +3386,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7864047924722094715, guid: 544b8ccc802de154fac238b9c290f6a6,
-        type: 3}
-      propertyPath: m_TargetDisplay
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7864047924722094718, guid: 544b8ccc802de154fac238b9c290f6a6,
         type: 3}

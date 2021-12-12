@@ -5,19 +5,28 @@ using UnityEngine.UI;
 
 public class ConfigMenu : MonoBehaviour
 {
-
-    public static float Sensitivity = 1;
-
     // Events
     public delegate void OnPressOKDelegate();
     public static event OnPressOKDelegate OnPressOK;
+
+    public static float Sensitivity = 1;
+    private static bool SensitivityConfigured = false;
 
     [SerializeField] private Slider SensitivitySlider = null;
     [SerializeField] private Text SensitivityValue = null;
 
     private void Awake()
     {
-        onChangeSliderValue();
+        if(SensitivityConfigured)
+        {
+            SensitivitySlider.value = Sensitivity;
+        }
+        else
+        {
+            Sensitivity = SensitivitySlider.value;
+        }
+
+        SensitivityValue.text = Sensitivity.ToString("0.00");
 
         GameMenu.OnPressConfigurations += this.toggleMenu;
     }
@@ -31,6 +40,7 @@ public class ConfigMenu : MonoBehaviour
     {
         Sensitivity = SensitivitySlider.value;
         SensitivityValue.text = Sensitivity.ToString("0.00");
+        SensitivityConfigured = true;
     }
 
     // Button Actions

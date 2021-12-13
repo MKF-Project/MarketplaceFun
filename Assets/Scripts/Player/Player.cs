@@ -18,6 +18,7 @@ public class Player : NetworkBehaviour
     private Throw _throwScript = null;
 
     private Rigidbody _rigidbody = null;
+    private PlayerAudio _playerAudioScript;
 
     // Held Item Vars
     private Transform _heldItemPosition;
@@ -57,6 +58,7 @@ public class Player : NetworkBehaviour
     {
         _throwScript = GetComponent<Throw>();
         _rigidbody = GetComponent<Rigidbody>();
+        _playerAudioScript = GetComponent<PlayerAudio>();
         _heldItemPosition = gameObject.transform.Find(HELD_POSITION_NAME);
 
         #if UNITY_EDITOR
@@ -68,6 +70,11 @@ public class Player : NetworkBehaviour
             if(_rigidbody == null)
             {
                 Debug.LogError($"[{gameObject.name}]: Could not find Player Rigidbody");
+            }
+
+            if(_playerAudioScript == null)
+            {
+                Debug.LogError($"[{gameObject.name}]: Could not find PlayerAudio Script");
             }
 
             if(_heldItemPosition == null)
@@ -225,6 +232,10 @@ public class Player : NetworkBehaviour
         if(cameraScript != null)
         {
             cameraScript.SetCameraOnPlayerOverview();
+            if(IsOwner)
+            {
+                _playerAudioScript.PlayTakeHit();
+            }
         }
     }
 

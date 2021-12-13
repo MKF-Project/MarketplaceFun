@@ -441,6 +441,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a3ba3766e42b0fe4986914f79d862e1c, type: 3}
   - {fileID: 8300000, guid: 63f9fc8afd22b3043a93e49e93a18140, type: 3}
   ThrowItem: {fileID: 0}
+  TakeHit: {fileID: 0}
 --- !u!1 &8816987188999332804
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,6 +804,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a3ba3766e42b0fe4986914f79d862e1c, type: 3}
   - {fileID: 8300000, guid: 63f9fc8afd22b3043a93e49e93a18140, type: 3}
   ThrowItem: {fileID: 8300000, guid: 8396545b87da23a478d5d0efb2156c1f, type: 3}
+  TakeHit: {fileID: 8300000, guid: b06d6b15160f32548ba48cb758976c94, type: 3}
 --- !u!114 &5644185216240505816
 MonoBehaviour:
   m_ObjectHideFlags: 0

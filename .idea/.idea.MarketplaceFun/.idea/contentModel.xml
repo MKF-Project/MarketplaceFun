@@ -135,6 +135,7 @@
           </e>
           <e p="Score" t="Include">
             <e p="DescriptivePoints.cs" t="Include" />
+            <e p="DiceCollision.cs" t="Include" />
             <e p="ScoreActions" t="Include">
               <e p="ScorableAction.cs" t="Include" />
               <e p="ScoreConfig.cs" t="Include" />

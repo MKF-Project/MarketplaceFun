@@ -13,8 +13,8 @@ public class ShoppingListUI : MonoBehaviour
     public Dictionary<ulong, GameObject> UIItemsDictionary;
 
     [SerializeField]
-    private Sprite StartingCheckedImage;
-    public static Sprite CheckedImage { get; private set; }
+    //private Sprite StartingCheckedImage;
+    //public static Sprite CheckedImage { get; private set; }
 
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class ShoppingListUI : MonoBehaviour
 
         _instance = this;
 
-        CheckedImage = StartingCheckedImage;
+        //CheckedImage = StartingCheckedImage;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -51,13 +51,15 @@ public class ShoppingListUI : MonoBehaviour
             return;
         }
 
+        
+        _instance.transform.GetChild(0).gameObject.SetActive(true);
         //Jump first
         int i = 1;
 
         foreach (ShoppingListItem shoppingListItem in itemList)
         {
             GameObject itemUI = _instance.transform.GetChild(i).gameObject;
-            Image itemImageUI = itemUI.GetComponent<Image>();
+            Image itemImageUI = itemUI.transform.GetChild(1).GetComponent<Image>();
 
             itemImageUI.sprite = NetworkItemManager.GetItemPrefabScript(shoppingListItem.ItemCode).UISticker;
 
@@ -80,12 +82,12 @@ public class ShoppingListUI : MonoBehaviour
             }
             else
             {
-                var itemUI = childTransform.GetComponent<Image>();
+                var itemUI = childTransform.transform.GetChild(1).GetComponent<Image>();
                 itemUI.sprite = null;
                 itemUI.enabled = false;
 
-                var checkMark = itemUI.transform.GetChild(0).GetComponent<Image>();
-                checkMark.sprite = null;
+                var checkMark = childTransform.transform.GetChild(0).GetComponent<Image>();
+                //checkMark.sprite = null;
                 checkMark.enabled = false;
             }
         }
@@ -95,7 +97,7 @@ public class ShoppingListUI : MonoBehaviour
     {
         GameObject itemUI = _instance.UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();
-        imageCheckUI.sprite = CheckedImage;
+        //imageCheckUI.sprite = CheckedImage;
         imageCheckUI.enabled = true;
     }
 
@@ -103,7 +105,7 @@ public class ShoppingListUI : MonoBehaviour
     {
         GameObject itemUI = _instance.UIItemsDictionary[itemCode];
         Image imageCheckUI = itemUI.transform.GetChild(0).GetComponent<Image>();
-        imageCheckUI.sprite = null;
+        //imageCheckUI.sprite = null;
         imageCheckUI.enabled = false;
     }
 }

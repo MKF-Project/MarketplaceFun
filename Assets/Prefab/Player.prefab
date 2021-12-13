@@ -668,7 +668,6 @@ MonoBehaviour:
   _gravity: 30
   MoveSpeed: 3.5
   WalkSpeed: 1.7
-  Sensitivity: 2
   InteractionDistance: 1.2
   InteractCooldown: 0.1
   FallSpeed: 3
@@ -693,7 +692,6 @@ MonoBehaviour:
   _gravity: 30
   MoveSpeed: 3.5
   WalkSpeed: 2
-  Sensitivity: 2
   InteractionDistance: 2
   InteractCooldown: 0.1
   MovingTurnSpeed: 100
@@ -738,7 +736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b671f22c445904b4b89b89050a2c03d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShoppingListUi: {fileID: 0}
   _quantityChecked: 0
 --- !u!114 &162437846829725900
 MonoBehaviour:
@@ -752,6 +749,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b106e56f08f18324b9bd336d7ef7f024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InvicibilityPeriod: 1
 --- !u!114 &2533615510006663239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,10 +796,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1fe3d7452b5a6468c031b616f7abb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Position1: {x: -3, y: 0.2, z: 0}
-  Position2: {x: -1, y: 0.2, z: 0}
-  Position3: {x: 1, y: 0.2, z: 0}
-  Position4: {x: 3, y: 0.2, z: 0}
+  Position1: {x: -4.5, y: 1, z: 2.5}
+  Position2: {x: -1.5, y: 1, z: 2.5}
+  Position3: {x: 1.5, y: 1, z: 2.5}
+  Position4: {x: 4.5, y: 1, z: 2.5}
 --- !u!114 &-2014535450862663308
 MonoBehaviour:
   m_ObjectHideFlags: 0

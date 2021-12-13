@@ -29,6 +29,13 @@ public class ShoppingCartInteract : NetworkBehaviour
     private List<Collider> _cartColliders;
     private List<PhysicMaterial> _cartMaterials;
 
+    [Header("SFX")]
+    public List<AudioClip> CartHitSounds;
+    public float _hitSoundCooldown = 0.1f;
+
+    private AudioSource _cartSource;
+    private float _lastHitSound = 0;
+
     private void Awake()
     {
         _interactScript = GetComponentInChildren<Interactable>();
@@ -38,6 +45,9 @@ public class ShoppingCartInteract : NetworkBehaviour
         _netRigidbody = GetComponent<NetRigidbody>();
 
         _rigidbody = GetComponent<Rigidbody>();
+
+        _cartSource = GetComponent<AudioSource>();
+        _lastHitSound = Time.time;
 
         // Store list of Physics materials
         _cartColliders = new List<Collider>(7);
@@ -56,6 +66,15 @@ public class ShoppingCartInteract : NetworkBehaviour
         _interactScript.OnLookEnter -= showButtonPrompt;
         _interactScript.OnLookExit -= hideButtonPrompt;
         _interactScript.OnInteract -= grabCart;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if(Time.time - _lastHitSound > _hitSoundCooldown && CartHitSounds != null && CartHitSounds.Count > 0)
+        {
+            _cartSource.PlayOneShot(CartHitSounds[Random.Range(0, CartHitSounds.Count)]);
+            _lastHitSound = Time.time;
+        }
     }
 
     /** ---- Interaction ---- **/
@@ -206,6 +225,9 @@ public class ShoppingCartInteract : NetworkBehaviour
                 break;
             }
         }
+
+        // Prevent sounds right as the cart detaches
+        _lastHitSound = Time.time;
     }
 
     /** ---- RPCs ---- **/

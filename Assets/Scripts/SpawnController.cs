@@ -48,8 +48,15 @@ public class SpawnController : NetworkBehaviour
     private static readonly WaitForSeconds OneSecondWait = new WaitForSeconds(1);
     private static readonly WaitForSeconds HoldMessageWait = new WaitForSeconds(COUNTDOWN_MESSAGE_HOLD_SECONDS);
 
+    [Header("SFX")]
+    public AudioClip CountdownProgressSound;
+    public AudioClip CountdownGoSound;
+    private AudioSource _spawnSource;
+
     private void Awake()
     {
+        TryGetComponent(out _spawnSource);
+
         /* Spawn Logic */
         if(_levelSpawnInstance != null)
         {
@@ -124,10 +131,12 @@ public class SpawnController : NetworkBehaviour
         for(int i = COUNTDOWN_SECONDS; i > 0; i--)
         {
             _releaseCountdown.text = i.ToString();
+            _spawnSource.PlayOneShot(CountdownProgressSound);
             yield return OneSecondWait;
         }
 
         _releaseCountdown.text = RELEASE_COUNTDOWN_MESSAGE;
+        _spawnSource.PlayOneShot(CountdownGoSound);
 
         // Open up the spawn together with the "Go!" message
         _generatedCollider.enabled = false;

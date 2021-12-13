@@ -16,6 +16,7 @@ public class PlayerAudio : NetworkBehaviour
 
     [Header("Sounds")]
     public List<AudioClip> Steps;
+    public AudioClip ThrowItem;
 
     private AudioSource _playerSource;
     private WaitForSeconds _muteTimeout = new WaitForSeconds(MUTE_TIMEOUT);
@@ -72,4 +73,5 @@ public class PlayerAudio : NetworkBehaviour
     }
 
     public void PlayStep() => _playerSource.PlayOneShot(Steps[UnityEngine.Random.Range(0, Steps.Count)]);
+    public void PlayThrowItem() => _playerSource.PlayOneShot(ThrowItem);
 }

@@ -189,12 +189,13 @@ public class ScoreSceneManager : NetworkBehaviour
             ScoreSpotController.AddPointsAt(playerIndex, scorePoint.LastMatchPoints);
         }
         
-        PutMatchListIntoMainList();
 
 
         if (IsServer)
         {
-            _scoreController.MoveToScoresToMainList();
+            PutMatchListIntoMainList();
+
+            _scoreController.ClearLastMatchPoints();
             _scoreFinished = true;
             //-----------------------------------------
             if(_scoreController.VerifyWinner())

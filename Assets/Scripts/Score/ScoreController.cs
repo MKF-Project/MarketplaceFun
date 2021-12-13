@@ -221,7 +221,7 @@ public class ScoreController : MonoBehaviour
         return result;
     }
 
-    public void MoveToScoresToMainList()
+    public void ClearLastMatchPoints()
     {
         foreach(ulong playerId in _playerPoints.Keys)
         {

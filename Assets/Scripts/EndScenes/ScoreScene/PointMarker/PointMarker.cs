@@ -10,12 +10,15 @@ public class PointMarker : MonoBehaviour
     private int _pointType;
 
     private List<GameObject> DiceObjects;
-    
+
     private bool _goToPosition;
 
     public float Speed;
 
     private Vector3 _target;
+
+    [Header("SFX")]
+    public List<AudioClip> DiceHitSounds;
 
     private void Awake()
     {
@@ -23,6 +26,21 @@ public class PointMarker : MonoBehaviour
         DiceObjects = gameObject.FindChildrenWithTag("Dice");
         //_meshRenderer = GetComponent<MeshRenderer>();
         ScoreSceneManager.OnWin += PrepareToWin;
+    }
+
+    private void Update()
+    {
+        if (_goToPosition)
+        {
+            float step =  Speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, _target, step);
+
+            if (Vector3.Distance(transform.position, _target) < 0.01f)
+            {
+                transform.position = _target;
+                _goToPosition = false;
+            }
+        }
     }
 
     private void OnDestroy()
@@ -53,24 +71,6 @@ public class PointMarker : MonoBehaviour
             materials[colorIndex] = ScoreConfig.ScoreTypeDictionary[pointType].ScoreColor;
             meshRenderer.materials = materials;
         }
-
-
-    }
-
-    
-    void Update()
-    {
-        if (_goToPosition)
-        {
-            float step =  Speed * Time.deltaTime; 
-            transform.position = Vector3.MoveTowards(transform.position, _target, step);
-
-            if (Vector3.Distance(transform.position, _target) < 0.01f)
-            {
-                transform.position = _target;
-                _goToPosition = false;
-            }
-        }
     }
 
     public void PrepareToWin(int winnerIndex)
@@ -91,7 +91,7 @@ public class PointMarker : MonoBehaviour
                 break;
         }
     }
-    
+
     public void ScrollToSide(float positionX)
     {
         Vector3 markerPosition = transform.position;

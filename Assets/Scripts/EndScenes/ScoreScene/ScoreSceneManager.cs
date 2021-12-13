@@ -170,11 +170,13 @@ public class ScoreSceneManager : NetworkBehaviour
                             Tuple<ulong, DescriptivePoints> tuple = new Tuple<ulong, DescriptivePoints>(scorePoint.PlayerId, descriptivePoints);
                             _listToAddInMain.Add(tuple);
                         }
-                        
-                        yield return new WaitForSeconds(3f);
                     }
-                    
                 }
+            }
+
+            if (haveScoreType)
+            {
+                yield return new WaitForSeconds(3f);
             }
         }
 
@@ -185,6 +187,9 @@ public class ScoreSceneManager : NetworkBehaviour
             int playerIndex = localPlayers[scorePoint.PlayerId].GetComponent<PlayerInfo>().PlayerData.Color - 1;
             ScoreSpotController.AddPointsAt(playerIndex, scorePoint.LastMatchPoints);
         }
+        
+        PutMatchListIntoMainList();
+
 
         if (IsServer)
         {
@@ -274,7 +279,6 @@ public class ScoreSceneManager : NetworkBehaviour
 
     public void StartNewMatch()
     {
-        PutMatchListIntoMainList();
         SceneManager.LoadMatch();
         //NetworkController.switchNetworkScene(SceneManager.MatchSceneTag);
     }

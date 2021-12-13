@@ -16,7 +16,13 @@ public class PlayerScore: NetworkBehaviour
         }
 
         PlayerScoreDictionary = new Dictionary<int, int>();
-        waitTime = Time.time;
+        //waitTime = Time.time;
+        MatchManager.OnMatchStart += ResetPlayerScore;
+    }
+
+    private void OnDestroy()
+    {
+        MatchManager.OnMatchStart -= ResetPlayerScore;
     }
 
     public void ScoreAction(ScoreType scoreType)
@@ -45,6 +51,14 @@ public class PlayerScore: NetworkBehaviour
         ScoreAction(ScoreConfig.ScoreTypeDictionary[scoreCode]);
     }
 
+
+    public void ResetPlayerScore()
+    {
+        PlayerScoreDictionary = new Dictionary<int, int>();
+    }
+
+
+    /*
     private float waitTime;
 
     private void Update()
@@ -64,4 +78,5 @@ public class PlayerScore: NetworkBehaviour
             Debug.Log("Cliente: " + OwnerClientId + " - " + scoreType.Type + " " + scoreType.Id + ": " +  PlayerScoreDictionary[key]);
         }
     }
+    */
 }

@@ -16,6 +16,7 @@ public class LobbyPosition : NetworkBehaviour
         _isOnLobby = true;
         _isOnScore = false;
         SceneManager.OnMatchLoaded += ExitLobby;
+        //PutPlayerOnLobbyPosition();
     }
 
     private void OnDestroy()
@@ -30,7 +31,7 @@ public class LobbyPosition : NetworkBehaviour
         {
             if (_isOnScore)
             {
-                transform.position = _lobbyPosition + new Vector3(_lobbyPosition.x/2,23.5f,-3.1f);
+                transform.position = _lobbyPosition + new Vector3(0,23.2f,-5.58f);
             }
             else
             {

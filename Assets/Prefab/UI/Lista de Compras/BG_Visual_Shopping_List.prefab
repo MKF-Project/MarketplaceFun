@@ -126,7 +126,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3184447081005475106}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -182,8 +182,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -600, y: 349}
-  m_SizeDelta: {x: 640, y: 200}
+  m_AnchoredPosition: {x: -600, y: 355}
+  m_SizeDelta: {x: 769.99854, y: 264.99924}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3184447081409490067
 CanvasRenderer:
@@ -212,7 +212,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2b915a620e6ce2d4c9c13936f55571bb, type: 3}
+  m_Sprite: {fileID: 2771402237313962307, guid: 1af1908dd34fea644b76b9f14c35b4a9,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

@@ -65,6 +65,7 @@
             <e p="Auxiliary" t="Include">
               <e p="LobbyPositionController.cs" t="Include" />
             </e>
+            <e p="ConfigMenu.cs" t="Include" />
             <e p="ConnectionMenu.cs" t="Include" />
             <e p="DisconnectMenu.cs" t="Include" />
             <e p="ExitMenu.cs" t="Include" />

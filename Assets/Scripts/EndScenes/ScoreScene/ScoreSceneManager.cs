@@ -153,7 +153,7 @@ public class ScoreSceneManager : NetworkBehaviour
                             ScoreType scoreType = ScoreConfig.ScoreTypeDictionary[scoreTypeId];
                             ScoreCanvas.ShowScoreText(scoreType.Type, scoreType.ScoreColor.color);
                         
-                            yield return new WaitForSeconds(2f);
+                            yield return new WaitForSeconds(1.5f);
                             haveScoreType = true;
                         }
 
@@ -176,7 +176,7 @@ public class ScoreSceneManager : NetworkBehaviour
 
             if (haveScoreType)
             {
-                yield return new WaitForSeconds(3f);
+                yield return new WaitForSeconds(2f);
             }
         }
 

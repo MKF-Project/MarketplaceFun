@@ -64,6 +64,7 @@
           <e p="Menus" t="Include">
             <e p="Auxiliary" t="Include">
               <e p="LobbyPositionController.cs" t="Include" />
+              <e p="MenuCameraManager.cs" t="Include" />
             </e>
             <e p="ConfigMenu.cs" t="Include" />
             <e p="ConnectionMenu.cs" t="Include" />

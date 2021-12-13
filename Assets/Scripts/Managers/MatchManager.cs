@@ -213,6 +213,11 @@ public class MatchManager : NetworkBehaviour
                         UpdateMatchTime_ClientRpc(MatchTimeMinutes);
                     }
                 }
+
+                if (ListCompletedPlayers.Count == NetworkController.GetLocalPlayers().Count)
+                {
+                    EndMatch();
+                }
             }
         }
     }

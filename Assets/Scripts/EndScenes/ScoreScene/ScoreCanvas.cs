@@ -16,7 +16,7 @@ public class ScoreCanvas : MonoBehaviour
     private GameObject _buttonReady;
     public GameObject ScorePanel;
     private Text _scoreText;
-    
+    public GameObject ExitButton;
 
     public void Awake()
     {
@@ -40,6 +40,12 @@ public class ScoreCanvas : MonoBehaviour
 
     }
     
+    public void ShowButtonExit()
+    {
+        ExitButton.SetActive(true);
+
+    }
+    
     public void HideButtonStart()
     {
         _buttonStart.SetActive(false);
@@ -53,6 +59,12 @@ public class ScoreCanvas : MonoBehaviour
     public void HideScoreText()
     {
         ScorePanel.SetActive(false);
+    }
+    
+    public void HideButtonExit()
+    {
+        ExitButton.SetActive(false);
+
     }
 
 

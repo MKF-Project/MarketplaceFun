@@ -92,6 +92,7 @@ public class ScoreSceneManager : NetworkBehaviour
             PlayWinLoseAnimation();
             OnWin?.Invoke(_playerIndex);
             _haveWinner = false;
+            ScoreCanvas.ShowButtonExit();
         }
 
         if (IsClient & !IsHost)

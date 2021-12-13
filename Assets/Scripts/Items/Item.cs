@@ -28,10 +28,13 @@ public class Item : NetworkBehaviour
     private NetworkObject _networkObject;
     private Rigidbody _rigidbody = null;
     private AudioSource _itemSource;
+    private MeshRenderer _meshRenderer;
 
     [HideInInspector]
     public bool IsOnThrow;
-
+    [HideInInspector]
+    public bool IsInCart;
+    
     private bool _isBeingDestroyed = false;
     private WaitForSeconds _destroyTimeout = new WaitForSeconds(ITEM_DESTROY_DELAY);
 
@@ -75,6 +78,9 @@ public class Item : NetworkBehaviour
                 Debug.LogError($"[{name}]: AudioSource not found!");
             #endif
         }
+
+        _meshRenderer = gameObject.GetComponentInChildren<MeshRenderer>();
+
     }
 
     // Object needs to be registered not before NetworkStart, like in Awake()
@@ -116,6 +122,10 @@ public class Item : NetworkBehaviour
 
     public void OnCollisionEnter(Collision other)
     {
+        if(other.gameObject.tag == ShoppingCartItem.SHOPPING_CART_TAG)
+        {
+            _meshRenderer.enabled = false;
+        }
         if(other.gameObject.tag != ShoppingCartItem.SHOPPING_CART_TAG)
         {
             PlayHitSound();

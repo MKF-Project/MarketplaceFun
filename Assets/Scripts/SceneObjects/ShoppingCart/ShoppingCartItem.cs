@@ -112,6 +112,12 @@ public class ShoppingCartItem : NetworkBehaviour
     {
         if(item != null && IsServer)
         {
+            if (item.IsInCart)
+            {
+                return;
+            }
+
+            item.IsInCart = true;
             item.DestroyItem_ClientRpc();
 
             var index = GetItemCartIndex(item);
@@ -175,6 +181,12 @@ public class ShoppingCartItem : NetworkBehaviour
         if(_itemCount < _itemIDs.Length)
         {
             return _itemCount;
+        }
+
+    
+        if (Owner == null)
+        {
+            return Random.Range(0, _itemCount);
         }
 
         // If the player that threw the item into the cart also owns said cart,

@@ -120,7 +120,7 @@ public class ScoreController : MonoBehaviour
     public void EndMatch()
     {
         _scoreAuditor.Audit();
-        AdicionaParaTeste();
+        //AdicionaParaTeste();
     }
 
     public bool VerifyWinner()
@@ -250,6 +250,7 @@ public class ScoreController : MonoBehaviour
 
     // REMOVER DEPOIS ---------------------------------------------------------------------------------------------------------------------------
 
+    
     private void AdicionaParaTeste()
     {
         List<DescriptivePoints> descriptivePointsList = new List<DescriptivePoints>();

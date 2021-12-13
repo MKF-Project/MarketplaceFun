@@ -817,10 +817,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1fe3d7452b5a6468c031b616f7abb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Position1: {x: -4.5, y: 0.5, z: 2.5}
-  Position2: {x: -1.5, y: 0.5, z: 2.5}
-  Position3: {x: 1.5, y: 0.5, z: 2.5}
-  Position4: {x: 4.5, y: 0.5, z: 2.5}
+  Position1: {x: -4.5, y: 0.49, z: 2.5}
+  Position2: {x: -1.5, y: 0.49, z: 2.5}
+  Position3: {x: 1.5, y: 0.49, z: 2.5}
+  Position4: {x: 4.5, y: 0.49, z: 2.5}
 --- !u!114 &-2014535450862663308
 MonoBehaviour:
   m_ObjectHideFlags: 0

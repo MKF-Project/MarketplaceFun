@@ -15,7 +15,7 @@ public class ConnectionMenu : MonoBehaviour
     private bool _isHost;
 
     // Title
-    private const string _joinText = "Join";
+    private const string _joinText = "Cliente";
     private const string _hostText = "Host";
     [SerializeField] private Text _menuTitle = null;
 
@@ -23,9 +23,9 @@ public class ConnectionMenu : MonoBehaviour
     [SerializeField] private InputField _addressInput = null;
 
     // Address Placeholder
-    private const string _placeholderIPPrompt = " Enter IP/Address...";
-    private const string _placeholderPhotonPrompt = " Enter Room Name...";
-    private const string _placeholderIgnore = " [Ignored]";
+    private const string _placeholderIPPrompt = " Digite o endereço de IP do HOST...";
+    private const string _placeholderPhotonPrompt = " Digite o nome da sala...";
+    private const string _placeholderIgnore = " [Ignorado]";
     [SerializeField] private Text _addressPlaceholder = null;
 
     // Transport Dropdown
@@ -58,7 +58,7 @@ public class ConnectionMenu : MonoBehaviour
         MenuManager.toggleMenu(gameObject);
 
         _isHost = isHost;
-        _menuTitle.text = $"{(isHost? _hostText : _joinText)} Game:";
+        _menuTitle.text = $"{(isHost? _hostText : _joinText)}";
 
         onChangeTransport();
     }

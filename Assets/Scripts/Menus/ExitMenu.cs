@@ -14,17 +14,24 @@ public class ExitMenu : NetworkBehaviour
     public static event OnStayOnMatchDelegate OnStayOnMatch;
 
     public bool ShowPrompt;
-    
+
     private const string hostPrompt = "Stop";
     private const string clientPrompt = "Leave";
     [SerializeField] private Text _exitPrompt = null;
 
+    [Header("Sensitivity")]
+    [SerializeField] private Slider SensitivitySlider = null;
+    [SerializeField] private Text SensitivityValue = null;
+
     private void Awake()
     {
-        if (ShowPrompt)
+        if(ShowPrompt)
         {
             _exitPrompt.text = $"{(IsHost ? hostPrompt : clientPrompt)} Match?";
         }
+
+        SensitivityValue.text = ConfigMenu.Sensitivity.ToString("0.00");
+        SensitivitySlider.value = ConfigMenu.Sensitivity;
 
         InputController.OnPause += handleMenuState;
         InputController.OnUnpause += handleMenuState;
@@ -50,6 +57,13 @@ public class ExitMenu : NetworkBehaviour
         {
             gameObject.SetActive(true);
         }
+    }
+
+    public void onChangeSensitivitySliderValue()
+    {
+        ConfigMenu.Sensitivity = SensitivitySlider.value;
+        SensitivityValue.text = ConfigMenu.Sensitivity.ToString("0.00");
+        ConfigMenu.SensitivityConfigured = true;
     }
 
     // Button Events

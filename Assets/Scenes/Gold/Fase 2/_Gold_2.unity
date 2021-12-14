@@ -21,11 +21,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
+  m_AmbientSkyColor: {r: 0.6827848, g: 0.6827848, b: 0.6827848, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -39,13 +39,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1727926, g: 0.21592408, b: 0.29786363, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 1
+  m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -53,10 +53,10 @@ LightmapSettings:
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
     m_EnableBakedLightmaps: 0
-    m_EnableRealtimeLightmaps: 0
+    m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
     serializedVersion: 12
-    m_Resolution: 2
+    m_Resolution: 4
     m_BakeResolution: 50
     m_AtlasSize: 256
     m_AO: 0
@@ -5221,6 +5221,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: 54f68f934067cde4e8ca080eb20a3489,
+        type: 3}
+      propertyPath: _group
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54f68f934067cde4e8ca080eb20a3489, type: 3}
 --- !u!4 &80696550 stripped
@@ -6249,6 +6254,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: 54f68f934067cde4e8ca080eb20a3489,
+        type: 3}
+      propertyPath: _group
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54f68f934067cde4e8ca080eb20a3489, type: 3}
 --- !u!4 &107001125 stripped
@@ -6869,6 +6879,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: 54f68f934067cde4e8ca080eb20a3489,
+        type: 3}
+      propertyPath: _group
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54f68f934067cde4e8ca080eb20a3489, type: 3}
 --- !u!4 &129642703 stripped
@@ -8427,17 +8442,17 @@ PrefabInstance:
     - target: {fileID: 3039092015860575909, guid: e5d647dc9d088c942afc64fca840163a,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3039092015860575909, guid: e5d647dc9d088c942afc64fca840163a,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00008319318
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3039092015860575909, guid: e5d647dc9d088c942afc64fca840163a,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3039092015860575909, guid: e5d647dc9d088c942afc64fca840163a,
         type: 3}
@@ -8457,7 +8472,7 @@ PrefabInstance:
     - target: {fileID: 3039092015860575909, guid: e5d647dc9d088c942afc64fca840163a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0.010000001
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3039092015860575909, guid: e5d647dc9d088c942afc64fca840163a,
         type: 3}
@@ -8469,6 +8484,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: e5d647dc9d088c942afc64fca840163a,
+        type: 3}
+      propertyPath: _group
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5d647dc9d088c942afc64fca840163a, type: 3}
 --- !u!4 &172214042 stripped
@@ -12868,6 +12888,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2474090738181349012, guid: 5c63a889dd9b7b84fa098350b77bb70c,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2474090738181349012, guid: 5c63a889dd9b7b84fa098350b77bb70c,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2474090738181349012, guid: 5c63a889dd9b7b84fa098350b77bb70c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342170812962885707, guid: 5c63a889dd9b7b84fa098350b77bb70c,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342170812962885707, guid: 5c63a889dd9b7b84fa098350b77bb70c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c63a889dd9b7b84fa098350b77bb70c, type: 3}
@@ -34294,6 +34339,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: 54f68f934067cde4e8ca080eb20a3489,
+        type: 3}
+      propertyPath: _group
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54f68f934067cde4e8ca080eb20a3489, type: 3}
 --- !u!4 &738081562 stripped
@@ -48499,7 +48549,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0.84
@@ -61550,6 +61600,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: e5d647dc9d088c942afc64fca840163a,
+        type: 3}
+      propertyPath: _group
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5d647dc9d088c942afc64fca840163a, type: 3}
 --- !u!4 &1325695504 stripped
@@ -64020,7 +64075,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -65896,6 +65951,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: e5d647dc9d088c942afc64fca840163a,
+        type: 3}
+      propertyPath: _group
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5d647dc9d088c942afc64fca840163a, type: 3}
 --- !u!4 &1431002246 stripped
@@ -70523,6 +70583,11 @@ PrefabInstance:
       propertyPath: _itemGenerator
       value: 
       objectReference: {fileID: 1440940966}
+    - target: {fileID: 5500671584903351107, guid: e5d647dc9d088c942afc64fca840163a,
+        type: 3}
+      propertyPath: _group
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5d647dc9d088c942afc64fca840163a, type: 3}
 --- !u!4 &1459549540 stripped
@@ -71668,7 +71733,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1

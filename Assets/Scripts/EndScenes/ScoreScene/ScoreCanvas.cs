@@ -13,6 +13,8 @@ public class ScoreCanvas : MonoBehaviour
     public GameObject ScorePanel;
     private Text _scoreText;
     public GameObject ExitButton;
+    public Image CoinRight;
+    public Image CoinLeft;
 
     public void Awake()
     {
@@ -94,5 +96,7 @@ public class ScoreCanvas : MonoBehaviour
     {
         _scoreText.text = text;
         _scoreText.color = color;
+        CoinRight.color = color;
+        CoinLeft.color = color;
     }
 }

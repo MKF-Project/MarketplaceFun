@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -8139996898228635041
-    second: Alerta HUD Sprites_0
+    second: AlertaHUDSprites_0
   - first:
       213: -3318610424987565023
-    second: Alerta HUD Sprites_1
+    second: AlertaHUDSprites_1
   - first:
       213: -3936465507444768833
-    second: Alerta HUD Sprites_2
+    second: AlertaHUDSprites_2
   - first:
       213: -5537088133723565983
-    second: Alerta HUD Sprites_3
+    second: AlertaHUDSprites_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Alerta HUD Sprites_0
+      name: AlertaHUDSprites_0
       rect:
         serializedVersion: 2
         x: 678
@@ -131,7 +131,7 @@ TextureImporter:
         width: 630
         height: 220
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -144,7 +144,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alerta HUD Sprites_1
+      name: AlertaHUDSprites_1
       rect:
         serializedVersion: 2
         x: 680
@@ -152,7 +152,7 @@ TextureImporter:
         width: 630
         height: 220
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -165,7 +165,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alerta HUD Sprites_2
+      name: AlertaHUDSprites_2
       rect:
         serializedVersion: 2
         x: 675
@@ -173,7 +173,7 @@ TextureImporter:
         width: 630
         height: 220
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -186,7 +186,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alerta HUD Sprites_3
+      name: AlertaHUDSprites_3
       rect:
         serializedVersion: 2
         x: 678
@@ -194,7 +194,7 @@ TextureImporter:
         width: 630
         height: 220
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

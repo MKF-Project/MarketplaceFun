@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34928e05cc81300438367e20d4f4a646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowPrompt: 0
+  ShowPrompt: 1
   _exitPrompt: {fileID: 1838894549790915672}
   SensitivitySlider: {fileID: 8684462952201326373}
   SensitivityValue: {fileID: 7503614419471792787}

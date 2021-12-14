@@ -28,11 +28,10 @@ public class ExitMenu : NetworkBehaviour
         if(ShowPrompt)
         {
             _exitPrompt.text = $"{(IsHost ? hostPrompt : clientPrompt)} Match?";
+            SensitivityValue.text = ConfigMenu.Sensitivity.ToString("0.00");
+            SensitivitySlider.value = ConfigMenu.Sensitivity;
         }
-
-        SensitivityValue.text = ConfigMenu.Sensitivity.ToString("0.00");
-        SensitivitySlider.value = ConfigMenu.Sensitivity;
-
+        
         InputController.OnPause += handleMenuState;
         InputController.OnUnpause += handleMenuState;
     }

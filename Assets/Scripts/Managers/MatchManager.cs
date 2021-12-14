@@ -274,8 +274,8 @@ public class MatchManager : NetworkBehaviour
         PlayerInfo playerInfo = playerGameObject.GetComponent<PlayerInfo>();
         String playerNickname = playerInfo.PlayerData.Nickname;
         Color color = ColorManager.Instance.GetColor(playerInfo.PlayerData.Color).color;
-        MatchMessages.Instance.EditMessage("Player " + playerNickname + " Checked Out");
-        MatchMessages.Instance.EditColorMessage(color);
+        MatchMessages.Instance.EditMessage(playerNickname + "\n" + "passou no caixa");
+        MatchMessages.Instance.EditColorMessage(playerInfo.PlayerData.Color);
 
         MatchMessages.Instance.ShowMessage();
         if(NetworkManager.LocalClientId == playerId)

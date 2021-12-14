@@ -6758,6 +6758,7 @@ GameObject:
   - component: {fileID: 6784357425229333593}
   - component: {fileID: 1400383987496632617}
   - component: {fileID: 3054378371170269865}
+  - component: {fileID: 2033608925570948158}
   m_Layer: 5
   m_Name: TutorialMenu
   m_TagString: Menu
@@ -6822,6 +6823,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2033608925570948158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8157068672189926412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bccd4510ec47404586b2326a7a04357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TutorialPages:
+  - {fileID: 21300000, guid: 8c47eb99208bbdb4ba386555fd210e7d, type: 3}
+  _pageImage: {fileID: 2239611749140574072}
 --- !u!1 &8500255394885240352
 GameObject:
   m_ObjectHideFlags: 0
@@ -7150,11 +7166,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2033608925570948158}
     - target: {fileID: 7966326220554371762, guid: e01a7a5891f5355458bfd80626a691b7,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: pressOK
+      value: Next
       objectReference: {fileID: 0}
     - target: {fileID: 7966326220554371762, guid: e01a7a5891f5355458bfd80626a691b7,
         type: 3}
@@ -7775,11 +7791,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2033608925570948158}
     - target: {fileID: 7966326220554371762, guid: e01a7a5891f5355458bfd80626a691b7,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: pressOK
+      value: Back
       objectReference: {fileID: 0}
     - target: {fileID: 7966326220554371762, guid: e01a7a5891f5355458bfd80626a691b7,
         type: 3}
@@ -7953,6 +7969,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e01a7a5891f5355458bfd80626a691b7, type: 3}
+--- !u!224 &3569105518112078637 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5820132072055083565, guid: e01a7a5891f5355458bfd80626a691b7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7011332519723755776}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1135842490067282866 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7966326220554371762, guid: e01a7a5891f5355458bfd80626a691b7,
@@ -7965,12 +7987,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &3569105518112078637 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5820132072055083565, guid: e01a7a5891f5355458bfd80626a691b7,
-    type: 3}
-  m_PrefabInstance: {fileID: 7011332519723755776}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7111481445857945558
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8126,7 +8142,7 @@ PrefabInstance:
     - target: {fileID: 7966326220554371762, guid: e01a7a5891f5355458bfd80626a691b7,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: pressConfigurations
+      value: viewTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 7966326220554371762, guid: e01a7a5891f5355458bfd80626a691b7,
         type: 3}

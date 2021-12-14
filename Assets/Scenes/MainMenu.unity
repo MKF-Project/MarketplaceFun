@@ -4253,6 +4253,7 @@ MonoBehaviour:
     - WinScene
     - _Gold_1
     - _Gold_2
+    - _Gold_3
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8816987188999332804, guid: 9a21ac4d0486e2c4dbf2cb729b7f14f4,
@@ -5873,7 +5874,7 @@ PrefabInstance:
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
       propertyPath: MatchSceneList.Array.size
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
@@ -5888,6 +5889,46 @@ PrefabInstance:
     - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
         type: 3}
       propertyPath: MatchSceneList.Array.data[1]
+      value: _Gold_2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[2]
+      value: _Gold_3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[3]
+      value: _Gold_2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[4]
+      value: _Gold_1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[5]
+      value: _Gold_2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[6]
+      value: _Gold_3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[7]
+      value: _Gold_2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[8]
+      value: _Gold_1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8374696426801445531, guid: 36a488169971b2b49befd725e2b9f9b0,
+        type: 3}
+      propertyPath: MatchSceneList.Array.data[9]
       value: _Gold_2
       objectReference: {fileID: 0}
     - target: {fileID: 3806232346622104752, guid: 36a488169971b2b49befd725e2b9f9b0,

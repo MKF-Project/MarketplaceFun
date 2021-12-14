@@ -14,13 +14,14 @@ public class ScoreSceneManager : NetworkBehaviour
     public int _playersReady;
 
     private ScoreController _scoreController;
-    
+    private AudioSource _scoreAudioSource;
+
     private int _playerIndex;
-    
+
     //SceneObjects
     public Transform Camera;
     public float FirstPositionY;
-    
+
     //Scene Controllers
     public ScoreCanvas ScoreCanvas;
     public PointMarkerController PointMarkerController;
@@ -32,7 +33,7 @@ public class ScoreSceneManager : NetworkBehaviour
     private bool _scoreFinished;
 
     //public WinCamera WinCamera;
-    
+
     private NetworkVariable<bool> _canActivateReady = new NetworkVariable<bool>(
         new NetworkVariableSettings
         {
@@ -40,7 +41,7 @@ public class ScoreSceneManager : NetworkBehaviour
             WritePermission = NetworkVariablePermission.ServerOnly
         }
     );
-    
+
     public delegate void OnWinDelegate(int winnerIndex);
     public static event OnWinDelegate OnWin;
 
@@ -56,6 +57,7 @@ public class ScoreSceneManager : NetworkBehaviour
             WritePermission = NetworkVariablePermission.ServerOnly
         }
     );
+
     public void Awake()
     {
         _startProcess = false;
@@ -65,8 +67,10 @@ public class ScoreSceneManager : NetworkBehaviour
         _playerIndex = -1;
         NetworkController.SelfPlayer.GetComponent<LobbyPosition>().EnterOnScore(Camera.position);
 
+        _scoreAudioSource = GetComponent<AudioSource>();
+
         if (IsServer)
-        { 
+        {
             _listToAddInMain = new List<Tuple<ulong, DescriptivePoints>>();
             _scoreFinished = false;
             _playersReady = 1;
@@ -74,7 +78,7 @@ public class ScoreSceneManager : NetworkBehaviour
             scoreList.Value = _scoreController.GetSerializedScore();
             StartShowPoints();
             ScoreCanvas.ShowButtonStart();
-            
+
         }
 
         if (IsClient & !IsHost)
@@ -99,6 +103,7 @@ public class ScoreSceneManager : NetworkBehaviour
         {
             ScoreCanvas.HideUI();
             PlayWinLoseAnimation();
+            _scoreAudioSource.Play();
             OnWin?.Invoke(_playerIndex);
             _haveWinner = false;
             ScoreCanvas.ShowButtonExit();
@@ -120,7 +125,7 @@ public class ScoreSceneManager : NetworkBehaviour
 
     }
 
-    
+
     private void StartShowPoints()
     {
         if (!_startProcess)
@@ -162,19 +167,19 @@ public class ScoreSceneManager : NetworkBehaviour
                         {
                             ScoreType scoreType = ScoreConfig.ScoreTypeDictionary[scoreTypeId];
                             ScoreCanvas.ShowScoreText(scoreType.Type, scoreType.ScoreColor.color);
-                        
+
                             yield return new WaitForSeconds(1.5f);
                             haveScoreType = true;
                         }
 
                         int playerIndex = localPlayers[scorePoint.PlayerId].GetComponent<PlayerInfo>().PlayerData.Color;
                         PointMarkerController.SpawnMarker(playerIndex-1, descriptivePoints.ScoreTypeId, descriptivePoints.Points);
-                        
-                        
+
+
                         #if UNITY_EDITOR
                             Debug.Log("Generated " + descriptivePoints.ScoreTypeId + " Points:  " + descriptivePoints.Points + " --- at " + playerIndex);
                         #endif
-                        
+
                         if (IsServer)
                         {
                             Tuple<ulong, DescriptivePoints> tuple = new Tuple<ulong, DescriptivePoints>(scorePoint.PlayerId, descriptivePoints);
@@ -197,7 +202,7 @@ public class ScoreSceneManager : NetworkBehaviour
             int playerIndex = localPlayers[scorePoint.PlayerId].GetComponent<PlayerInfo>().PlayerData.Color - 1;
             ScoreSpotController.AddPointsAt(playerIndex, scorePoint.LastMatchPoints);
         }
-        
+
 
 
         if (IsServer)
@@ -228,7 +233,7 @@ public class ScoreSceneManager : NetworkBehaviour
         ScorePoints[] scorePointsList = scoreList.Value.Array;
 
         float nextPositionY = 0;
-        
+
         foreach (ScorePoints scorePoint in scorePointsList)
         {
             //Get Player Index
@@ -236,7 +241,7 @@ public class ScoreSceneManager : NetworkBehaviour
 
             //Populate Sign
             ScoreSpotController.StartPointsAt(playerIndex, scorePoint.TotalPoints);
-            
+
             //Generate Markers
             foreach (DescriptivePoints descriptivePoints in scorePoint.PlayerPoints)
             {
@@ -275,7 +280,7 @@ public class ScoreSceneManager : NetworkBehaviour
         _playerIndex = winnerIndex;
         _haveWinner = true;
     }
-    
+
     /*
     [ClientRpc]
     public void CanActivateReadyButton_ClientRpc()
@@ -289,7 +294,7 @@ public class ScoreSceneManager : NetworkBehaviour
     {
         _playersReady += 1;
     }
-    
+
 
     public void StartNewMatch()
     {
@@ -305,7 +310,7 @@ public class ScoreSceneManager : NetworkBehaviour
             playerAnimator.SetTrigger("P_Vitoria");
             return;
         }
-       
+
         playerAnimator.SetTrigger("P_Derrota");
     }
 

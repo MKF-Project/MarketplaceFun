@@ -137,19 +137,19 @@ public class MatchManager : NetworkBehaviour
                     NetworkController.switchNetworkScene(SCORE_SCENE_NAME);
                 }
             }
+        }
 
-            else if(_hasSetHurry)
+        if(_hasSetHurry)
+        {
+            var timeDiff = Time.time - _lastClockTick;
+            if((_hasSetThreshold && timeDiff > ThresholdTickingTempo) || timeDiff > TickingTempo)
             {
-                var timeDiff = Time.time - _lastClockTick;
-                if((_hasSetThreshold && timeDiff > ThresholdTickingTempo) || timeDiff > TickingTempo)
-                {
-                    _lastClockTick = Time.time;
+                _lastClockTick = Time.time;
 
-                    var list = _isOnUpTick? ClockTickUpSounds : ClockTickDownSounds;
-                    _clockAudioSource.PlayOneShot(list[UnityEngine.Random.Range(0, list.Count)]);
+                var list = _isOnUpTick? ClockTickUpSounds : ClockTickDownSounds;
+                _clockAudioSource.PlayOneShot(list[UnityEngine.Random.Range(0, list.Count)]);
 
-                    _isOnUpTick = !_isOnUpTick;
-                }
+                _isOnUpTick = !_isOnUpTick;
             }
         }
     }

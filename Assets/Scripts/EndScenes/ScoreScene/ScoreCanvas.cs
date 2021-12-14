@@ -63,12 +63,20 @@ public class ScoreCanvas : MonoBehaviour
 
     }
 
+    public void HideCoins()
+    {
+        CoinRight.enabled = false;
+        CoinLeft.enabled = false;;
+    }
+
 
     public void HideUI()
     {
         HideButtonStart();
         HideButtonReady();
         HideScoreText();
+        HideCoins();
+
     }
 
 

@@ -608,7 +608,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8c47eb99208bbdb4ba386555fd210e7d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: eccd8674a74713246a7361a5f7384b97, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2455,7 +2455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7864047925046990882
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2681,7 +2681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7864047925134855149
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5948,10 +5948,10 @@ RectTransform:
   m_Father: {fileID: 7864047926692551904}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.6207512}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -4.9198}
-  m_SizeDelta: {x: -1020, y: 1}
+  m_AnchoredPosition: {x: 0, y: -516}
+  m_SizeDelta: {x: 0.00024414062, y: -1030.6752}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7864047926204320898
 CanvasRenderer:
@@ -5981,21 +5981,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 34ced82636ccfd941b704174b9056615, type: 3}
     m_FontSize: 14
     m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 130
+    m_MaxSize: 60
     m_Alignment: 4
     m_AlignByGeometry: 1
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'SUPER
-
-    MERCADUX'
+  m_Text: "Marcelo Fr\xF3es, Pedro Bledow, Rodrigo Caetanie e Thiago Rosa"
 --- !u!1 &7864047926214243368
 GameObject:
   m_ObjectHideFlags: 0
@@ -6725,7 +6723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7864047926692551904
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6742,9 +6740,9 @@ RectTransform:
   m_Father: {fileID: 7864047924956679875}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -540.20996}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 539.79004}
   m_SizeDelta: {x: 1920.0001, y: 1080.4205}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8157068672189926412
@@ -6837,6 +6835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TutorialPages:
   - {fileID: 21300000, guid: 8c47eb99208bbdb4ba386555fd210e7d, type: 3}
+  - {fileID: 21300000, guid: eccd8674a74713246a7361a5f7384b97, type: 3}
   _pageImage: {fileID: 2239611749140574072}
 --- !u!1 &8500255394885240352
 GameObject:

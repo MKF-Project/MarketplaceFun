@@ -28,10 +28,18 @@ public class ScoreSceneManager : NetworkBehaviour
 
     //Mutex
     private bool _haveWinner;
-    private bool _canActivateReady;
+    private bool _canActivateReadyLocal;
     private bool _scoreFinished;
 
     //public WinCamera WinCamera;
+    
+    private NetworkVariable<bool> _canActivateReady = new NetworkVariable<bool>(
+        new NetworkVariableSettings
+        {
+            ReadPermission = NetworkVariablePermission.Everyone,
+            WritePermission = NetworkVariablePermission.ServerOnly
+        }
+    );
     
     public delegate void OnWinDelegate(int winnerIndex);
     public static event OnWinDelegate OnWin;
@@ -52,7 +60,8 @@ public class ScoreSceneManager : NetworkBehaviour
     {
         _startProcess = false;
         _haveWinner = false;
-        _canActivateReady = false;
+        _canActivateReady.Value = false;
+        _canActivateReadyLocal = true;
         _playerIndex = -1;
         NetworkController.SelfPlayer.GetComponent<LobbyPosition>().EnterOnScore(Camera.position);
 
@@ -97,10 +106,10 @@ public class ScoreSceneManager : NetworkBehaviour
 
         if (IsClient & !IsHost)
         {
-            if (_canActivateReady)
+            if (_canActivateReady.Value & _canActivateReadyLocal)
             {
                 ScoreCanvas.ActivateButtonReady();
-                _canActivateReady = false;
+                _canActivateReadyLocal = false;
             }
         }
 
@@ -207,7 +216,8 @@ public class ScoreSceneManager : NetworkBehaviour
             }
             else
             {
-                CanActivateReadyButton_ClientRpc();
+                _canActivateReady.Value = true;
+                //CanActivateReadyButton_ClientRpc();
             }
             //-----------------------------------------
         }
@@ -266,11 +276,13 @@ public class ScoreSceneManager : NetworkBehaviour
         _haveWinner = true;
     }
     
+    /*
     [ClientRpc]
     public void CanActivateReadyButton_ClientRpc()
     {
         _canActivateReady = true;
     }
+    */
 
     [ServerRpc(RequireOwnership = false)]
     public void PlayerIsReady_ServerRpc()

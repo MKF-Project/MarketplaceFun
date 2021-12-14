@@ -27,6 +27,11 @@ public class ScoreSceneManager : NetworkBehaviour
     public PointMarkerController PointMarkerController;
     public ScoreSpotController ScoreSpotController;
 
+    // Audio
+    [Header("SFX")]
+    public AudioClip WinSound;
+    public AudioClip SwitchScoreSound;
+
     //Mutex
     private bool _haveWinner;
     private bool _canActivateReadyLocal;
@@ -103,7 +108,7 @@ public class ScoreSceneManager : NetworkBehaviour
         {
             ScoreCanvas.HideUI();
             PlayWinLoseAnimation();
-            _scoreAudioSource.Play();
+            _scoreAudioSource.PlayOneShot(WinSound);
             OnWin?.Invoke(_playerIndex);
             _haveWinner = false;
             ScoreCanvas.ShowButtonExit();
@@ -167,6 +172,8 @@ public class ScoreSceneManager : NetworkBehaviour
                         {
                             ScoreType scoreType = ScoreConfig.ScoreTypeDictionary[scoreTypeId];
                             ScoreCanvas.ShowScoreText(scoreType.Type, scoreType.ScoreColor.color);
+
+                            _scoreAudioSource.PlayOneShot(SwitchScoreSound);
 
                             yield return new WaitForSeconds(1.5f);
                             haveScoreType = true;

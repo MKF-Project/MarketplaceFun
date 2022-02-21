@@ -8,51 +8,65 @@ using UnityEngine.UI;
 
 public class ScoreCanvas : MonoBehaviour
 {
-    private const string BUTTON_READY_TAG = "ButtonReady";
-    private const string BUTTON_START_TAG = "ButtonStart";
-    
-
-    private GameObject _buttonStart;
-    private GameObject _buttonReady;
+    public GameObject ButtonStart;
+    public GameObject ButtonReady;
     public GameObject ScorePanel;
     private Text _scoreText;
-    
+    public GameObject ExitButton;
+    public Image CoinRight;
+    public Image CoinLeft;
 
     public void Awake()
     {
-        _buttonStart = gameObject.FindChildWithTag(BUTTON_START_TAG);
-        _buttonStart.SetActive(false);
+        ButtonStart.SetActive(false);
 
-        _buttonReady = gameObject.FindChildWithTag(BUTTON_READY_TAG);
-        _buttonReady.SetActive(false);
+        ButtonReady.SetActive(false);
 
         _scoreText = ScorePanel.GetComponentInChildren<Text>();
     }
 
     public void ShowButtonStart()
     {
-        _buttonStart.SetActive(true);
+        ButtonStart.SetActive(true);
     }
 
     public void ShowButtonReady()
     {
-        _buttonReady.SetActive(true);
+        ButtonReady.SetActive(true);
+
+    }
+    
+    public void ShowButtonExit()
+    {
+        ExitButton.SetActive(true);
 
     }
     
     public void HideButtonStart()
     {
-        _buttonStart.SetActive(false);
+        ButtonStart.SetActive(false);
     }
 
     public void HideButtonReady()
     {
-        _buttonReady.SetActive(false);
+        ButtonReady.SetActive(false);
     }
     
     public void HideScoreText()
     {
         ScorePanel.SetActive(false);
+    }
+    
+    public void HideButtonExit()
+    {
+        ExitButton.SetActive(false);
+
+    }
+
+    public void HideCoins()
+    {
+        CoinRight.enabled = false;
+        CoinLeft.enabled = false;;
     }
 
 
@@ -61,22 +75,24 @@ public class ScoreCanvas : MonoBehaviour
         HideButtonStart();
         HideButtonReady();
         HideScoreText();
+        HideCoins();
+
     }
 
 
     public void ActivateButtonStart()
     {
-        _buttonStart.GetComponent<Button>().interactable = true;
+        ButtonStart.GetComponent<Button>().interactable = true;
     }
 
     public void ActivateButtonReady()
     {
-        _buttonReady.GetComponent<Button>().interactable = true;
+        ButtonReady.GetComponent<Button>().interactable = true;
     }
     
     public void InactivateButtonReady()
     {
-        _buttonReady.GetComponent<Button>().interactable = false;
+        ButtonReady.GetComponent<Button>().interactable = false;
     }
 
     public void ShowScoreText(String text)
@@ -88,5 +104,7 @@ public class ScoreCanvas : MonoBehaviour
     {
         _scoreText.text = text;
         _scoreText.color = color;
+        CoinRight.color = color;
+        CoinLeft.color = color;
     }
 }

@@ -64,7 +64,9 @@
           <e p="Menus" t="Include">
             <e p="Auxiliary" t="Include">
               <e p="LobbyPositionController.cs" t="Include" />
+              <e p="MenuCameraManager.cs" t="Include" />
             </e>
+            <e p="ConfigMenu.cs" t="Include" />
             <e p="ConnectionMenu.cs" t="Include" />
             <e p="DisconnectMenu.cs" t="Include" />
             <e p="ExitMenu.cs" t="Include" />
@@ -75,6 +77,7 @@
             </e>
             <e p="LobbyMenu.cs" t="Include" />
             <e p="MenuManager.cs" t="Include" />
+            <e p="TutorialMenu.cs" t="Include" />
           </e>
           <e p="Network" t="Include">
             <e p="ClientConnectionChecker.cs" t="Include" />
@@ -125,6 +128,7 @@
               <e p="Shelf.cs" t="Include" />
             </e>
             <e p="ShoppingCart" t="Include">
+              <e p="ShoppingCartAudio.cs" t="Include" />
               <e p="ShoppingCartInteract.cs" t="Include" />
               <e p="ShoppingCartItem.cs" t="Include" />
             </e>
@@ -132,6 +136,7 @@
           </e>
           <e p="Score" t="Include">
             <e p="DescriptivePoints.cs" t="Include" />
+            <e p="DiceCollision.cs" t="Include" />
             <e p="ScoreActions" t="Include">
               <e p="ScorableAction.cs" t="Include" />
               <e p="ScoreConfig.cs" t="Include" />

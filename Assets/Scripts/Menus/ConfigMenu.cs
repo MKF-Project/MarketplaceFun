@@ -10,7 +10,7 @@ public class ConfigMenu : MonoBehaviour
     public static event OnPressOKDelegate OnPressOK;
 
     public static float Sensitivity = 1;
-    private static bool SensitivityConfigured = false;
+    public static bool SensitivityConfigured = false;
 
     [SerializeField] private Slider SensitivitySlider = null;
     [SerializeField] private Text SensitivityValue = null;

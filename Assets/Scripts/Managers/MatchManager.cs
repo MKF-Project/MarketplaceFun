@@ -12,7 +12,7 @@ public class MatchManager : NetworkBehaviour
     private const string MATCH_CANVAS_TAG = "MatchCanvas";
     private static readonly int MATCH_CANVAS_ANIMATION_PARAM = Animator.StringToHash("P_Hurry");
 
-    //Player Complete Lists
+    // Player Complete Lists
     [HideInInspector]
     public List<ulong> ListCompletedPlayers;
 
@@ -21,19 +21,20 @@ public class MatchManager : NetworkBehaviour
     public bool MatchHurry;
 
     public Color TimeColor;
-
     public Color HurryColor;
 
     public float HurryTimeSeconds;
 
 
-    //Time variables
+    // Time variables
     public float MatchTimeMinutes;
 
     private GameObject _clockCanvas;
     private Text _clockText;
     private Animator _clockAnimator;
+    private AudioSource _clockAudioSource;
     private bool _hasSetHurry = false;
+    private bool _hasSetThreshold = false;
 
     private float _startTime;
     private bool _timeStarted;
@@ -64,8 +65,16 @@ public class MatchManager : NetworkBehaviour
 
     public Camera SceneCamera;
 
+    [Header("SFX")]
+    public float TickingTempo = 0.5f;
+    public float ThresholdTickingTempo = 0.25f;
+    public List<AudioClip> ClockTickUpSounds;
+    public List<AudioClip> ClockTickDownSounds;
 
-    public void Start()
+    private float _lastClockTick = 0;
+    private bool _isOnUpTick = true;
+
+    private void Start()
     {
         OnMatchStart?.Invoke();
         _clientsFished = 0;
@@ -81,6 +90,8 @@ public class MatchManager : NetworkBehaviour
 
         _clockText.color = TimeColor;
 
+        _clockAudioSource = GetComponent<AudioSource>();
+
         SpawnController.OnSpawnOpened += InitiateStartTime;
         if(IsServer)
         {
@@ -91,6 +102,7 @@ public class MatchManager : NetworkBehaviour
         NetworkTimeSpent.OnValueChanged = DisplayTime;
 
     }
+
     private void OnDestroy()
     {
         SpawnController.OnSpawnOpened -= InitiateStartTime;
@@ -126,6 +138,20 @@ public class MatchManager : NetworkBehaviour
                 }
             }
         }
+
+        if(_hasSetHurry)
+        {
+            var timeDiff = Time.time - _lastClockTick;
+            if((_hasSetThreshold && timeDiff > ThresholdTickingTempo) || timeDiff > TickingTempo)
+            {
+                _lastClockTick = Time.time;
+
+                var list = _isOnUpTick? ClockTickUpSounds : ClockTickDownSounds;
+                _clockAudioSource.PlayOneShot(list[UnityEngine.Random.Range(0, list.Count)]);
+
+                _isOnUpTick = !_isOnUpTick;
+            }
+        }
     }
 
     public void DisplayTime(float pre, float timeSpent)
@@ -143,6 +169,11 @@ public class MatchManager : NetworkBehaviour
 
             _clockText.color = HurryColor;
             _clockAnimator.SetBool(MATCH_CANVAS_ANIMATION_PARAM, true);
+        }
+
+        if(!_hasSetThreshold && minutesLeft <= 0 && secondsLeft <= ThresholdSeconds)
+        {
+            _hasSetThreshold = true;
         }
 
         if(minutesLeft <= 0 && secondsLeft <= 0)
@@ -213,6 +244,11 @@ public class MatchManager : NetworkBehaviour
                         UpdateMatchTime_ClientRpc(MatchTimeMinutes);
                     }
                 }
+
+                if (ListCompletedPlayers.Count == NetworkController.GetLocalPlayers().Count)
+                {
+                    EndMatch();
+                }
             }
         }
     }
@@ -238,8 +274,8 @@ public class MatchManager : NetworkBehaviour
         PlayerInfo playerInfo = playerGameObject.GetComponent<PlayerInfo>();
         String playerNickname = playerInfo.PlayerData.Nickname;
         Color color = ColorManager.Instance.GetColor(playerInfo.PlayerData.Color).color;
-        MatchMessages.Instance.EditMessage("Player " + playerNickname + " Checked Out");
-        MatchMessages.Instance.EditColorMessage(color);
+        MatchMessages.Instance.EditMessage(playerNickname + "\n" + "passou no caixa");
+        MatchMessages.Instance.EditColorMessage(playerInfo.PlayerData.Color);
 
         MatchMessages.Instance.ShowMessage();
         if(NetworkManager.LocalClientId == playerId)

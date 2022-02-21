@@ -24,7 +24,8 @@ public class Cashier : MonoBehaviour
                 }
                 else
                 {
-                    MatchMessages.Instance.EditMessage("List not complete");
+                    MatchMessages.Instance.EditColorMessage(5);
+                    MatchMessages.Instance.EditMessage("Lista incompleta!");
                     MatchMessages.Instance.ShowMessage();
                 }
             }

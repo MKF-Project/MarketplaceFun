@@ -14,11 +14,15 @@ public class GameMenu : MonoBehaviour
     public delegate void OnPressConfigurationsDelegate();
     public static event OnPressConfigurationsDelegate OnPressConfigurations;
 
+    public delegate void OnViewTutorialDelegate();
+    public static event OnViewTutorialDelegate OnViewTutorial;
+
     private void Awake()
     {
         ConnectionMenu.OnBack += this.toggleMenu;
         DisconnectMenu.OnPressOK += this.toggleMenu;
         ConfigMenu.OnPressOK += this.toggleMenu;
+        TutorialMenu.OnExitTutorial += this.toggleMenu;
         NetworkController.OnDisconnected += returnFromLobby;
     }
 
@@ -27,6 +31,7 @@ public class GameMenu : MonoBehaviour
         ConnectionMenu.OnBack -= this.toggleMenu;
         DisconnectMenu.OnPressOK -= this.toggleMenu;
         ConfigMenu.OnPressOK -= this.toggleMenu;
+        TutorialMenu.OnExitTutorial -= this.toggleMenu;
         NetworkController.OnDisconnected -= returnFromLobby;
     }
 
@@ -36,5 +41,6 @@ public class GameMenu : MonoBehaviour
     public void joinGame() => OnJoinGame?.Invoke();
     public void hostGame() => OnHostGame?.Invoke();
     public void pressConfigurations() => OnPressConfigurations?.Invoke();
+    public void viewTutorial() => OnViewTutorial?.Invoke();
     public void quitGame() => Application.Quit();
 }

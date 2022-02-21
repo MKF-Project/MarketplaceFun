@@ -8,7 +8,7 @@ public class ScoreAuditor : MonoBehaviour
 
     private ScoreController _scoreController;
     
-    private const int ENEMY_HIT_ID = 0;
+    private const int ENEMY_HIT_ID = 1;
 
     private const int SOLO_WINNER_ID = 3;
 

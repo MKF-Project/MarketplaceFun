@@ -14,6 +14,7 @@ public class ShoppingCartInteract : NetworkBehaviour
 
     private Interactable _interactScript = null;
     private ShoppingCartItem _cartScript = null;
+    private ShoppingCartAudio _cartAudio = null;
 
     private NetworkTransform _netTransform = null;
     private NetRigidbody _netRigidbody = null;
@@ -33,6 +34,7 @@ public class ShoppingCartInteract : NetworkBehaviour
     {
         _interactScript = GetComponentInChildren<Interactable>();
         _cartScript = GetComponent<ShoppingCartItem>();
+        _cartAudio = GetComponent<ShoppingCartAudio>();
 
         _netTransform = GetComponent<NetworkTransform>();
         _netRigidbody = GetComponent<NetRigidbody>();
@@ -160,6 +162,9 @@ public class ShoppingCartInteract : NetworkBehaviour
 
         // Make sure we detach the cart from this player if they disconnect
         player.OnBeforeDestroy += clientDetachCart;
+
+        // Update audio cart audio player
+        _cartAudio.UsePlayerRigidbody(player);
     }
 
     private void clientDetachCart(Player player)
@@ -206,6 +211,10 @@ public class ShoppingCartInteract : NetworkBehaviour
                 break;
             }
         }
+
+        // Update audio cart audio player
+        _cartAudio.UseCartRigidbody(_rigidbody);
+        _cartAudio.UpdateSoundTimer();
     }
 
     /** ---- RPCs ---- **/

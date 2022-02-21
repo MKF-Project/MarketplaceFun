@@ -96,6 +96,7 @@ MonoBehaviour:
   UISticker: {fileID: 0}
   ShelfItemGroups: []
   IsOnThrow: 0
+  IsInCart: 0
   EffectType: 0
   takeEffect: {fileID: 0}
   ThrowerId: 0

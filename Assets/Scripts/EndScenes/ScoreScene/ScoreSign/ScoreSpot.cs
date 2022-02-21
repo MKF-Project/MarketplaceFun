@@ -17,6 +17,15 @@ public class ScoreSpot : MonoBehaviour
     public MeshRenderer ScoreBase;
     public MeshRenderer ScoreSign;
 
+    // Audio
+    [Header("SFX")]
+    public AudioClip IncreaseScoreSound;
+    private AudioSource _scoreSpotSource;
+
+    private void Awake()
+    {
+        _scoreSpotSource = GetComponent<AudioSource>();
+    }
 
     public void AddPoints(int points)
     {
@@ -29,6 +38,7 @@ public class ScoreSpot : MonoBehaviour
         {
             _currentPoints++;
             SetRightPoint(_currentPoints);
+            _scoreSpotSource.PlayOneShot(IncreaseScoreSound);
             yield return new WaitForSeconds(0.1f);
         }
     }
@@ -47,9 +57,7 @@ public class ScoreSpot : MonoBehaviour
             return;
         }
         Text.text = "" + points;
-        
     }
-
 
     public void TurnSpotOn()
     {
@@ -57,7 +65,6 @@ public class ScoreSpot : MonoBehaviour
         EditMaterialOfMesh(Tube, 1);
         EditMaterialOfMesh(ScoreBase, 0);
         EditMaterialOfMesh(ScoreSign, 0);
-
     }
 
     private void EditMaterialOfMesh(MeshRenderer mesh, int materialIndex)

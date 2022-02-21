@@ -440,6 +440,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5c42f234bb7760b47a041a55432b7bc2, type: 3}
   - {fileID: 8300000, guid: a3ba3766e42b0fe4986914f79d862e1c, type: 3}
   - {fileID: 8300000, guid: 63f9fc8afd22b3043a93e49e93a18140, type: 3}
+  ThrowItem: {fileID: 0}
+  TakeHit: {fileID: 0}
 --- !u!1 &8816987188999332804
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,12 +467,12 @@ GameObject:
   - component: {fileID: 162437846829725900}
   - component: {fileID: 2533615510006663239}
   - component: {fileID: 3936554009223666934}
+  - component: {fileID: 4531594802421808373}
   - component: {fileID: 5644185216240505816}
   - component: {fileID: -2014535450862663308}
   - component: {fileID: 8026411014910446928}
   - component: {fileID: 492374440104628429}
   - component: {fileID: 288981495909586724}
-  - component: {fileID: 4531594802421808373}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -668,7 +670,6 @@ MonoBehaviour:
   _gravity: 30
   MoveSpeed: 3.5
   WalkSpeed: 1.7
-  Sensitivity: 2
   InteractionDistance: 1.2
   InteractCooldown: 0.1
   FallSpeed: 3
@@ -693,7 +694,6 @@ MonoBehaviour:
   _gravity: 30
   MoveSpeed: 3.5
   WalkSpeed: 2
-  Sensitivity: 2
   InteractionDistance: 2
   InteractCooldown: 0.1
   MovingTurnSpeed: 100
@@ -738,7 +738,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b671f22c445904b4b89b89050a2c03d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShoppingListUi: {fileID: 0}
   _quantityChecked: 0
 --- !u!114 &162437846829725900
 MonoBehaviour:
@@ -752,6 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b106e56f08f18324b9bd336d7ef7f024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InvicibilityPeriod: 1
 --- !u!114 &2533615510006663239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,6 +786,25 @@ MonoBehaviour:
   - {fileID: 1452059695410795679}
   - {fileID: 4123141227457878573}
   - {fileID: 4433698100275112086}
+--- !u!114 &4531594802421808373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816987188999332804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e931f833c6b35e41990c0fb34a1bcc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Steps:
+  - {fileID: 8300000, guid: b11a74b26b21f144999ef29c318eaac3, type: 3}
+  - {fileID: 8300000, guid: 5c42f234bb7760b47a041a55432b7bc2, type: 3}
+  - {fileID: 8300000, guid: a3ba3766e42b0fe4986914f79d862e1c, type: 3}
+  - {fileID: 8300000, guid: 63f9fc8afd22b3043a93e49e93a18140, type: 3}
+  ThrowItem: {fileID: 8300000, guid: 8396545b87da23a478d5d0efb2156c1f, type: 3}
+  TakeHit: {fileID: 8300000, guid: b06d6b15160f32548ba48cb758976c94, type: 3}
 --- !u!114 &5644185216240505816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,10 +817,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1fe3d7452b5a6468c031b616f7abb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Position1: {x: -3, y: 0.2, z: 0}
-  Position2: {x: -1, y: 0.2, z: 0}
-  Position3: {x: 1, y: 0.2, z: 0}
-  Position4: {x: 3, y: 0.2, z: 0}
+  Position1: {x: -4.5, y: 0.49, z: 2.5}
+  Position2: {x: -1.5, y: 0.49, z: 2.5}
+  Position3: {x: 1.5, y: 0.49, z: 2.5}
+  Position4: {x: 4.5, y: 0.49, z: 2.5}
 --- !u!114 &-2014535450862663308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -850,23 +869,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9cf24037e2cb148be1db3183d0804c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4531594802421808373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8816987188999332804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e931f833c6b35e41990c0fb34a1bcc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Steps:
-  - {fileID: 8300000, guid: b11a74b26b21f144999ef29c318eaac3, type: 3}
-  - {fileID: 8300000, guid: 5c42f234bb7760b47a041a55432b7bc2, type: 3}
-  - {fileID: 8300000, guid: a3ba3766e42b0fe4986914f79d862e1c, type: 3}
-  - {fileID: 8300000, guid: 63f9fc8afd22b3043a93e49e93a18140, type: 3}
 --- !u!1001 &6953011632518584898
 PrefabInstance:
   m_ObjectHideFlags: 0
